@@ -25,3 +25,5 @@ Route::get('/profile/edit', function () {
     return view('edit-profile');
 })->name('profile.edit');
 Route::post('plates_add', [App\Http\Controllers\LicenseplateController::class, 'store'])->name('plates.store');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('plates', [App\Http\Controllers\LicenseplateController::class, 'index'])->name('home');

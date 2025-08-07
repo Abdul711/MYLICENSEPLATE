@@ -19,4 +19,9 @@ class LicenseplateController extends Controller
         // return redirect()->route('home')->with('success', 'License Plate added successfully!');
         return view('customer.plate_detail',compact('plate'));  
     }
+    public function index(){
+        $plates = LicensePlate::with('user')->where("status","=","Available")->get();
+        return view('customer.plates', compact('plates'));
+    }
+    
 }

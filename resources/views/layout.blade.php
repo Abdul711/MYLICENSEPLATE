@@ -28,8 +28,10 @@
 
             <div class="collapse navbar-collapse" id="navbarMain">
                 <ul class="navbar-nav ms-auto">
+                       <li class="nav-item"><a class="nav-link" href="{{ url('plates') }}"> Plates</a></li>
                     @auth
-                        <li class="nav-item"><a class="nav-link" href="{{ url('plates') }}">My Plates</a></li>
+                     
+                        <li class="nav-item"><a class="nav-link" href="{{ url('plates') }}">My Sold Plates</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ url('/profile') }}">Profile</a></li>
                         <li class="nav-item">
                             <form action="{{ url('logout') }}" method="POST" class="d-inline">
