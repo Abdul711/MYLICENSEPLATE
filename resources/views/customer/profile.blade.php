@@ -30,6 +30,9 @@
                         </ul>
                         <div class="mt-4 text-end">
                             <a href="#" class="btn btn-outline-primary">Edit Profile</a>
+                    <a href="{{ route('plates.import') }}" class="btn btn-outline-primary">Import Plates CSV</a>
+                           
+                          <a href="{{url('/plates/add/multiple')}}" class="btn btn-success">Add Multiple Plates</a>
                             <a href="{{url('/plates/add')}}" class="btn btn-success">Add New Plate</a>
                         </div>
                     </div>

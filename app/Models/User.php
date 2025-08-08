@@ -20,7 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        	'email_domain',
+        'email_domain',
         'password',
         'mobile',
     ];
@@ -47,4 +47,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function licensePlates()
+    {
+        return $this->hasMany(LicensePlate::class);
+    }
+    public function getNameAttribute($value)
+    {
+       $parts = explode(' ', $value);
+       $firstPart = $parts[0]; 
+       return ucfirst(strtolower($firstPart));
+    }
+
 }
