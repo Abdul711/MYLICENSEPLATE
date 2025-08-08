@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use Illuminate\Support\Facades\Route;
 
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Models\LicensePlate;
 
 Route::redirect('/', '/plates');
 
@@ -13,7 +15,16 @@ Route::get("login", function () {
     return view('login');
 });
 Route::get("profile", function () {
-    return view('customer.profile');
+    Auth::check() ? Auth::user() : abort(403, 'Unauthorized action.');
+
+
+$myplates = LicensePlate::where('user_id', Auth::id())->get();
+
+
+
+
+
+    return view('customer.profile', compact('myplates'));
 });
 Route::post("login",[AuthController::class,'login'])->name("login");
 Route::get('/plates/add', function () {

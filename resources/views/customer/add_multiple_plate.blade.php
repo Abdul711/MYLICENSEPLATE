@@ -116,8 +116,7 @@
                     <option value="Sindh">Sindh</option>
                     <option value="Balochistan">Balochistan</option>
                     <option value="KPK">Khyber Pakhtunkhwa</option>
-                    <option value="gilgit">Gilgit Baltistan</option>
-                    <option value="ajk">Azad Jammu & Kashmir</option>
+             
                 </select>
             </div>
             <div class="col-md-2">

@@ -15,18 +15,28 @@
                         <hr>
                         <h5>My Plates</h5>
                         <ul class="list-group list-group-flush">
+                            @foreach ($myplates as $plate)
+                        
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span>AAA-123</span>
-                                <span class="badge bg-success rounded-pill">Available</span>
+                                <span>{{$plate->plate_number}}</span>
+                                    <span>{{$plate->city}}</span>
+                                        <span>{{$plate->region}}</span>
+                                @if($plate->status == 'Sold')
+                                    <span class="badge bg-danger rounded-pill">Sold</span>
+                                @elseif($plate->status == 'Pending')
+                                    <span class="badge bg-warning text-dark rounded-pill">Pending</span>    
+                                @else
+                                    <span class="badge bg-success rounded-pill">Available</span>
+                                @endif
+                                <span class="badge bg-secondary rounded-pill">{{ $plate->price }} PKR</span>
+                                <a href="{{ url('plates/' . $plate->id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                 <a href="{{ url('plates/' . $plate->id) }}" class="btn btn-sm btn-outline-danger">Delete</a>
+
                             </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span>XYZ-786</span>
-                                <span class="badge bg-danger rounded-pill">Sold</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span>CAR-2025</span>
-                                <span class="badge bg-warning text-dark rounded-pill">Pending</span>
-                            </li>
+                          
+                            @endforeach
+                          
+                        
                         </ul>
                         <div class="mt-4 text-end">
                             <a href="#" class="btn btn-outline-primary">Edit Profile</a>

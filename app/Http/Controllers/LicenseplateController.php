@@ -22,10 +22,51 @@ class LicenseplateController extends Controller
         // return redirect()->route('home')->with('success', 'License Plate added successfully!');
         return view('customer.plate_detail', compact('plate'));
     }
-    public function index()
+    public function index(Request $request)
     {
-        $plates = LicensePlate::with('user')->where("status", "=", "Available")->get();
-        return view('customer.plates', compact('plates'));
+        $query = LicensePlate::query();
+
+        // Filter: Start with
+        $query = LicensePlate::query();
+
+        if ($request->filled('start_with')) {
+            $query->where('plate_number', 'like', $request->start_with . '%');
+        }
+        if ($request->filled('region')) {
+            $query->where('region', '=', $request->region);
+        }
+        if ($request->filled('city')) {
+            $query->where('city', '=', $request->city);
+        }
+
+        if ($request->filled('contain')) {
+            $query->where('plate_number', 'like', '%' . $request->contain . '%');
+        }
+
+        if ($request->filled('end_with')) {
+            $query->where('plate_number', 'like', '%' . $request->end_with);
+        }
+
+        if ($request->filled('length')) {
+            $length = (int) $request->length;
+            $query->whereRaw("LENGTH(REPLACE(REPLACE(plate_number, ' ', ''), '-', '')) = ?", [$length]);
+        }
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+
+        // Filter by max price
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+
+        // Filter: Contain
+
+        $cities = LicensePlate::select('city')->distinct()->get();
+        $regions = LicensePlate::select('region')->distinct()->get();
+        $plates = $query->get();
+        return view('customer.plates', compact('plates', 'cities', 'regions'));
     }
     public function export()
     {
@@ -113,7 +154,7 @@ class LicenseplateController extends Controller
     public function multistore(Request $request)
     {
 
-       
+
         $validated = $request->validate([
             'plate_number' => 'array',
             'plate_number.*' => 'required|string|max:255',
@@ -150,6 +191,6 @@ class LicenseplateController extends Controller
 
 
 
-         return redirect(url('plates'))->with('success', 'Multiple plates added successfully!');
+        return redirect(url('plates'))->with('success', 'Multiple plates added successfully!');
     }
 }
