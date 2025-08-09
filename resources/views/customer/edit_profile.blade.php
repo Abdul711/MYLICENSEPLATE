@@ -1,4 +1,4 @@
-
+@extends('layout')
 @section('content')
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -6,7 +6,7 @@
             <div class="card shadow">
                 <div class="card-body p-4">
                     <h4 class="mb-4 text-center">Edit Profile</h4>
-                    <form action="{{ url('profile_update') }}" method="POST">
+                    <form action="{{ route('profile.update') }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="mb-3">
@@ -16,6 +16,10 @@
                         <div class="mb-3">
                             <label class="form-label">Email Address</label>
                             <input type="email" name="email" value="{{ old('email', Auth::user()->email) }}" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mobile</label>
+                            <input type="text" name="mobile" value="{{ old('mobile', Auth::user()->mobile) }}" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">New Password <small class="text-muted">(optional)</small></label>

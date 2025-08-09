@@ -27,7 +27,9 @@ class LicenseplateController extends Controller
         $query = LicensePlate::query();
 
         // Filter: Start with
-        $query = LicensePlate::query();
+        if ($request->filled('city')) {
+            $query->where('city', '=', $request->city);
+        }
 
         if ($request->filled('start_with')) {
             $query->where('plate_number', 'like', $request->start_with . '%');
@@ -35,9 +37,7 @@ class LicenseplateController extends Controller
         if ($request->filled('region')) {
             $query->where('region', '=', $request->region);
         }
-        if ($request->filled('city')) {
-            $query->where('city', '=', $request->city);
-        }
+
 
         if ($request->filled('contain')) {
             $query->where('plate_number', 'like', '%' . $request->contain . '%');
@@ -65,6 +65,10 @@ class LicenseplateController extends Controller
 
         $cities = LicensePlate::select('city')->distinct()->get();
         $regions = LicensePlate::select('region')->distinct()->get();
+
+        // Get the filtered plates
+        $query->where('status',"Available"); // Ensure only plates of the authenticated user are fetched
+
         $plates = $query->get();
         return view('customer.plates', compact('plates', 'cities', 'regions'));
     }
@@ -193,4 +197,53 @@ class LicenseplateController extends Controller
 
         return redirect(url('plates'))->with('success', 'Multiple plates added successfully!');
     }
-}
+    public function show(LicensePlate $plate)
+
+    {
+        // Assuming you have a LicensePlate model and a view to show the details
+        // You can pass the $plate to the view to display its details
+        // For example:
+        if (!$plate) {
+            abort(404, 'License Plate not found.');
+        }
+        return view('customer.plate_detail', compact('plate'));
+    }
+    public function edit($id)
+    {
+        $item = LicensePlate::findOrFail($id);
+        
+        if ($item->user_id != Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+        return view('customer.edit',[
+            'item' => $item,
+            
+            'provinces' => LicensePlate::select('region')->distinct()->get(),
+            'cities' => LicensePlate::select('city')->distinct()->get(),
+        ]);
+    }
+    public function update(Request $request, $id)
+    {
+        $item = LicensePlate::findOrFail($id);
+        
+        if ($item->user_id != Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $request->validate([
+            'plate_number' => 'required|string|max:255',
+          
+            'price' => 'required|numeric|min:0',
+            'status' => 'nullable|string|max:50',
+        ]);
+        $item->update([
+            'plate_number' => $request->plate_number,
+         
+            'price' => $request->price,
+            'status' => $request->status,
+        ]);
+            
+        return redirect()->route('plates.show', ['plate' => $item->id])->with('success', 'License Plate updated successfully!');    
+    }        
+}   
+

@@ -25,8 +25,8 @@
                     <div class="row mb-3">
                         <div class="col-md-4 text-muted">Status</div>
                         <div class="col-md-8 fw-semibold">
-                            @if($plate->is_sold)
-                                <span class="text-danger">Sold</span>
+                            @if($plate->status == 'Sold')
+                                <span class=" badge bg-danger rounded-pill ">Sold</span>
                             @else
                                 <span class="text-success">Available</span>
                             @endif
@@ -42,6 +42,24 @@
                         <div class="col-md-4 text-muted">Posted On</div>
                         <div class="col-md-8">{{ $plate->created_at->format('d M, Y') }}</div>
                     </div>
+                    
+                        @auth
+                            @if(!$plate->is_sold && Auth::id() !== $plate->user_id)
+                                <div class="row mb-3">
+                                    <div class="col-md-4 text-muted">Contact Seller</div>
+                                    <div class="col-md-8">
+                                        <a href="{{ url('contact_seller/', $plate->user_id) }}" class="btn btn-success"> Contact Now</a>
+                                    </div>
+                                </div>
+
+                          
+
+                    <div class="row mb-3">
+                        <div class="col-md-4 text-muted">Contact Number</div>
+                        <div class="col-md-8">{{ $plate->user->mobile ?? 'No Contact provided.' }}</div> 
+                    </div>
+                            @endif
+                        @endauth
 
                     <hr>
 

@@ -34,7 +34,7 @@
                         </div>
 
                         <div class="col-md-2">
-                            <select name="region" class="form-select mt-1">
+                            <select name="region" id="province" class="form-select mt-1">
                                 <option value="" disabled {{ request('region') ? '' : 'selected' }}>Select Province
                                 </option>
 
@@ -46,7 +46,7 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <select name="city" class="form-select mt-1">
+                            <select name="city" id="city"  class="form-select mt-1">
                                 <option value="" disabled {{ request('city') ? '' : 'selected' }}>Select City
                                 </option>
 
@@ -74,7 +74,7 @@
                         request()->has('max_price') ||
                         request()->has('min_price'))
                     <p class="mb-0">
-                        @if (empty(request()->all()))
+                        @if (!empty(request()->all()))
                             Current search:
                         @endif
                         @if (request()->has('start_with') && request('start_with') != '')
@@ -140,7 +140,7 @@
                             <div class="fw-bold text-center">Owner: {{ $plate->user->name }}</div>
                             <div class="fw-bold text-center">Number: {{ $plate->user->mobile }}</div>
                             <div class="fw-bold text-center">PKR {{ $plate->price }}</div>
-                            <a href="" class="btn btn-primary">View Detail</a>
+                            <a href="{{ url('plates/' . $plate->id . '/show') }}" class="btn btn-primary">View Detail</a>
                             @auth
                                 @if ($plate->user_id != Auth::user()->id)
                                     <a href="" class="btn btn-danger">Order</a>
@@ -167,7 +167,7 @@
                             <div class="fw-bold text-center">Owner: {{ $plate->user->name }}</div>
                             <div class="fw-bold text-center">Number: {{ $plate->user->mobile }}</div>
                             <div class="fw-bold text-center">PKR {{ $plate->price }}</div>
-                            <a href="" class="btn btn-primary">View Detail</a>
+                            <a href="{{ url('plates/' . $plate->id . '/show') }}" class="btn btn-primary">View Detail</a>
                             @auth
                                 @if ($plate->user_id != Auth::user()->id)
                                     <a href="" class="btn btn-danger">Order</a>
@@ -194,7 +194,7 @@
                             <div class="fw-bold text-center">Owner: {{ $plate->user->name }}</div>
                             <div class="fw-bold text-center">Number: {{ $plate->user->mobile }}</div>
                             <div class="fw-bold text-center">PKR {{ $plate->price }}</div>
-                            <a href="" class="btn btn-primary">View Detail</a>
+                            <a href="{{ url('plates/' . $plate->id . '/show') }}" class="btn btn-primary">View Detail</a>
                             @auth
                                 @if ($plate->user_id != Auth::user()->id)
                                     <a href="" class="btn btn-danger">Order</a>
@@ -220,7 +220,7 @@
                             <div class="fw-bold text-center">Owner: {{ $plate->user->name }}</div>
                             <div class="fw-bold text-center">Number: {{ $plate->user->mobile }}</div>
                             <div class="fw-bold text-center">PKR {{ $plate->price }}</div>
-                            <a href="" class="btn btn-primary">View Detail</a>
+                            <a href="{{ url('plates/' . $plate->id . '/show') }}" class="btn btn-primary">View Detail</a>
                             @auth
                                 @if ($plate->user_id != Auth::user()->id)
                                     <a href="" class="btn btn-danger">Order</a>
@@ -231,4 +231,43 @@
                 @endforeach
             </div>
         </div>
+        <script>
+    const cityOptions = {
+        'Punjab': ['Lahore', 'Faisalabad', 'Multan', 'Rawalpindi', 'Gujranwala','Sialkot', 'Bahawalpur', 'Sargodha'],
+        'Balochistan': ['Quetta', 'Khuzdar', 'Turbat','Zhob','Gwadar','Loralai','Sibi'],
+        'Sindh': ['Karachi', 'Hyderabad', 'Sukkur','Mirpurkhas','Larkana','Nawabshah','Thatta'],
+        'KPK': ['Peshawar', 'Abbottabad', 'Mardan','Swat','Bannu','Dera Ismail Khan','Charsadda'],
+        'Islamabad': ['Islamabad']
+    };
+
+    const provinceSelect = document.getElementById('province');
+    const citySelect = document.getElementById('city');
+
+    const oldProvince = "{{ old('region') }}";
+    const oldCity = "{{ old('city') }}";
+
+    function populateCities(province, selectedCity = null) {
+        const cities = cityOptions[province] || [];
+        citySelect.innerHTML = '<option value="">Select City</option>';
+        cities.forEach(function(city) {
+            const option = document.createElement('option');
+            option.value = city;
+            option.text = city;
+            if (city === selectedCity) {
+                option.selected = true;
+            }
+            citySelect.appendChild(option);
+        });
+    }
+
+    // Auto-select old values on load
+    if (oldProvince) {
+        populateCities(oldProvince, oldCity);
+    }
+
+    // Change handler
+    provinceSelect.addEventListener('change', function () {
+        populateCities(this.value);
+    });
+</script>
     @endsection

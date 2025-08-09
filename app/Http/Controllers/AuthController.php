@@ -6,22 +6,25 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         return view('signup');
     }
-    public function store(UserRequest $request){
-       $userData=$request->validated();
-       User::create($userData);
+    public function store(UserRequest $request)
+    {
+        $userData = $request->validated();
+        User::create($userData);
         // Here you would typically create the user in the database
         // User::create($request->validated());
         // return redirect()->route('home')->with('success', 'User registered successfully!');
         return redirect()->back()->with('success', 'User registered successfully!');
     }
-    public function login(Request $request){
-      
+    public function login(Request $request)
+    {
+
         // Validate the login request
         $request->validate([
             'email' => 'required|email',
@@ -29,17 +32,46 @@ class AuthController extends Controller
         ]);
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials) ) {
+        if (Auth::attempt($credentials)) {
             // Authentication passed...
             return redirect(url('profile'));
         }
-        
+
         return redirect()->back()->withErrors(['email' => 'Invalid credentials'])->withInput()
-        ->with('error', 'Invalid credentials'); 
-    
+            ->with('error', 'Invalid credentials');
     }
-    public function logout(){
+    public function logout()
+    {
         Auth::logout();
         return redirect('/')->with('success', 'Logged out successfully');
-    }        
+    }
+    public function update(Request $request)
+    {
+          $request->validate([
+            'name'   => 'required|string|max:255',
+            'email'  => 'required|email|max:255|unique:users,email,' . Auth::id(),
+            'mobile' => 'nullable|string|max:20',
+        ]);
+
+        $user = User::findOrFail(Auth::id());
+
+        // Replace leading 0 with +92
+        $mobile = $request->mobile;
+        if (!empty($mobile)) {
+            $mobile = preg_replace('/\s+/', '', $mobile); // Remove spaces
+            if (preg_match('/^0\d+$/', $mobile)) {
+                $mobile = '+92' . substr($mobile, 1);
+            }
+        }
+
+        $user->name   = $request->name;
+        $user->email  = $request->email;
+        $user->mobile = $mobile ?: null;
+
+        $user->save();
+
+      
+
+        return redirect()->route('profile')->with('success', 'Profile updated successfully.');
+    }
 }

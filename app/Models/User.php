@@ -53,9 +53,23 @@ class User extends Authenticatable
     }
     public function getNameAttribute($value)
     {
-       $parts = explode(' ', $value);
-       $firstPart = $parts[0]; 
-       return ucfirst(strtolower($firstPart));
-    }
+        // Check current request path
+        if (!request()->is('profile/edit')) {
+            // Only run formatting when NOT on profile/edit
+            $parts = explode(' ', $value);
+            $firstPart = $parts[0] ?? '';
+            return ucfirst(strtolower($firstPart));
+        }
 
+        // Otherwise, just return the original value
+        return $value;
+    }
+    public function getMobileAttribute($value)
+    {
+        // If starts with +92, replace with 0
+        if (strpos($value, '+92') === 0) {
+            return '0' . substr($value, 3); // remove +92 and prepend 0
+        }
+        return $value;
+    }
 }
