@@ -67,7 +67,7 @@ class LicenseplateController extends Controller
         $regions = LicensePlate::select('region')->distinct()->get();
 
         // Get the filtered plates
-        $query->where('status',"Available"); // Ensure only plates of the authenticated user are fetched
+        $query->where('status', "Available"); // Ensure only plates of the authenticated user are fetched
 
         $plates = $query->get();
         return view('customer.plates', compact('plates', 'cities', 'regions'));
@@ -211,13 +211,13 @@ class LicenseplateController extends Controller
     public function edit($id)
     {
         $item = LicensePlate::findOrFail($id);
-        
+
         if ($item->user_id != Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
-        return view('customer.edit',[
+        return view('customer.edit', [
             'item' => $item,
-            
+
             'provinces' => LicensePlate::select('region')->distinct()->get(),
             'cities' => LicensePlate::select('city')->distinct()->get(),
         ]);
@@ -225,25 +225,113 @@ class LicenseplateController extends Controller
     public function update(Request $request, $id)
     {
         $item = LicensePlate::findOrFail($id);
-        
+
         if ($item->user_id != Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
 
         $request->validate([
             'plate_number' => 'required|string|max:255',
-          
+
             'price' => 'required|numeric|min:0',
             'status' => 'nullable|string|max:50',
         ]);
         $item->update([
             'plate_number' => $request->plate_number,
-         
+
             'price' => $request->price,
             'status' => $request->status,
         ]);
-            
-        return redirect()->route('plates.show', ['plate' => $item->id])->with('success', 'License Plate updated successfully!');    
-    }        
-}   
 
+        return redirect()->route('plates.show', ['plate' => $item->id])->with('success', 'License Plate updated successfully!');
+    }
+    public function ajaxProcess(Request $request)
+    {
+
+
+
+
+        $plates = $request->input('plates', []);
+
+        if (empty($plates)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No plates selected.',
+            ]);
+        }
+
+        // Example: Mark all selected plates as "Sold"
+        LicensePlate::whereIn('id', $plates)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => count($plates) . ' plate(s) deleted successfully.',
+            'plates' => $plates,
+        ]);
+        // Process the action based on the token and selected plates
+        // This is just a placeholder for your actual processing logic
+
+
+
+    }
+    public function delete($id)
+    {
+        $plate = LicensePlate::findOrFail($id);
+
+        if ($plate->user_id != Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $plate->delete();
+
+        return redirect(url('profile'))->with('success', 'License Plate deleted successfully!');
+    }
+    public function summary(Request $request)
+    {
+        // Get all 'plates' query params as an array
+     // This will be an array [56, 58, 60]
+ $plateIds = $request->input('plates'); 
+ $ids= explode(',', $plateIds); // If you want to split by comma
+        // If you want to get all matching plates from DB:
+        $plates = LicensePlate::whereIn('id', $ids)->get();
+
+        // Pass to view or return JSON
+        return view('customer.edit_multiple', compact('plates'));
+    }
+    public function viewAll(Request $request)
+    {
+        // Get all plates for the authenticated user
+         $plateIds = $request->input('plates'); 
+ $ids= explode(',', $plateIds);
+        $plates = LicensePlate::whereIn('id',$ids)->get();
+        
+        // Pass to view
+        return view('customer.view_all', compact('plates'));
+    }
+     public function updateMultiple(Request $request)
+    {
+        $validated = $request->validate([
+            'id.*' => 'required|exists:licenseplates,id',
+            'plate_number.*' => 'required|string|max:255',
+            'price.*' => 'required|numeric|min:0',
+            'status.*' => 'required|in:Available,Pending,Sold',
+        ]);
+
+        $ids = $request->input('id');
+        $plateNumbers = $request->input('plate_number');
+        $prices = $request->input('price');
+        $statuses = $request->input('status');
+
+        foreach ($ids as $index => $id) {
+            $plate =    LicensePlate::find($id);
+            if ($plate) {
+                $plate->plate_number = $plateNumbers[$index];
+                $plate->price = $prices[$index];
+                $plate->status = $statuses[$index];
+                $plate->save();
+            }
+        }
+
+        return redirect(url('plates'))->with('success', 'Plates updated successfully!');
+    }
+}

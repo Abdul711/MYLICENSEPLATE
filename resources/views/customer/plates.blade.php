@@ -123,11 +123,12 @@
                 @foreach ($plates as $plate)
                     @if ($plate->region == 'Punjab')
                         <div class="col-md-3">
+                            
                             <div
                                 class="d-flex flex-column justify-content-between border border-primary bg-primary rounded p-3 shadow">
                                 <div class="text-center">
                                     <div class="fw-bold" style="font-size: 1rem;">{{ strtoupper($plate->region) }}</div>
-                                    <div style="font-size: 2rem; letter-spacing: 5px;">
+                                    <div style="font-size: 2rem; letter-spacing: 5px; color: white;">
                                         {{ $plate->plate_number ?? 'ABC 000' }}
                                     </div>
                                 </div>
@@ -150,11 +151,12 @@
                         </div>
                     @elseif ($plate->region == 'Sindh')
                         <div class="col-md-3">
+                          
                             <div
                                 class="d-flex flex-column justify-content-between border border-primary bg-warning rounded p-3 shadow">
                                 <div class="text-center">
                                     <div class="fw-bold" style="font-size: 1rem;">{{ strtoupper($plate->region) }}</div>
-                                    <div style="font-size: 2rem; letter-spacing: 5px;">
+                                    <div style="font-size: 2rem; letter-spacing: 5px; color: white;">
                                         {{ $plate->plate_number ?? 'ABC 000' }}
                                     </div>
                                 </div>
@@ -176,12 +178,13 @@
                         </div>
                     @endif
                     @if ($plate->region == 'Balochistan')
-                        <div class="col-md-3">
+                        <div class="col-md-3" >
+                              
                             <div
                                 class="d-flex flex-column justify-content-between border border-primary bg-danger rounded p-3 shadow">
                                 <div class="text-center">
                                     <div class="fw-bold" style="font-size: 1rem;">{{ strtoupper($plate->region) }}</div>
-                                    <div style="font-size: 2rem; letter-spacing: 5px;">
+                                    <div style="font-size: 2rem; letter-spacing: 5px; color: white;">
                                         {{ $plate->plate_number ?? 'ABC 000' }}
                                     </div>
                                 </div>
@@ -207,7 +210,7 @@
                                 class="d-flex flex-column justify-content-between border border-primary bg-info rounded p-3 shadow">
                                 <div class="text-center">
                                     <div class="fw-bold" style="font-size: 1rem;">{{ strtoupper($plate->region) }}</div>
-                                    <div style="font-size: 2rem; letter-spacing: 5px;">
+                                    <div style="font-size: 2rem; letter-spacing: 5px; color: white;">
                                         {{ $plate->plate_number ?? 'ABC 000' }}
                                     </div>
                                 </div>

@@ -37,7 +37,7 @@ Route::get('/profile/edit', function () {
 Route::put('/profile/update', [AuthController::class, 'update'])->name('profile.update');
 Route::post('plates_add', [App\Http\Controllers\LicenseplateController::class, 'store'])->name('plates.store');
 Route::post('plates/add/multiple', [App\Http\Controllers\LicenseplateController::class, 'multistore'])->name('multiplates.store');
-
+Route::post('/plates/ajaxProcess', [App\Http\Controllers\LicenseplateController::class, 'ajaxProcess'])->name('plates.ajaxProcess');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('plates', [App\Http\Controllers\LicenseplateController::class, 'index'])->name('home');
 Route::get('plates/export', [App\Http\Controllers\LicenseplateController::class, 'export'])->name('plates.export');
@@ -51,3 +51,7 @@ Route::post('plates/import', [App\Http\Controllers\LicenseplateController::class
 Route::get('plates/{plate}/show', [App\Http\Controllers\LicenseplateController::class, 'show'])->name('plates.show');
 Route::get('plates/{id}/edit', [App\Http\Controllers\LicenseplateController::class, 'edit'])->name('items.edit');
 Route::put('/items/{id}', [App\Http\Controllers\LicenseplateController::class, 'update'])->name('items.update');
+Route::get('/plates/summary', [App\Http\Controllers\LicenseplateController::class, 'summary'])->name('plates.summary');
+Route::post('/updateMultiple', [App\Http\Controllers\LicenseplateController::class, 'updateMultiple']);
+Route::get('plates/{id}/delete', [App\Http\Controllers\LicenseplateController::class, 'delete']);
+Route::get('/plates/views', [App\Http\Controllers\LicenseplateController::class, 'viewAll'])->name('plates.summary');
