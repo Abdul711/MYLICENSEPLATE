@@ -9,7 +9,8 @@ use App\Models\LicensePlate;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Smalot\PdfParser\Parser;
-
+use setasign\Fpdi\Fpdi;
+use Illuminate\Support\Facades\Storage;
 class LicenseplateController extends Controller
 {
 
@@ -234,13 +235,74 @@ class LicenseplateController extends Controller
     }
 
 
-    public function exportPdf()
+    public function exportPdf(Request $request)
     {
-        $plates = LicensePlate::all();
+         // 5 minutes, adjust if needed  $query = LicensePlate::query();
+
+        // Filter: Start with
+          $query = LicensePlate::query();
+        if ($request->filled('city')) {
+            $query->where('city', '=', $request->city);
+        }
+
+        if ($request->filled('start_with')) {
+            $query->where('plate_number', 'like', $request->start_with . '%');
+        }
+        if ($request->filled('region')) {
+            $query->where('region', '=', $request->region);
+        }
+
+
+        if ($request->filled('contain')) {
+            $query->where('plate_number', 'like', '%' . $request->contain . '%');
+        }
+
+        if ($request->filled('end_with')) {
+            $query->where('plate_number', 'like', '%' . $request->end_with);
+        }
+
+        if ($request->filled('length')) {
+            $length = (int) $request->length;
+            $query->whereRaw("LENGTH(REPLACE(REPLACE(plate_number, ' ', ''), '-', '')) = ?", [$length]);
+        }
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+
+        // Filter by max price
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+
+     $plates = $query->limit(1500)->get();
+  
+      
+        if(count($plates) > 1500){
+           $this->export();
+              return redirect()->back()->with('success', 'Plates exported to CSV. Downloading PDF for more than 2000 plates is not allowed.');
+        }
         $pdf = PDF::loadView('customer.plates_pdf', compact('plates'));
         return $pdf->download('license_plates.pdf');
     }
+   private function mergePdfs(array $files, string $outputFile)
+    {
+        $pdf = new Fpdi();
 
+        foreach ($files as $file) {
+            $pageCount = $pdf->setSourceFile($file);
+
+            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                $tplId = $pdf->importPage($pageNo);
+                $size = $pdf->getTemplateSize($tplId);
+
+                $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                $pdf->useTemplate($tplId);
+            }
+        }
+
+        $pdf->Output('F', $outputFile);
+    }
 
     public function update(Request $request, $id)
     {
@@ -316,7 +378,7 @@ class LicenseplateController extends Controller
 
 
         foreach ($platesArray as $plate) {
-          $plateModel=  LicensePlate::updateOrCreate(
+            $plateModel =  LicensePlate::updateOrCreate(
                 ['plate_number' => $plate['plate_number']],
                 [
                     'region' => $plate['province'],
@@ -328,8 +390,7 @@ class LicenseplateController extends Controller
             );
             if ($plateModel->wasRecentlyCreated) {
                 $imported++;
-            } 
-            
+            }
         }
 
         return back()->with('success', "$imported plates imported successfully from PDF.");

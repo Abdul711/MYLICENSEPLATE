@@ -3,41 +3,51 @@
 @section('content')
     <div class="container py-4">
         <h2 class="text-center mb-4">Available Plates</h2>
+
+        <marquee behavior="" direction="">If Record Is Greater Than 1500 No PDF is Available To Export Data Use Csv Instead</marquee>
+        
         <h2 class="text-center mb-4"> {{ $plates->count() }} Plates Found</h2>
         <div class="row mb-4">
             <div class="col-md-12">
                 <form action="{{ url('plates') }}" method="GET" class="d-flex justify-content-end">
                     <div class="row">
                         <div class="col-md-2">
+                                <label for="">Start With</label>
                             <input type="text" name="start_with" class="form-control" placeholder="Start with"
                                 value="{{ request('start_with') }}">
                         </div>
                         <div class="col-md-2">
+                                <label for="">Contain</label>
                             <input type="text" name="contain" class="form-control" placeholder="Contain"
                                 value="{{ request('contain') }}">
                         </div>
                         <div class="col-md-2">
+                                <label for="">End With</label>
                             <input type="text" name="end_with" class="form-control" placeholder="End with"
                                 value="{{ request('end_with') }}">
                         </div>
                         <div class="col-md-2">
+                               <label for="">Character Length</label>
                             <input type="number" name="length" class="form-control" placeholder="Length"
                                 value="{{ request('length') }}">
                         </div>
                         <div class="col-md-2">
+                               <label for="">Max Price</label>
                             <input type="number" name="max_price" class="form-control" placeholder="Max Price"
                                 value="{{ request('max_price') }}">
                         </div>
                         <div class="col-md-2">
+
+                            <label for="">Min Price</label>
                             <input type="number" name="min_price" class="form-control" placeholder="Min Price"
                                 value="{{ request('min_price') }}">
                         </div>
 
                         <div class="col-md-2">
+                            <label for="province" class="form-label">Province</label>
                             <select name="region" id="province" class="form-select mt-1">
-                                <option value="" disabled {{ request('region') ? '' : 'selected' }}>Select Province
-                                </option>
-
+                              
+                                <option value="">Select Province</option>
                                 @foreach ($regions as $region)
                                     <option value="{{ $region->region }}"
                                         {{ request('region') == $region->region ? 'selected' : '' }}>
@@ -46,18 +56,18 @@
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <select name="city" id="city"  class="form-select mt-1">
-                                <option value="" disabled {{ request('city') ? '' : 'selected' }}>Select City
-                                </option>
-
+                            <label for="province" class="form-label">City</label>
+                            <select name="city" id="city" class="form-select mt-1">
+                             
                                 @foreach ($cities as $city)
                                     <option value="{{ $city->city }}"
-                                        {{ request('city') == $city->city? 'selected' : '' }}>
+                                        {{ request('city') == $city->city ? 'selected' : '' }}>
                                         {{ $city->city }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-1">
+                               <label class="form-label"></label>
                             <button type="submit" class="btn btn-primary w-100 mt-1">Search</button>
 
                         </div>
@@ -115,8 +125,21 @@
             <div class="row g-3">
                 <div class="mb-3">
                     <a href="{{ route('plates.export') }}" class="btn btn-outline-secondary">Export Plates CSV</a>
+                    @if (count($plates) < 2200)
+                        @php
+                            $nonEmptyQuery = collect(request()->query())
+                                ->filter(fn($value) => trim($value) !== '')
+                                ->toArray();
+                        @endphp
 
-                    <a href="{{ route('plates.export.pdf') }}" class="btn btn-outline-secondary">Export Plates PDF</a>
+                        @if (count($nonEmptyQuery) > 0)
+                            {{-- Show export button with filtered query parameters --}}
+                            <a href="{{ url('plates/export/pdf?' . http_build_query($nonEmptyQuery)) }}"
+                                class="btn btn-outline-secondary">
+                                Export Plates PDF
+                            </a>
+                        @endif
+                    @endif
                 </div>
 
 
@@ -124,7 +147,7 @@
                 @foreach ($plates as $plate)
                     @if ($plate->region == 'Punjab')
                         <div class="col-md-3">
-                            
+
                             <div
                                 class="d-flex flex-column justify-content-between border border-primary bg-primary rounded p-3 shadow">
                                 <div class="text-center">
@@ -152,7 +175,7 @@
                         </div>
                     @elseif ($plate->region == 'Sindh')
                         <div class="col-md-3">
-                          
+
                             <div
                                 class="d-flex flex-column justify-content-between border border-primary bg-warning rounded p-3 shadow">
                                 <div class="text-center">
@@ -179,8 +202,8 @@
                         </div>
                     @endif
                     @if ($plate->region == 'Balochistan')
-                        <div class="col-md-3" >
-                              
+                        <div class="col-md-3">
+
                             <div
                                 class="d-flex flex-column justify-content-between border border-primary bg-danger rounded p-3 shadow">
                                 <div class="text-center">
@@ -207,7 +230,7 @@
                         </div>
                     @elseif ($plate->region == 'KPK')
                         <div class="col-md-3">
-                            
+
                             <div
                                 class="d-flex flex-column justify-content-between border border-primary bg-info rounded p-3 shadow">
                                 <div class="text-center">
@@ -237,42 +260,43 @@
             </div>
         </div>
         <script>
-    const cityOptions = {
-        'Punjab': ['Lahore', 'Faisalabad', 'Multan', 'Rawalpindi', 'Gujranwala','Sialkot', 'Bahawalpur', 'Sargodha'],
-        'Balochistan': ['Quetta', 'Khuzdar', 'Turbat','Zhob','Gwadar','Loralai','Sibi'],
-        'Sindh': ['Karachi', 'Hyderabad', 'Sukkur','Mirpurkhas','Larkana','Nawabshah','Thatta'],
-        'KPK': ['Peshawar', 'Abbottabad', 'Mardan','Swat','Bannu','Dera Ismail Khan','Charsadda'],
-        'Islamabad': ['Islamabad']
-    };
+            const cityOptions = {
+                'Punjab': ['Lahore', 'Faisalabad', 'Multan', 'Rawalpindi', 'Gujranwala', 'Sialkot', 'Bahawalpur',
+                    'Sargodha'],
+                'Balochistan': ['Quetta', 'Khuzdar', 'Turbat', 'Zhob', 'Gwadar', 'Loralai', 'Sibi'],
+                'Sindh': ['Karachi', 'Hyderabad', 'Sukkur', 'Mirpurkhas', 'Larkana', 'Nawabshah', 'Thatta'],
+                'KPK': ['Peshawar', 'Abbottabad', 'Mardan', 'Swat', 'Bannu', 'Dera Ismail Khan', 'Charsadda'],
+                'Islamabad': ['Islamabad']
+            };
 
-    const provinceSelect = document.getElementById('province');
-    const citySelect = document.getElementById('city');
+            const provinceSelect = document.getElementById('province');
+            const citySelect = document.getElementById('city');
 
-    const oldProvince = "{{ old('region') }}";
-    const oldCity = "{{ old('city') }}";
+            const oldProvince = "{{ old('region') }}";
+            const oldCity = "{{ old('city') }}";
 
-    function populateCities(province, selectedCity = null) {
-        const cities = cityOptions[province] || [];
-        citySelect.innerHTML = '<option value="">Select City</option>';
-        cities.forEach(function(city) {
-            const option = document.createElement('option');
-            option.value = city;
-            option.text = city;
-            if (city === selectedCity) {
-                option.selected = true;
+            function populateCities(province, selectedCity = null) {
+                const cities = cityOptions[province] || [];
+                citySelect.innerHTML = '<option value="">Select City</option>';
+                cities.forEach(function(city) {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.text = city;
+                    if (city === selectedCity) {
+                        option.selected = true;
+                    }
+                    citySelect.appendChild(option);
+                });
             }
-            citySelect.appendChild(option);
-        });
-    }
 
-    // Auto-select old values on load
-    if (oldProvince) {
-        populateCities(oldProvince, oldCity);
-    }
+            // Auto-select old values on load
+            if (oldProvince) {
+                populateCities(oldProvince, oldCity);
+            }
 
-    // Change handler
-    provinceSelect.addEventListener('change', function () {
-        populateCities(this.value);
-    });
-</script>
+            // Change handler
+            provinceSelect.addEventListener('change', function() {
+                populateCities(this.value);
+            });
+        </script>
     @endsection
