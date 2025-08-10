@@ -132,7 +132,7 @@ The developer is not responsible for misuse.**
 ## 📬 Contact
 
 * **Developer:** Syed Abdul Samad Ahasn
-* **Email:** mailto:abdulsamadahsan@gmail.com
+* **Email:** abdulsamadahsan@gmail.com
 * **LinkedIn:** https://www.linkedin.com/in/syed-abdul-samad-laravel-dev-562123309/
 * **Contact Number:**03421462082
 
@@ -140,9 +140,6 @@ The developer is not responsible for misuse.**
 
 ---
 
-If you want, I can **add GitHub badges, images, and screenshots** so this README looks even more eye-catching for recruiters.  
-Do you want me to make that version?
-```
 
 
 
