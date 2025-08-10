@@ -136,11 +136,3 @@ The developer is not responsible for misuse.**
 * **LinkedIn:** https://www.linkedin.com/in/syed-abdul-samad-laravel-dev-562123309/
 * **Contact Number:**03421462082
 
-```
-
----
-
-
-
-
-
