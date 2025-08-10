@@ -39,7 +39,7 @@
 
                     <div class="col-md-2">
                         <label class="form-label">Price</label>
-                        <input type="text" name="price[]" class="form-control" placeholder="ABC-123">
+                        <input type="text" name="price[]" class="form-control" placeholder="123">
                     </div>
 
                     <div class="col-md-2">
@@ -131,7 +131,7 @@
             </div>
              <div class="col-md-2">
                 <label class="form-label">Price</label>
-                <input type="text" name="price[]" class="form-control" placeholder="ABC-123">
+                <input type="text" name="price[]" class="form-control" placeholder="123">
             </div>
                <div class="col-md-2">
                 <label class="form-label">Status</label>

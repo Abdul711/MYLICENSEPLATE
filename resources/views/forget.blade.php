@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Login - PlateHub</title>
+    <title>Plate Market</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -20,25 +20,28 @@
             <div class="col-md-5">
                 <div class="card shadow-lg border-0">
                     <div class="card-body p-4">
-                        <h3 class="text-center mb-4">Login to Plate Market</h3>
-                        <form method="POST" action="{{ route('login') }}">
+                        <h3 class="text-center mb-4">Forgot Password</h3>
+                        <p class="text-center">Enter your email to receive a password reset link.</p>
+                        <form method="POST" action="{{ route('password.email') }}">
                             @csrf
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
-                                <input type="email" class="form-control" name="email" required autofocus>
+                                <input type="email" class="form-control" name="email" value="{{ old('email') }}"
+                                    autofocus>
+                                @error('email')
+                                    <div class="alert alert-danger mt-2">{{ $message }}</div>
+                                @enderror
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Password</label>
-                                <input type="password" class="form-control" name="password" required>
-                            </div>
+                            @if (session('status'))
+                                <div class="alert alert-success mt-2">
+                                    {{ session('status') }}
+                                </div>
+                            @endif
                             <div class="d-grid mb-3">
-                                <button type="submit" class="btn btn-primary">Login</button>
+                                <button type="submit" class="btn btn-primary">Send Link</button>
                             </div>
                             <div class="text-center">
                                 <a href="{{ url('register') }}">Don't have an account? Register</a>
-                            </div>
-                            <div class="text-center">
-                                <a href="{{ url('forgotpassword') }}">Forget Password ?</a>
                             </div>
                         </form>
                     </div>

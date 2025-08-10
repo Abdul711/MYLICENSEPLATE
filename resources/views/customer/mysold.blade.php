@@ -17,14 +17,13 @@
                             </div>
                         </div>
                         <hr>
-                        <h5>My Plates</h5>
+                        <h5>My Plates Sold</h5>
                         <h6>My Total Plates: {{ $myplates->count() }}</h6>
 
                         <table class="table table-striped table-bordered">
                             <button class="btn btn-outline-danger" id="showSelected">Delete All</button>
                             <button class="btn btn-outline-primary" id="editAll">Edit All</button>
                             <button class="btn btn-outline-primary" id="viewAll">View All</button>
-                            <a href="{{ route('plates.import.form') }}" class="btn btn-outline-primary">Import Plates PDF</a>
                             <thead>
                                 <tr>
                                     <th><input type="checkbox" class="form-check-input" id="selectAllPlates"></th>

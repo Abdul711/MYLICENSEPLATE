@@ -11,4 +11,15 @@ class licenseplate extends Model
 {
     return $this->belongsTo(User::class);
 }
+    public function getregionAttribute($query){
+        return ucfirst($query);
+    }
+    public function getstatusAttribute($query){
+        return ucfirst($query);
+    }
+    public function getcityAttribute($query){
+        return ucfirst($query);
+    }
+  
+
 }

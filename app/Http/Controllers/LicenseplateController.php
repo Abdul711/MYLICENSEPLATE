@@ -7,6 +7,8 @@ use App\Http\Requests\LicensePlateRequest;
 use Illuminate\Http\Request;
 use App\Models\LicensePlate;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Smalot\PdfParser\Parser;
 
 class LicenseplateController extends Controller
 {
@@ -63,8 +65,15 @@ class LicenseplateController extends Controller
 
         // Filter: Contain
 
-        $cities = LicensePlate::select('city')->distinct()->get();
-        $regions = LicensePlate::select('region')->distinct()->get();
+        $cities = LicensePlate::select('city')
+            ->whereNotNull('city')
+            ->distinct()
+            ->get();
+
+        $regions = LicensePlate::select('region')
+            ->whereNotNull('region')
+            ->distinct()
+            ->get();
 
         // Get the filtered plates
         $query->where('status', "Available"); // Ensure only plates of the authenticated user are fetched
@@ -85,16 +94,17 @@ class LicenseplateController extends Controller
         $file = fopen('php://output', 'w');
 
         // Write the header row
-        fputcsv($file, ['Plate Number', 'Province', 'City', 'Price', 'Status', 'Owner']);
+        fputcsv($file, ['Province', 'City', 'Plate Number', 'Price', 'Status', 'Owner']);
 
         // Fetch data from DB
         $plates = LicensePlate::all();
 
         foreach ($plates as $plate) {
             fputcsv($file, [
-                $plate->plate_number,
+
                 $plate->region,
                 $plate->city,
+                $plate->plate_number,
                 $plate->price,
                 $plate->status,
                 $plate->user ? $plate->user->name : 'N/A', // Assuming you have a user relationship
@@ -133,10 +143,10 @@ class LicenseplateController extends Controller
                 // Assuming columns: plate_number, region, city, price, status
 
                 LicensePlate::updateOrCreate(
-                    ['plate_number' => $row[0]],
+                    ['plate_number' => $row[2]],
                     [
-                        'region' => $row[1],
-                        'city' => $row[2],
+                        'region' => $row[0],
+                        'city' => $row[1],
                         'price' => $row[3],
                         'status' => $row[4] ?? 'Available',
                         'user_id' => Auth::id(),
@@ -222,6 +232,16 @@ class LicenseplateController extends Controller
             'cities' => LicensePlate::select('city')->distinct()->get(),
         ]);
     }
+
+
+    public function exportPdf()
+    {
+        $plates = LicensePlate::all();
+        $pdf = PDF::loadView('customer.plates_pdf', compact('plates'));
+        return $pdf->download('license_plates.pdf');
+    }
+
+
     public function update(Request $request, $id)
     {
         $item = LicensePlate::findOrFail($id);
@@ -245,6 +265,79 @@ class LicenseplateController extends Controller
 
         return redirect()->route('plates.show', ['plate' => $item->id])->with('success', 'License Plate updated successfully!');
     }
+
+
+    public function importPDFForm()
+    {
+        return view('customer.import_pdf');
+    }
+    public function importPDF(Request $request)
+    {
+
+
+        $request->validate([
+            'pdf_file' => 'required|mimes:pdf|max:5120',
+        ]);
+
+        // Parse PDF
+        $parser = new Parser();
+        $pdf    = $parser->parseFile($request->file('pdf_file')->getPathName());
+        $text   = $pdf->getText();
+
+        // Split into lines & clean
+        $lines = array_filter(array_map('trim', explode("\n", $text)));
+
+        $platesArray = [];
+        $imported = 0;
+        foreach ($lines as $line) {
+            // Skip any header or unrelated line
+            if (stripos($line, 'Province') !== false && stripos($line, 'Plate') !== false) {
+                continue;
+            }
+
+            /**
+             * Flexible pattern:
+             * 1 → Province: first word
+             * 2 → City: first word after province (handles multi-word cities but takes first for DB)
+             * 3 → Plate number: ABC-123
+             * 4 → Price: numeric
+             * 5 → Status: Available or Sold
+             */
+            if (preg_match('/^([A-Za-z]+)\s+([A-Za-z]+)(?:\s+[A-Za-z]+)*\s+([A-Z]{3}-\d{3})\s+(\d+)\s+(Available|Sold)$/i', $line, $matches)) {
+                $platesArray[] = [
+                    'province'     => $matches[1],
+                    'city'         => $matches[2],
+                    'plate_number' => $matches[3],
+                    'price'        => (int)$matches[4],
+                    'status'       => ucfirst(strtolower($matches[5])),
+                ];
+            }
+        }
+
+
+        foreach ($platesArray as $plate) {
+          $plateModel=  LicensePlate::updateOrCreate(
+                ['plate_number' => $plate['plate_number']],
+                [
+                    'region' => $plate['province'],
+                    'city'     => $plate['city'],
+                    'price'    => $plate['price'],
+                    'status'   => $plate['status'],
+                    'user_id'  => Auth::id() // Associate with the authenticated user
+                ]
+            );
+            if ($plateModel->wasRecentlyCreated) {
+                $imported++;
+            } 
+            
+        }
+
+        return back()->with('success', "$imported plates imported successfully from PDF.");
+    }
+
+    // return back()->with('success', 'Plates imported successfully from PDF.');
+
+
     public function ajaxProcess(Request $request)
     {
 
@@ -289,9 +382,9 @@ class LicenseplateController extends Controller
     public function summary(Request $request)
     {
         // Get all 'plates' query params as an array
-     // This will be an array [56, 58, 60]
- $plateIds = $request->input('plates'); 
- $ids= explode(',', $plateIds); // If you want to split by comma
+        // This will be an array [56, 58, 60]
+        $plateIds = $request->input('plates');
+        $ids = explode(',', $plateIds); // If you want to split by comma
         // If you want to get all matching plates from DB:
         $plates = LicensePlate::whereIn('id', $ids)->get();
 
@@ -301,14 +394,14 @@ class LicenseplateController extends Controller
     public function viewAll(Request $request)
     {
         // Get all plates for the authenticated user
-         $plateIds = $request->input('plates'); 
- $ids= explode(',', $plateIds);
-        $plates = LicensePlate::whereIn('id',$ids)->get();
-        
+        $plateIds = $request->input('plates');
+        $ids = explode(',', $plateIds);
+        $plates = LicensePlate::whereIn('id', $ids)->get();
+
         // Pass to view
         return view('customer.view_all', compact('plates'));
     }
-     public function updateMultiple(Request $request)
+    public function updateMultiple(Request $request)
     {
         $validated = $request->validate([
             'id.*' => 'required|exists:licenseplates,id',

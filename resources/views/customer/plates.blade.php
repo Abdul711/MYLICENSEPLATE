@@ -116,6 +116,7 @@
                 <div class="mb-3">
                     <a href="{{ route('plates.export') }}" class="btn btn-outline-secondary">Export Plates CSV</a>
 
+                    <a href="{{ route('plates.export.pdf') }}" class="btn btn-outline-secondary">Export Plates PDF</a>
                 </div>
 
 
@@ -206,6 +207,7 @@
                         </div>
                     @elseif ($plate->region == 'KPK')
                         <div class="col-md-3">
+                            
                             <div
                                 class="d-flex flex-column justify-content-between border border-primary bg-info rounded p-3 shadow">
                                 <div class="text-center">

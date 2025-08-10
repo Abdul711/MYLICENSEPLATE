@@ -21,10 +21,7 @@
         @csrf
         @method('PUT')
 
-        {{-- Province --}}
-      
-
-        {{-- City --}}
+    
 
 
         {{-- Plate Number --}}

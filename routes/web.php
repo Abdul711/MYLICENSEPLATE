@@ -9,8 +9,8 @@ use App\Models\LicensePlate;
 Route::redirect('/', '/plates');
 
 
-Route::get("register",[AuthController::class,"index"])->name("register");
-Route::post("register",[AuthController::class,"store"]);
+Route::get("register",[AuthController::class,"index"]);
+Route::post("register",[AuthController::class,"store"])->name("register");
 Route::get("login", function () {
     return view('login');
 });
@@ -18,7 +18,9 @@ Route::get("profile", function () {
     Auth::check() ? Auth::user() : abort(403, 'Unauthorized action.');
 
 
-$myplates = LicensePlate::where('user_id', Auth::id())->get();
+$myplates = LicensePlate::where('user_id', Auth::id())
+->where('status','!=','Sold')
+->get();
 
 
 
@@ -26,6 +28,20 @@ $myplates = LicensePlate::where('user_id', Auth::id())->get();
 
     return view('customer.profile', compact('myplates'));
 })->name("profile");
+Route::get("platesold", function () {
+    Auth::check() ? Auth::user() : abort(403, 'Unauthorized action.');
+
+
+$myplates = LicensePlate::where('user_id', Auth::id())
+->where('status', 'Sold')
+->get();
+
+
+
+
+
+    return view('customer.mysold', compact('myplates'));
+});
 Route::post("login",[AuthController::class,'login'])->name("login");
 Route::get('/plates/add', function () {
     return view('customer.add_plate');
@@ -43,10 +59,14 @@ Route::get('plates', [App\Http\Controllers\LicenseplateController::class, 'index
 Route::get('plates/export', [App\Http\Controllers\LicenseplateController::class, 'export'])->name('plates.export');
 Route::get('plates/import', [App\Http\Controllers\LicenseplateController::class, 'import'])->name('plates.import');
 Route::post('plates/import', [App\Http\Controllers\LicenseplateController::class, 'importStore'])->name('plates.import.store');
-
+Route::get('/plates/export_pdf', [App\Http\Controllers\LicenseplateController::class, 'exportPdf'])->name('plates.export.pdf');
 Route::get('plates/add/multiple', function () {
     return view('customer.add_multiple_plate');
 })->name('plates.add.multiple');
+
+
+Route::get('/plates/import/form', [App\Http\Controllers\LicenseplateController::class, 'importPDFForm'])->name('plates.import.form');
+Route::post('/plates/import-pdf', [App\Http\Controllers\LicenseplateController::class, 'importPDF'])->name('plates.importPDF');
 Route::post('plates/import', [App\Http\Controllers\LicenseplateController::class, 'importStore'])->name('plates.import.store');
 Route::get('plates/{plate}/show', [App\Http\Controllers\LicenseplateController::class, 'show'])->name('plates.show');
 Route::get('plates/{id}/edit', [App\Http\Controllers\LicenseplateController::class, 'edit'])->name('items.edit');
@@ -55,3 +75,7 @@ Route::get('/plates/summary', [App\Http\Controllers\LicenseplateController::clas
 Route::post('/updateMultiple', [App\Http\Controllers\LicenseplateController::class, 'updateMultiple']);
 Route::get('plates/{id}/delete', [App\Http\Controllers\LicenseplateController::class, 'delete']);
 Route::get('/plates/views', [App\Http\Controllers\LicenseplateController::class, 'viewAll'])->name('plates.summary');
+Route::view('forgotpassword', 'forget')->name('forgotpassword');
+Route::post('forget', [App\Http\Controllers\ForgetPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('password/reset/{token}', [App\Http\Controllers\ForgetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('reset', [App\Http\Controllers\ForgetPasswordController::class, 'reset'])->name('password.update');
