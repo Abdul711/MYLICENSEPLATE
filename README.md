@@ -16,7 +16,7 @@ The License Plate Management System allows users to store, edit, search, and man
 ### 📥 PDF Data Import
 - Supports **two PDF formats**:
 
-  - **Type 2:** Province, City, Plate Number, Price, Status.
+  - *** Province, City, Plate Number, Price, Status.
 - Automatically detects PDF format and parses accordingly.
 - Skips headers and non-data lines.
 - Handles **multi-word city names**.
