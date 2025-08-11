@@ -31,7 +31,7 @@
                        <li class="nav-item"><a class="nav-link" href="{{ url('plates') }}"> Plates</a></li>
                     @auth
                      
-                        <li class="nav-item"><a class="nav-link" href="{{ url('platesold') }}">My Sold Plates</a></li>
+
                         <li class="nav-item"><a class="nav-link" href="{{ url('/profile') }}">Profile</a></li>
                         <li class="nav-item">
                             <form action="{{ url('logout') }}" method="POST" class="d-inline">

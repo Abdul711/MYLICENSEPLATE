@@ -11,6 +11,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Smalot\PdfParser\Parser;
 use setasign\Fpdi\Fpdi;
 use Illuminate\Support\Facades\Storage;
+
 class LicenseplateController extends Controller
 {
 
@@ -82,7 +83,7 @@ class LicenseplateController extends Controller
         $plates = $query->get();
         return view('customer.plates', compact('plates', 'cities', 'regions'));
     }
-    public function export()
+    public function export(Request $request)
     {
         $filename = "license_plates_" . date('Y-m-d_H-i-s') . ".csv";
 
@@ -98,7 +99,46 @@ class LicenseplateController extends Controller
         fputcsv($file, ['Province', 'City', 'Plate Number', 'Price', 'Status', 'Owner']);
 
         // Fetch data from DB
-        $plates = LicensePlate::all();
+
+        $query = LicensePlate::query();
+        if ($request->filled('city')) {
+            $query->where('city', '=', $request->city);
+        }
+
+        if ($request->filled('start_with')) {
+            $query->where('plate_number', 'like', $request->start_with . '%');
+        }
+        if ($request->filled('region')) {
+            $query->where('region', '=', $request->region);
+        }
+
+
+        if ($request->filled('contain')) {
+            $query->where('plate_number', 'like', '%' . $request->contain . '%');
+        }
+
+        if ($request->filled('end_with')) {
+            $query->where('plate_number', 'like', '%' . $request->end_with);
+        }
+
+        if ($request->filled('length')) {
+            $length = (int) $request->length;
+            $query->whereRaw("LENGTH(REPLACE(REPLACE(plate_number, ' ', ''), '-', '')) = ?", [$length]);
+        }
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+
+        // Filter by max price
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+
+        $plates = $query->where("status", "Available")->get();
+
+
+
 
         foreach ($plates as $plate) {
             fputcsv($file, [
@@ -237,10 +277,10 @@ class LicenseplateController extends Controller
 
     public function exportPdf(Request $request)
     {
-         // 5 minutes, adjust if needed  $query = LicensePlate::query();
+        // 5 minutes, adjust if needed  $query = LicensePlate::query();
 
         // Filter: Start with
-          $query = LicensePlate::query();
+        $query = LicensePlate::query();
         if ($request->filled('city')) {
             $query->where('city', '=', $request->city);
         }
@@ -275,17 +315,59 @@ class LicenseplateController extends Controller
         }
 
 
-     $plates = $query->limit(1500)->get();
-  
-      
-        if(count($plates) > 1500){
-           $this->export();
-              return redirect()->back()->with('success', 'Plates exported to CSV. Downloading PDF for more than 2000 plates is not allowed.');
+        $plates = $query->where("status", "Available")->limit(1500)->get();
+
+
+        if (count($plates) > 1500) {
+
+            return redirect()->back()->with('success', 'Plates exported to CSV. Downloading PDF for more than 2000 plates is not allowed.');
         }
         $pdf = PDF::loadView('customer.plates_pdf', compact('plates'));
         return $pdf->download('license_plates.pdf');
     }
-   private function mergePdfs(array $files, string $outputFile)
+    public function myPdf()
+    {
+        // $myplates = LicensePlate::where('user_id', Auth::id())
+
+        //     ->limit(100)
+        //     ->get();
+
+        $plates = LicensePlate::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')->limit(100)->get();
+
+        $pdf = PDF::loadView('customer.my_plate_data_pdf', compact('plates'));
+        return $pdf->download('my_license_plates.pdf');
+
+    }
+    public function myCsv()
+    {
+        $plates = LicensePlate::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')->limit(100)->get();
+            
+        $filename = "my_license_plates_" . date('Y-m-d_H-i-s') . ".csv";
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        
+        $file = fopen('php://output', 'w');
+        fputcsv($file, ['Province', 'City', 'Plate Number', 'Price', 'Status']);
+
+        foreach ($plates as $plate) {
+            fputcsv($file, [
+                $plate->region,
+                $plate->city,
+                $plate->plate_number,
+                $plate->price,
+                $plate->status
+               // Assuming you have a user relationship
+            ]);
+        }
+        
+        fclose($file);
+        exit;
+    }       
+    private function mergePdfs(array $files, string $outputFile)
     {
         $pdf = new Fpdi();
 
@@ -415,7 +497,9 @@ class LicenseplateController extends Controller
         }
 
         // Example: Mark all selected plates as "Sold"
-        LicensePlate::whereIn('id', $plates)->delete();
+        LicensePlate::whereIn('id', $plates)
+            ->where('user_id', Auth::id()) // Ensure only the authenticated user's plates are processed
+            ->delete();
 
         return response()->json([
             'success' => true,
@@ -447,7 +531,10 @@ class LicenseplateController extends Controller
         $plateIds = $request->input('plates');
         $ids = explode(',', $plateIds); // If you want to split by comma
         // If you want to get all matching plates from DB:
-        $plates = LicensePlate::whereIn('id', $ids)->get();
+        $plates = LicensePlate::whereIn('id', $ids)
+            ->where('user_id', Auth::id())
+            ->where('status', '!=', "Sold") // Ensure only the authenticated user's plates are fetched
+            ->get();
 
         // Pass to view or return JSON
         return view('customer.edit_multiple', compact('plates'));

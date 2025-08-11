@@ -124,14 +124,15 @@
 
             <div class="row g-3">
                 <div class="mb-3">
-                    <a href="{{ route('plates.export') }}" class="btn btn-outline-secondary">Export Plates CSV</a>
-                    @if (count($plates) < 2200)
                         @php
                             $nonEmptyQuery = collect(request()->query())
                                 ->filter(fn($value) => trim($value) !== '')
                                 ->toArray();
                         @endphp
 
+                    <a href="{{ url('plates/export?'.http_build_query($nonEmptyQuery)) }}" class="btn btn-outline-secondary">Export Plates CSV</a>
+                    @if (count($plates) < 2200)
+                    
                         @if (count($nonEmptyQuery) > 0)
                             {{-- Show export button with filtered query parameters --}}
                             <a href="{{ url('plates/export/pdf?' . http_build_query($nonEmptyQuery)) }}"
