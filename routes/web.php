@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Models\LicensePlate;
+use App\Models\City;
+use App\Models\Region;
 
 Route::redirect('/', '/plates');
 
@@ -73,7 +75,7 @@ Route::get("profile", function () {
 
       $myplates = $query->
         where('user_id', Auth::id())->
-        get();
+        paginate(10);
 
 
 
@@ -99,9 +101,11 @@ $myplates = LicensePlate::where('user_id', Auth::id())
 });
 Route::post("login",[AuthController::class,'login'])->name("login");
 Route::get('/plates/add', function () {
-    return view('customer.add_plate');
+$regions = Region::get();
+    Auth::check() ? Auth::user() : abort(403, 'Unauthorized action.');
+    return view('customer.add_plate', compact('regions'));
 })->name('plates.create');
-
+Route::get('getCities',[App\Http\Controllers\LicenseplateController::class, 'getCities'])->name('plates.getCities') ;
 Route::get('/profile/edit', function () {
     return view('customer.edit_profile');
 })->name('profile.edit');

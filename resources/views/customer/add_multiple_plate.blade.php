@@ -67,10 +67,20 @@
 
         </form>
     </div>
+    @php
+        use App\Models\Region;
+        $provinces = Region::all();
 
-
+        // Prepare province options HTML for JS
+        $provinceOptions = '<option value="">Select Province</option>';
+        foreach ($provinces as $province) {
+            $provinceOptions .= '<option value="' . $province->region_name . '">' . $province->full_form . '</option>';
+        }
+    @endphp
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
+        const provinceOptions = `{!! $provinceOptions !!}`;
         const provinceCities = {
             Punjab: ["Lahore", "Faisalabad", "Multan", "Rawalpindi", "Gujranwala"],
             Sindh: ["Karachi", "Hyderabad", "Sukkur", "Larkana", "Mirpur Khas"],
@@ -85,14 +95,41 @@
             const citySelect = provinceSelect.closest('.plate-row').querySelector('.city-select');
             citySelect.innerHTML = '<option value="">Select City</option>';
 
-            if (province && provinceCities[province]) {
-                provinceCities[province].forEach(city => {
-                    const option = document.createElement('option');
-                    option.value = city.toLowerCase();
-                    option.textContent = city;
-                    citySelect.appendChild(option);
-                });
-            }
+
+            $.ajax({
+                url: "{{ url('getCities') }}",
+                data: {
+                    province: province
+                },
+                type: 'GET',
+                success: function(cities) {
+                    console.log(cities);
+                    cities.cities.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city.city_name;
+                        option.textContent = city.city_name;
+                        citySelect.appendChild(option);
+                    });
+                    // cities.cities.forEach(function(city) {
+                    //     const option = document.createElement('option');
+                    //     option.value = city.city_name;
+                    //     option.text = city.city_name;
+                    //     if (city.city_name === selectedCity) {
+                    //         option.selected = true;
+                    //     }
+                    //     citySelect.appendChild(option);
+                    // });
+                }
+            });
+
+            // if (province && provinceCities[province]) {
+            //     provinceCities[province].forEach(city => {
+            //         const option = document.createElement('option');
+            //         option.value = city.toLowerCase();
+            //         option.textContent = city;
+            //         citySelect.appendChild(option);
+            //     });
+            // }
         }
 
         // Handle province change for all existing & future rows
@@ -111,11 +148,7 @@
             <div class="col-md-3">
                 <label class="form-label">Province</label>
                 <select name="province[]" class="form-select province-select">
-                    <option value="">Select Province</option>
-                    <option value="Punjab">Punjab</option>
-                    <option value="Sindh">Sindh</option>
-                    <option value="Balochistan">Balochistan</option>
-                    <option value="KPK">Khyber Pakhtunkhwa</option>
+                         ${provinceOptions}
              
                 </select>
             </div>

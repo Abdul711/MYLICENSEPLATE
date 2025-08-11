@@ -11,6 +11,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Smalot\PdfParser\Parser;
 use setasign\Fpdi\Fpdi;
 use Illuminate\Support\Facades\Storage;
+use App\Models\City;
+use App\Models\Region;
 
 class LicenseplateController extends Controller
 {
@@ -63,6 +65,10 @@ class LicenseplateController extends Controller
         if ($request->filled('max_price')) {
             $query->where('price', '<=', $request->max_price);
         }
+         if ($request->filled('user')) {
+            $query->where('user_id', '=', $request->user);
+        }
+
 
 
         // Filter: Contain
@@ -77,11 +83,16 @@ class LicenseplateController extends Controller
             ->distinct()
             ->get();
 
+   $user_ids=LicensePlate::select('user_id')
+            ->whereNotNull('user_id')
+            ->distinct()
+            ->pluck('user_id')->toArray();
+     $users=    \App\Models\User::select('id','name')->whereIn("id",$user_ids)->get();
         // Get the filtered plates
         $query->where('status', "Available"); // Ensure only plates of the authenticated user are fetched
 
-        $plates = $query->get();
-        return view('customer.plates', compact('plates', 'cities', 'regions'));
+        $plates = $query->paginate(10)->appends($request->query());
+        return view('customer.plates', compact('plates', 'cities', 'regions','users'));
     }
     public function export(Request $request)
     {
@@ -262,18 +273,39 @@ class LicenseplateController extends Controller
     public function edit($id)
     {
         $item = LicensePlate::findOrFail($id);
-
+               print_r($item->toArray());
         if ($item->user_id != Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
+       $regions=LicensePlate::select('region')->distinct()->get();
+    $cities= LicensePlate::select('city')->distinct()->get();
         return view('customer.edit', [
             'item' => $item,
-
-            'provinces' => LicensePlate::select('region')->distinct()->get(),
-            'cities' => LicensePlate::select('city')->distinct()->get(),
+             "cities"=>   $cities,
+             "provinces"=> $regions
+     
         ]);
     }
+   public function getCities(Request $request){
+        $region = $request->input('province');
+        if (!$region) {
+            return response()->json(['error' => 'Region is required'], 400);
+        }
+       
+        $region_id = Region::where('region_name', $region)->value('id');
+        if (!$region_id) {
+            return response()->json(['status' => 'error']);
+        }
+        // Fetch cities based on the region
+        $cities = City::where('region_id', $region_id)->get();
+        if ($cities->isEmpty()) {
+            return response()->json(['status' => 'error',"message"=>"No Cities Found For This Region "], 404);
+        }
+        
+        return response()->json(['cities' => $cities,"status"=>"success"]);
 
+   }  
+     
 
     public function exportPdf(Request $request)
     {
@@ -389,20 +421,24 @@ class LicenseplateController extends Controller
     public function update(Request $request, $id)
     {
         $item = LicensePlate::findOrFail($id);
-
+           
         if ($item->user_id != Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
+         
 
-        $request->validate([
+       $validated= $request->validate([
             'plate_number' => 'required|string|max:255',
 
             'price' => 'required|numeric|min:0',
             'status' => 'nullable|string|max:50',
+            "city"=>"required",
+            "region"=>"required"
         ]);
         $item->update([
-            'plate_number' => $request->plate_number,
-
+            'plate_number' =>  $validated['plate_number'],
+             "city"=>$validated['city'],
+             "region"=>$validated["region"],
             'price' => $request->price,
             'status' => $request->status,
         ]);

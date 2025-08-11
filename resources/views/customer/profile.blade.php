@@ -112,7 +112,14 @@
                                         request()->has('status') ||
                                         request()->has('min_price'))
                                     <p class="mb-0">
-                                        @if (!empty(request()->all()))
+                                        @if (request('city') != '' ||
+                                                request('region') != '' ||
+                                                request('min_price') != '' ||
+                                                request('max_price') != '' ||
+                                                request('length') != '' ||
+                                                request('end_with') != '' ||
+                                                request('contain') != '' ||
+                                                request('end_with'))
                                             Current search:
                                         @endif
                                         @if (request()->has('start_with') && request('start_with') != '')
@@ -149,7 +156,14 @@
                                         @if (request()->has('status') && request('status') != '')
                                             <span class="btn-simple btn py-0 px-2">#status : {{ request('status') }}</span>
                                         @endif
-                                        @if (!empty(request()->all()))
+                                        @if (request('city') != '' ||
+                                                request('region') != '' ||
+                                                request('min_price') != '' ||
+                                                request('max_price') != '' ||
+                                                request('length') != '' ||
+                                                request('end_with') != '' ||
+                                                request('contain') != '' ||
+                                                request('end_with') != '')
                                             <a class="btn-danger btn py-0 px-2" href="{{ url('profile') }}"><i
                                                     class="fa fa-trash" aria-hidden="true"></i>Cancel</a>
                                         @endif
@@ -159,21 +173,19 @@
                         </div>
 
                         <table class="table table-striped table-bordered">
-                            <button class="btn btn-outline-danger" id="showSelected">Delete All</button>
-                            <button class="btn btn-outline-primary" id="editAll">Edit All</button>
-                            <button class="btn btn-outline-primary" id="viewAll">View All</button>
-                            <a href="{{ route('plates.import.form') }}" class="btn btn-outline-primary">Import Plates
+                            <button class="m-1 btn btn-outline-danger" id="showSelected">Delete All</button>
+                            <button class="m-1 btn btn-outline-primary" id="editAll">Edit All</button>
+                            <button class="m-1 btn btn-outline-primary" id="viewAll">View All</button>
+                            <a href="{{ route('plates.import.form') }}" class="m-1 btn btn-outline-primary">Import Plates
                                 PDF</a>
-                            <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary">Edit Profile</a>
-                            <a href="{{ route('plates.import') }}" class="btn btn-outline-primary">Import Plates CSV</a>
-                            <a href="{{ url('/plates/add/multiple') }}" class="btn btn-success">Add Multiple Plates</a>
-                            <a href="{{ url('/plates/add') }}" class="btn btn-success">Add New Plate</a>
+                            <a href="{{ route('profile.edit') }}" class="m-1 btn btn-outline-primary">Edit Profile</a>
+                            <a href="{{ route('plates.import') }}" class="m-1 btn btn-outline-primary">Import Plates CSV</a>
+                            <a href="{{ url('/plates/add/multiple') }}" class="m-1 btn btn-success">Add Multiple Plates</a>
+                            <a href="{{ url('/plates/add') }}" class="btn btn-success m-1">Add New Plate</a>
 
-                            <a href="{{ url('/plates/mypdf') }}" class="btn btn-success">Export Latest 100 Plate PDF</a>
-                            <a href="{{ url('/plates/mycsv') }}" class="btn btn-success">Export Latest 100 Plate CSV</a>
-                            <div class="form-check form-switch float-end">
-                            </div>
-
+                            <a href="{{ url('/plates/mypdf') }}" class="btn btn-success m-1">Export Latest 100 Plate PDF</a>
+                            <a href="{{ url('/plates/mycsv') }}" class="btn btn-success m-1">Export Latest 100 Plate CSV</a>
+                           
 
 
 
@@ -219,10 +231,12 @@
                                         </td>
                                     </tr>
                                 @endforeach
+                             
                             </tbody>
                         </table>
-                        <div class="mt-4 text-end">
 
+                        <div class="mt-4 text-end">
+   {{$myplates->links()}}
                         </div>
                     </div>
                 </div>

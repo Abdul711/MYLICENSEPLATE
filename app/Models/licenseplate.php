@@ -18,8 +18,13 @@ class licenseplate extends Model
         return ucfirst($query);
     }
     public function getcityAttribute($query){
-        return ucfirst($query);
+        return ucwords($query);
     }
+    public function city()
+{
+    // belongsTo(RelatedModel, foreignKeyOnThisModel, ownerKeyOnRelatedModel)
+      return $this->belongsTo(City::class, 'city', 'city_name');
+}
   
 
 }

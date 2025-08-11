@@ -4,70 +4,97 @@
     <div class="container py-4">
         <h2 class="text-center mb-4">Available Plates</h2>
 
-        <marquee behavior="" direction="">If Record Is Greater Than 1500 No PDF is Available To Export Data Use Csv Instead</marquee>
-        
+        <marquee behavior="" direction="">If Record Is Greater Than 1500 No PDF is Available To Export Data Use Csv
+            Instead</marquee>
+
         <h2 class="text-center mb-4"> {{ $plates->count() }} Plates Found</h2>
         <div class="row mb-4">
             <div class="col-md-12">
                 <form action="{{ url('plates') }}" method="GET" class="d-flex justify-content-end">
                     <div class="row">
-                        <div class="col-md-2">
-                                <label for="">Start With</label>
+                        <div class="col-md-6">
+                            <label for="">Start With</label>
                             <input type="text" name="start_with" class="form-control" placeholder="Start with"
                                 value="{{ request('start_with') }}">
                         </div>
-                        <div class="col-md-2">
-                                <label for="">Contain</label>
+                        <div class="col-md-6">
+                            <label for="">Contain</label>
                             <input type="text" name="contain" class="form-control" placeholder="Contain"
                                 value="{{ request('contain') }}">
                         </div>
-                        <div class="col-md-2">
-                                <label for="">End With</label>
+                        <div class="col-md-6">
+                            <label for="">End With</label>
                             <input type="text" name="end_with" class="form-control" placeholder="End with"
                                 value="{{ request('end_with') }}">
                         </div>
-                        <div class="col-md-2">
-                               <label for="">Character Length</label>
+                        <div class="col-md-6">
+                            <label for="">Character Length</label>
                             <input type="number" name="length" class="form-control" placeholder="Length"
                                 value="{{ request('length') }}">
                         </div>
-                        <div class="col-md-2">
-                               <label for="">Max Price</label>
+                        <div class="col-md-6">
+                            <label for="">Max Price</label>
                             <input type="number" name="max_price" class="form-control" placeholder="Max Price"
                                 value="{{ request('max_price') }}">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-6">
 
                             <label for="">Min Price</label>
                             <input type="number" name="min_price" class="form-control" placeholder="Min Price"
                                 value="{{ request('min_price') }}">
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-6">
                             <label for="province" class="form-label">Province</label>
                             <select name="region" id="province" class="form-select mt-1">
-                              
+
                                 <option value="">Select Province</option>
                                 @foreach ($regions as $region)
                                     <option value="{{ $region->region }}"
                                         {{ request('region') == $region->region ? 'selected' : '' }}>
-                                        {{ $region->region }}</option>
+                                        @if ($region->region == 'KPK')
+                                            Khyber Pakhtunkhwa
+                                        @else
+                                            {{ $region->region }}
+                                        @endif
+
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-6">
                             <label for="province" class="form-label">City</label>
                             <select name="city" id="city" class="form-select mt-1">
-                             
+                                <option value="">Select City</option>
                                 @foreach ($cities as $city)
-                                    <option value="{{ $city->city }}"
-                                        {{ request('city') == $city->city ? 'selected' : '' }}>
-                                        {{ $city->city }}</option>
+                                    @if ($city->city != '')
+                                        <option value="{{ $city->city }}"
+                                            {{ request('city') == $city->city ? 'selected' : '' }}>
+                                            {{ $city->city }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-1">
-                               <label class="form-label"></label>
+                        <div class="col-md-6">
+                            <label for="province" class="form-label">User</label>
+                            <select name="user" class="form-select mt-1">
+                                <option value="">Select User</option>
+                                @foreach ($users as $user)
+                                    @if ($user->name != '')
+                                        <option value="{{ $user->id }}"
+                                            {{ request('user') == $user->id ? 'selected' : '' }}>
+                                            @if (auth()->check() && auth()->id() == $user->id)
+                                                Me
+                                            @else
+                                                {{ $user->name }}
+                                            @endif
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label"></label>
                             <button type="submit" class="btn btn-primary w-100 mt-1">Search</button>
 
                         </div>
@@ -82,11 +109,21 @@
                         request()->has('end_with') ||
                         request()->has('length') ||
                         request()->has('max_price') ||
-                        request()->has('min_price'))
+                        request()->has('min_price') ||
+                        request()->has('user'))
                     <p class="mb-0">
-                        @if (!empty(request()->all()))
+                        @if (request('city') != '' ||
+                                request('region') != '' ||
+                                request('min_price') != '' ||
+                                request('max_price') != '' ||
+                                request('length') != '' ||
+                                request('end_with') != '' ||
+                                request('contain') != '' ||
+                                request('start_with') != '' ||
+                                request()->has('user') != '')
                             Current search:
                         @endif
+
                         @if (request()->has('start_with') && request('start_with') != '')
                             <span class="btn-simple btn py-0 px-2">#start_with : {{ request('start_with') }}</span>
                         @endif
@@ -97,6 +134,7 @@
                             <span class="btn-simple btn py-0 px-2">#end_with : {{ request('end_with') }}</span>
                         @endif
                         @if (request()->has('length') && request('length') != '')
+                            Current search:
                             <span class="btn-simple btn py-0 px-2">#length : {{ request('length') }}</span>
                         @endif
                         @if (request()->has('max_price') && request('max_price') != '')
@@ -106,13 +144,39 @@
                             <span class="btn-simple btn py-0 px-2">#min_price : {{ request('min_price') }}</span>
                         @endif
                         @if (request()->has('region') && request('region') != '')
-                            <span class="btn-simple btn py-0 px-2">#province : {{ request('region') }}</span>
+                            @if (request('region') == 'KPK')
+                                <span class="btn-simple btn py-0 px-2">#province : Khyber Pakhtunkhwa</span>
+                            @else
+                                <span class="btn-simple btn py-0 px-2">#province : {{ request('region') }}</span>
+                            @endif
                         @endif
 
                         @if (request()->has('city') && request('city') != '')
                             <span class="btn-simple btn py-0 px-2">#city : {{ request('city') }}</span>
                         @endif
-                        @if (!empty(request()->all()))
+                        @if (request()->has('user') && request('user') != '')
+                            @php
+                                $user = \App\Models\User::select('id', 'name')->where('id', request('user'))->first();
+
+                            @endphp
+
+                            @if (auth()->check() && auth()->id() == $user->id)
+                                <span class="btn-simple btn py-0 px-2">#user: Me</span>
+                            @else
+                                <span class="btn-simple btn py-0 px-2">#user: {{ $user->name }}
+                                </span>
+                            @endif
+                        @endif
+                        @if (request('city') != '' ||
+                                request('region') != '' ||
+                                request('min_price') != '' ||
+                                request('max_price') != '' ||
+                                request('length') != '' ||
+                                request('end_with') != '' ||
+                                request('contain') != '' ||
+                                request('end_with') != '' ||
+                                request('start_with') != '' ||
+                                request()->has('user') != '')
                             <a class="btn-danger btn py-0 px-2" href="{{ url('plates') }}"><i class="fa fa-trash"
                                     aria-hidden="true"></i>Cancel</a>
                         @endif
@@ -124,15 +188,15 @@
 
             <div class="row g-3">
                 <div class="mb-3">
-                        @php
-                            $nonEmptyQuery = collect(request()->query())
-                                ->filter(fn($value) => trim($value) !== '')
-                                ->toArray();
-                        @endphp
+                    @php
+                        $nonEmptyQuery = collect(request()->query())
+                            ->filter(fn($value) => trim($value) !== '')
+                            ->toArray();
+                    @endphp
 
-                    <a href="{{ url('plates/export?'.http_build_query($nonEmptyQuery)) }}" class="btn btn-outline-secondary">Export Plates CSV</a>
+                    <a href="{{ url('plates/export?' . http_build_query($nonEmptyQuery)) }}"
+                        class="btn btn-outline-secondary">Export Plates CSV</a>
                     @if (count($plates) < 2200)
-                    
                         @if (count($nonEmptyQuery) > 0)
                             {{-- Show export button with filtered query parameters --}}
                             <a href="{{ url('plates/export/pdf?' . http_build_query($nonEmptyQuery)) }}"
@@ -142,24 +206,104 @@
                         @endif
                     @endif
                 </div>
+                @php
+                    $regions = [
+                        'Punjab' => ['bg' => 'primary', 'logo' => 'punjab.jpeg', 'name_ur' => 'پنجاب'],
+                        'Sindh' => ['bg' => 'warning', 'logo' => 'sindh.png', 'name_ur' => 'سندھ'],
+                        'Balochistan' => ['bg' => 'danger', 'logo' => 'balochistan.jpeg', 'name_ur' => 'بلوچستان'],
+                        'KPK' => ['bg' => 'info', 'logo' => 'KP_logo.png', 'name_ur' => 'خیبر پختونخوا'],
+                    ];
+                @endphp
+
+                @foreach ($plates as $plate)
+                    @php
+                       $city = \App\Models\City::where('city_name', $plate->city)->first();
+                        $city_urdu_name = $city->name_ur;
+                        $regionData = $regions[$plate->region] ?? null;
+                       
+                    @endphp
+
+                    @if ($regionData)
+                        <div class="col-md-3">
+                            <div
+                                class="d-flex flex-column justify-content-between border border-primary bg-{{ $regionData['bg'] }} rounded p-3 shadow">
+                                <img src="{{ asset('glogo/' . $regionData['logo']) }}" width="40" height="40">
+
+                                <div class="text-center">
+                                    <div class="fw-bold" style="font-size: 1rem;">
+                                        @if ($plate->featured == 1)
+                                            {{ $regionData['name_ur'] }}
+                                        @else
+                                            {{ strtoupper($plate->region) }}
+                                        @endif
+                                    </div>
+                                    <div style="font-size: 2rem; letter-spacing: 5px; color: white;">
+                                        {{ $plate->plate_number ?? 'ABC 000' }}
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-center mt-2">
+                                    <div class="text-muted">
+                                        @if ($plate->featured == 1)
+                                            {{ $city_urdu_name }}
+                                        @else
+                                            {{ strtoupper($plate->city) }}
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="fw-bold text-center">Owner: {{ $plate->user->name }}</div>
+                            <div class="fw-bold text-center">Number: {{ $plate->user->mobile }}</div>
+                            <div class="fw-bold text-center">PKR {{ $plate->price }}</div>
+
+                            <a href="{{ url('plates/' . $plate->id . '/show') }}" class="btn btn-primary">View Detail</a>
+
+                            @auth
+                                @if ($plate->user_id != Auth::user()->id)
+                                    <a href="" class="btn btn-danger">Order</a>
+                                @endif
+                            @endauth
+                        </div>
+                    @endif
+                @endforeach
+
+                {{ $plates->links() }}
 
 
                 {{-- Loop through each plate --}}
-                @foreach ($plates as $plate)
+                {{-- @foreach ($plates as $plate)
+                    @php
+
+                        $city = \App\Models\City::where('city_name', $plate->city)->first();
+                        $city_urdu_name = $city->name_ur;
+                    @endphp
                     @if ($plate->region == 'Punjab')
                         <div class="col-md-3">
 
                             <div
                                 class="d-flex flex-column justify-content-between border border-primary bg-primary rounded p-3 shadow">
+                                <img src="{{ asset('glogo/punjab.jpeg') }}" width="40" height="40">
+
+
                                 <div class="text-center">
-                                    <div class="fw-bold" style="font-size: 1rem;">{{ strtoupper($plate->region) }}</div>
+                                    @if ($plate->featured == 1)
+                                        <div class="fw-bold" style="font-size: 1rem;">پنجاب</div>
+                                    @else
+                                        <div class="fw-bold" style="font-size: 1rem;">{{ strtoupper($plate->region) }}
+                                        </div>
+                                    @endif
                                     <div style="font-size: 2rem; letter-spacing: 5px; color: white;">
                                         {{ $plate->plate_number ?? 'ABC 000' }}
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center mt-2 ">
-                                    <div class="text-muted      ">{{ strtoupper($plate->city) }}</div>
 
+                                    @if ($plate->featured == 1)
+                                        <div class="text-muted      ">{{ $city_urdu_name }}</div>
+                                    @else
+                                        <div class="text-muted      ">{{ strtoupper($plate->city) }}</div>
+                                    @endif
                                 </div>
 
                             </div>
@@ -179,14 +323,25 @@
 
                             <div
                                 class="d-flex flex-column justify-content-between border border-primary bg-warning rounded p-3 shadow">
+                                <img src="{{ asset('glogo/sindh.png') }}" width="40" height="40">
                                 <div class="text-center">
-                                    <div class="fw-bold" style="font-size: 1rem;">{{ strtoupper($plate->region) }}</div>
+                                    @if ($plate->featured == 1)
+                                        <div class="fw-bold" style="font-size: 1rem;">سندھ</div>
+                                    @else
+                                        <div class="fw-bold" style="font-size: 1rem;">{{ strtoupper($plate->region) }}
+                                        </div>
+                                    @endif
                                     <div style="font-size: 2rem; letter-spacing: 5px; color: white;">
                                         {{ $plate->plate_number ?? 'ABC 000' }}
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center mt-2 ">
-                                    <div class="text-muted      ">{{ strtoupper($plate->city) }}</div>
+
+                                    @if ($plate->featured == 1)
+                                        <div class="text-muted      ">{{ $city_urdu_name }}</div>
+                                    @else
+                                        <div class="text-muted      ">{{ strtoupper($plate->city) }}</div>
+                                    @endif
 
                                 </div>
 
@@ -207,15 +362,24 @@
 
                             <div
                                 class="d-flex flex-column justify-content-between border border-primary bg-danger rounded p-3 shadow">
+                                <img src="{{ asset('glogo/balochistan.jpeg') }}" width="40" height="40">
                                 <div class="text-center">
-                                    <div class="fw-bold" style="font-size: 1rem;">{{ strtoupper($plate->region) }}</div>
+                                    @if ($plate->featured == 1)
+                                        <div class="fw-bold" style="font-size: 1rem;">بلوچستان</div>
+                                    @else
+                                        <div class="fw-bold" style="font-size: 1rem;">{{ strtoupper($plate->region) }}
+                                        </div>
+                                    @endif
                                     <div style="font-size: 2rem; letter-spacing: 5px; color: white;">
                                         {{ $plate->plate_number ?? 'ABC 000' }}
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center mt-2 ">
-                                    <div class="text-muted      ">{{ strtoupper($plate->city) }}</div>
-
+                                    @if ($plate->featured == 1)
+                                        <div class="text-muted      ">{{ $city_urdu_name }}</div>
+                                    @else
+                                        <div class="text-muted      ">{{ strtoupper($plate->city) }}</div>
+                                    @endif
                                 </div>
 
                             </div>
@@ -234,15 +398,24 @@
 
                             <div
                                 class="d-flex flex-column justify-content-between border border-primary bg-info rounded p-3 shadow">
+                                <img src="{{ asset('glogo/KP_logo.png') }}" width="40" height="40">
                                 <div class="text-center">
-                                    <div class="fw-bold" style="font-size: 1rem;">{{ strtoupper($plate->region) }}</div>
+
+                                    @if ($plate->featured == 1)
+                                        <div class="fw-bold" style="font-size: 1rem;"> خیبر پختونخوا</div>
+                                    @else
+                                        <div class="fw-bold" style="font-size: 1rem;"> Khyber Pakhtunkhwa</div>
+                                    @endif
                                     <div style="font-size: 2rem; letter-spacing: 5px; color: white;">
                                         {{ $plate->plate_number ?? 'ABC 000' }}
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center mt-2 ">
-                                    <div class="text-muted      ">{{ strtoupper($plate->city) }}</div>
-
+                                    @if ($plate->featured == 1)
+                                        <div class="text-muted      ">{{ $city_urdu_name }}</div>
+                                    @else
+                                        <div class="text-muted      ">{{ strtoupper($plate->city) }}</div>
+                                    @endif
                                 </div>
 
                             </div>
@@ -257,13 +430,16 @@
                             @endauth
                         </div>
                     @endif
-                @endforeach
+                @endforeach --}}
+                {{-- {{ $plates->links() }} --}}
             </div>
         </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
             const cityOptions = {
                 'Punjab': ['Lahore', 'Faisalabad', 'Multan', 'Rawalpindi', 'Gujranwala', 'Sialkot', 'Bahawalpur',
-                    'Sargodha'],
+                    'Sargodha'
+                ],
                 'Balochistan': ['Quetta', 'Khuzdar', 'Turbat', 'Zhob', 'Gwadar', 'Loralai', 'Sibi'],
                 'Sindh': ['Karachi', 'Hyderabad', 'Sukkur', 'Mirpurkhas', 'Larkana', 'Nawabshah', 'Thatta'],
                 'KPK': ['Peshawar', 'Abbottabad', 'Mardan', 'Swat', 'Bannu', 'Dera Ismail Khan', 'Charsadda'],
@@ -278,16 +454,41 @@
 
             function populateCities(province, selectedCity = null) {
                 const cities = cityOptions[province] || [];
-                citySelect.innerHTML = '<option value="">Select City</option>';
-                cities.forEach(function(city) {
-                    const option = document.createElement('option');
-                    option.value = city;
-                    option.text = city;
-                    if (city === selectedCity) {
-                        option.selected = true;
+
+                $.ajax({
+                    url: "{{ url('getCities') }}",
+                    data: {
+                        province: province
+                    },
+                    type: 'GET',
+                    success: function(cities) {
+                        console.log(cities);
+
+                        cities.cities.forEach(function(city) {
+                            const option = document.createElement('option');
+                            option.value = city.city_name;
+                            option.text = city.city_name;
+                            if (city.city_name === selectedCity) {
+                                option.selected = true;
+                            }
+                            citySelect.appendChild(option);
+                        });
+
                     }
-                    citySelect.appendChild(option);
                 });
+
+                console.log(province);
+                citySelect.innerHTML = '<option value="">Select City</option>';
+
+                // cities.forEach(function(city) {
+                //     const option = document.createElement('option');
+                //     option.value = city;
+                //     option.text = city;
+                //     if (city === selectedCity) {
+                //         option.selected = true;
+                //     }
+                //     citySelect.appendChild(option);
+                // });
             }
 
             // Auto-select old values on load
