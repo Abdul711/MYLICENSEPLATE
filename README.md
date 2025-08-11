@@ -17,7 +17,7 @@ The License Plate Management System allows users to store, edit, search, and man
 - Supports **two PDF formats**:
 
 
-  - **Type 2:** Province, City, Plate Number, Price, Status.
+  - Province, City, Plate Number, Price, Status.
 
   - *** Province, City, Plate Number, Price, Status.
 
@@ -76,10 +76,10 @@ https://www.ilovepdf.com/word_to_pdf
 ## 🚀 Installation
 ### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/yourusername/license-plate-management.git
+git clone https://github.com/Abdul711/MYLICENSEPLATE.git
 ````
 ### 2️⃣ Install dependencies
-<<<<<<< HEAD
+
 
 ```bash
 composer install
