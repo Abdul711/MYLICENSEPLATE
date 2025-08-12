@@ -124,9 +124,7 @@
                         request()->has('max_price') ||
                         request()->has('min_price') ||
                         request()->has('user') ||
-                         request()->has('featured')
-                        
-                        )
+                        request()->has('featured'))
                     <p class="mb-0">
                         @if (request('city') != '' ||
                                 request('region') != '' ||
@@ -137,9 +135,7 @@
                                 request('contain') != '' ||
                                 request('start_with') != '' ||
                                 request('user') != '' ||
-                                 request('featured') !=""
-                                
-                                )
+                                request('featured') != '')
                             Current search:
                         @endif
 
@@ -175,7 +171,7 @@
                         @endif
 
 
- @if (request()->has('featured') && request('featured') != '')
+                        @if (request()->has('featured') && request('featured') != '')
                             <span class="btn-simple btn py-0 px-2">#featured : {{ request('featured') }}</span>
                         @endif
 
@@ -202,8 +198,7 @@
                                 request('end_with') != '' ||
                                 request('start_with') != '' ||
                                 request('user') != '' ||
-                                 request('featured')!=""
-                                )
+                                request('featured') != '')
                             <a class="btn-danger btn py-0 px-2" href="{{ url('plates') }}"><i class="fa fa-trash"
                                     aria-hidden="true"></i>Cancel</a>
                         @endif
@@ -303,162 +298,40 @@
                     @php
 
                         $city = \App\Models\City::where('city_name', $plate->city)->first();
-                        $city_urdu_name = $city->name_ur;
+                        $city_urdu_name = $city?->name_ur;
+                         $componentName = strtolower($plate->region) . '-plate';
                     @endphp
-                    @if ($plate->region == 'Punjab')
+
+    <div class="col-md-3">
+        <x-dynamic-component 
+            :component="$componentName" 
+            :plate="$plate" 
+            :cityUrduName="$city_urdu_name" 
+        />
+    </div>
+    {{-- php artisan make:component BalochistanPlate --}}
+
+     
+
+                    {{-- @if ($plate->region == 'Punjab')
                         <div class="col-md-3">
-
-                            <div
-                                class="d-flex flex-column justify-content-between border border-primary bg-primary rounded p-3 shadow">
-                                <img src="{{ asset('glogo/punjab.jpeg') }}" width="40" height="40">
-
-
-                                <div class="text-center">
-                                    @if ($plate->featured == 1)
-                                        <div class="fw-bold" style="font-size: 1rem;">پنجاب</div>
-                                    @else
-                                        <div class="fw-bold" style="font-size: 1rem;">{{ strtoupper($plate->region) }}
-                                        </div>
-                                    @endif
-                                    <div style="font-size: 2rem; letter-spacing: 5px; color: white;">
-                                        {{ $plate->plate_number ?? 'ABC 000' }}
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-center mt-2 ">
-
-                                    @if ($plate->featured == 1)
-                                        <div class="text-muted      ">{{ $city_urdu_name }}</div>
-                                    @else
-                                        <div class="text-muted      ">{{ strtoupper($plate->city) }}</div>
-                                    @endif
-                                </div>
-
-                            </div>
-                            <div class="fw-bold text-center">Owner: {{ $plate->user->name }}</div>
-                            <div class="fw-bold text-center">Number: {{ $plate->user->mobile }}</div>
-                            <div class="fw-bold text-center">PKR {{ $plate->price }}</div>
-                            <a href="{{ url('plates/' . $plate->id . '/show') }}" class="btn btn-primary">View Detail</a>
-                            @auth
-                                @if ($plate->user_id != Auth::user()->id)
-                                    <a href="" class="btn btn-danger">Order</a>
-                                @endif
-
-                            @endauth
+                            <x-punjab-plate :plate="$plate" :cityUrduName="$city_urdu_name" />
                         </div>
                     @elseif ($plate->region == 'Sindh')
                         <div class="col-md-3">
-
-                            <div
-                                class="d-flex flex-column justify-content-between border border-primary bg-warning rounded p-3 shadow">
-                                <img src="{{ asset('glogo/sindh.png') }}" width="40" height="40">
-                                <div class="text-center">
-                                    @if ($plate->featured == 1)
-                                        <div class="fw-bold" style="font-size: 1rem;">سندھ</div>
-                                    @else
-                                        <div class="fw-bold" style="font-size: 1rem;">{{ strtoupper($plate->region) }}
-                                        </div>
-                                    @endif
-                                    <div style="font-size: 2rem; letter-spacing: 5px; color: white;">
-                                        {{ $plate->plate_number ?? 'ABC 000' }}
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-center mt-2 ">
-
-                                    @if ($plate->featured == 1)
-                                        <div class="text-muted      ">{{ $city_urdu_name }}</div>
-                                    @else
-                                        <div class="text-muted      ">{{ strtoupper($plate->city) }}</div>
-                                    @endif
-
-                                </div>
-
-                            </div>
-                            <div class="fw-bold text-center">Owner: {{ $plate->user->name }}</div>
-                            <div class="fw-bold text-center">Number: {{ $plate->user->mobile }}</div>
-                            <div class="fw-bold text-center">PKR {{ $plate->price }}</div>
-                            <a href="{{ url('plates/' . $plate->id . '/show') }}" class="btn btn-primary">View Detail</a>
-                            @auth
-                                @if ($plate->user_id != Auth::user()->id)
-                                    <a href="" class="btn btn-danger">Order</a>
-                                @endif
-                            @endauth
+                            <x-sindh-plate :plate="$plate" :cityUrduName="$city_urdu_name" />
                         </div>
-                    @endif
-                    @if ($plate->region == 'Balochistan')
+                    @elseif ($plate->region == 'Balochistan')
                         <div class="col-md-3">
-
-                            <div
-                                class="d-flex flex-column justify-content-between border border-primary bg-danger rounded p-3 shadow">
-                                <img src="{{ asset('glogo/balochistan.jpeg') }}" width="40" height="40">
-                                <div class="text-center">
-                                    @if ($plate->featured == 1)
-                                        <div class="fw-bold" style="font-size: 1rem;">بلوچستان</div>
-                                    @else
-                                        <div class="fw-bold" style="font-size: 1rem;">{{ strtoupper($plate->region) }}
-                                        </div>
-                                    @endif
-                                    <div style="font-size: 2rem; letter-spacing: 5px; color: white;">
-                                        {{ $plate->plate_number ?? 'ABC 000' }}
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-center mt-2 ">
-                                    @if ($plate->featured == 1)
-                                        <div class="text-muted      ">{{ $city_urdu_name }}</div>
-                                    @else
-                                        <div class="text-muted      ">{{ strtoupper($plate->city) }}</div>
-                                    @endif
-                                </div>
-
-                            </div>
-                            <div class="fw-bold text-center">Owner: {{ $plate->user->name }}</div>
-                            <div class="fw-bold text-center">Number: {{ $plate->user->mobile }}</div>
-                            <div class="fw-bold text-center">PKR {{ $plate->price }}</div>
-                            <a href="{{ url('plates/' . $plate->id . '/show') }}" class="btn btn-primary">View Detail</a>
-                            @auth
-                                @if ($plate->user_id != Auth::user()->id)
-                                    <a href="" class="btn btn-danger">Order</a>
-                                @endif
-                            @endauth
+                            <x-balochistan-plate :plate="$plate" :cityUrduName="$city_urdu_name" />
                         </div>
                     @elseif ($plate->region == 'KPK')
                         <div class="col-md-3">
-
-                            <div
-                                class="d-flex flex-column justify-content-between border border-primary bg-info rounded p-3 shadow">
-                                <img src="{{ asset('glogo/KP_logo.png') }}" width="40" height="40">
-                                <div class="text-center">
-
-                                    @if ($plate->featured == 1)
-                                        <div class="fw-bold" style="font-size: 1rem;"> خیبر پختونخوا</div>
-                                    @else
-                                        <div class="fw-bold" style="font-size: 1rem;"> Khyber Pakhtunkhwa</div>
-                                    @endif
-                                    <div style="font-size: 2rem; letter-spacing: 5px; color: white;">
-                                        {{ $plate->plate_number ?? 'ABC 000' }}
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-center mt-2 ">
-                                    @if ($plate->featured == 1)
-                                        <div class="text-muted      ">{{ $city_urdu_name }}</div>
-                                    @else
-                                        <div class="text-muted      ">{{ strtoupper($plate->city) }}</div>
-                                    @endif
-                                </div>
-
-                            </div>
-                            <div class="fw-bold text-center">Owner: {{ $plate->user->name }}</div>
-                            <div class="fw-bold text-center">Number: {{ $plate->user->mobile }}</div>
-                            <div class="fw-bold text-center">PKR {{ $plate->price }}</div>
-                            <a href="{{ url('plates/' . $plate->id . '/show') }}" class="btn btn-primary">View Detail</a>
-                            @auth
-                                @if ($plate->user_id != Auth::user()->id)
-                                    <a href="" class="btn btn-danger">Order</a>
-                                @endif
-                            @endauth
+                            <x-kpk-plate :plate="$plate" :cityUrduName="$city_urdu_name" />
                         </div>
-                    @endif
-                @endforeach 
-               {{  $plates->links() }} 
+                    @endif --}}
+                @endforeach
+                {{ $plates->links() }}
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
