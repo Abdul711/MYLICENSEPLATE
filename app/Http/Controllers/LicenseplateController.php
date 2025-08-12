@@ -13,21 +13,80 @@ use setasign\Fpdi\Fpdi;
 use Illuminate\Support\Facades\Storage;
 use App\Models\City;
 use App\Models\Region;
+use Carbon\Carbon;
+use App\Models\Bank;
+use Illuminate\Support\Facades\Mail;
 
 class LicenseplateController extends Controller
 {
 
-    public function store(LicensePlateRequest $request)
-    {
-        $plateData = $request->validated();
-        $plateData['user_id'] = Auth::id();
 
-        $plate =   LicensePlate::create($plateData);
-        // Here you would typically create the license plate in the database
-        // LicensePlate::create($request->validated());
-        // return redirect()->route('home')->with('success', 'License Plate added successfully!');
-        return view('customer.plate_detail', compact('plate'));
+    public function store(LicensePlateRequest $request)
+{
+    $plateData = $request->validated();
+    $plateData['user_id'] = Auth::id();
+
+    $plate = LicensePlate::create($plateData);
+    $banks = Bank::get()->toArray();
+    $dueDate = now()->addMonths(2)->format('d M Y');
+
+    $provinceLogos = [
+        'Punjab'      => public_path('glogo/punjab.jpeg'),
+        'Sindh'       => public_path('glogo/sindh.png'),
+        'KPK'         => public_path('glogo/KP_logo.png'),
+        'Balochistan' => public_path('glogo/balochistan.jpeg'),
+    ];
+
+    $user = Auth::user();
+    $provinceLogo = $provinceLogos[$plate->region] ?? null;
+
+    // Generate PDF
+    $paymentMthod="Bank";
+    $pdf = Pdf::loadView('pdf.plate_challan', [
+        'plate'        => $plate,
+        'banks'        => $banks,
+        'dueDate'      => $dueDate,
+        'user'         => $user,
+        'provinceLogo' => $provinceLogo,
+        "paymentMethod"=>$paymentMthod,
+        "LatePaymentPenalty"=>500,
+        "invoiceNumber" => 'INV-' . rand(100000, 999999)
+    ])->setPaper('A4', 'portrait');
+
+    // Path to public/challans
+    $challanDir = public_path('challans');
+    if (!file_exists($challanDir)) {
+        mkdir($challanDir, 0777, true);
     }
+
+    $fileName = 'challan_' . $plate->id . '.pdf';
+    $filePath = $challanDir . '/' . $fileName;
+
+    // Save PDF
+    $pdf->save($filePath);
+$downloadUrl = asset('challans/' . $fileName);
+    // Send email with attachment
+    Mail::send('emails.plate_challan', compact('plate', 'dueDate', 'user','provinceLogo'), function ($message) use ($user, $filePath) {
+        $message->to($user->email)
+            ->subject('Your License Plate Challan')
+            ->attach($filePath, [
+                'as'   => 'Plate_Challan.pdf',
+                'mime' => 'application/pdf',
+            ]);
+    });
+
+    // Optional: make download link
+   return redirect(url('plates/' . $plate->id . '/show'));
+    // return redirect()->route('home')->with([
+    //     'success'      => 'License Plate added successfully!',
+    //     'downloadLink' => $downloadUrl
+    // ]);
+}
+
+
+         // return view('customer.plate_detail', compact('plate'));
+
+
     public function index(Request $request)
     {
         $query = LicensePlate::query();
