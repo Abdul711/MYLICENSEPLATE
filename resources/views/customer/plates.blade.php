@@ -93,6 +93,19 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="col-md-6">
+                            <label for="province" class="form-label">Featured</label>
+                            <select name="featured" class="form-select mt-1">
+                                <option value="">Select Feature</option>
+                                @foreach (['Yes', 'No'] as $status)
+                                    <option value="{{ $status }}"
+                                        {{ request('featured') == $status ? 'selected' : '' }}>
+                                        {{ $status }}</option>
+                                @endforeach
+
+
+                            </select>
+                        </div>
                         <div class="col-md-12">
                             <label class="form-label"></label>
                             <button type="submit" class="btn btn-primary w-100 mt-1">Search</button>
@@ -110,7 +123,10 @@
                         request()->has('length') ||
                         request()->has('max_price') ||
                         request()->has('min_price') ||
-                        request()->has('user'))
+                        request()->has('user') ||
+                         request()->has('featured')
+                        
+                        )
                     <p class="mb-0">
                         @if (request('city') != '' ||
                                 request('region') != '' ||
@@ -120,7 +136,10 @@
                                 request('end_with') != '' ||
                                 request('contain') != '' ||
                                 request('start_with') != '' ||
-                                request()->has('user') != '')
+                                request('user') != '' ||
+                                 request('featured') !=""
+                                
+                                )
                             Current search:
                         @endif
 
@@ -154,6 +173,12 @@
                         @if (request()->has('city') && request('city') != '')
                             <span class="btn-simple btn py-0 px-2">#city : {{ request('city') }}</span>
                         @endif
+
+
+ @if (request()->has('featured') && request('featured') != '')
+                            <span class="btn-simple btn py-0 px-2">#featured : {{ request('featured') }}</span>
+                        @endif
+
                         @if (request()->has('user') && request('user') != '')
                             @php
                                 $user = \App\Models\User::select('id', 'name')->where('id', request('user'))->first();
@@ -176,7 +201,9 @@
                                 request('contain') != '' ||
                                 request('end_with') != '' ||
                                 request('start_with') != '' ||
-                                request()->has('user') != '')
+                                request('user') != '' ||
+                                 request('featured')!=""
+                                )
                             <a class="btn-danger btn py-0 px-2" href="{{ url('plates') }}"><i class="fa fa-trash"
                                     aria-hidden="true"></i>Cancel</a>
                         @endif
@@ -215,12 +242,12 @@
                     ];
                 @endphp
 
-                @foreach ($plates as $plate)
+                {{-- @foreach ($plates as $plate)
                     @php
-                       $city = \App\Models\City::where('city_name', $plate->city)->first();
+                        $city = \App\Models\City::where('city_name', $plate->city)->first();
                         $city_urdu_name = $city->name_ur;
                         $regionData = $regions[$plate->region] ?? null;
-                       
+
                     @endphp
 
                     @if ($regionData)
@@ -268,11 +295,11 @@
                     @endif
                 @endforeach
 
-                {{ $plates->links() }}
+                {{ $plates->links() }} --}}
 
 
                 {{-- Loop through each plate --}}
-                {{-- @foreach ($plates as $plate)
+                @foreach ($plates as $plate)
                     @php
 
                         $city = \App\Models\City::where('city_name', $plate->city)->first();
@@ -430,8 +457,8 @@
                             @endauth
                         </div>
                     @endif
-                @endforeach --}}
-                {{-- {{ $plates->links() }} --}}
+                @endforeach 
+               {{  $plates->links() }} 
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

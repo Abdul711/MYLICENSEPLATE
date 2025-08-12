@@ -69,6 +69,18 @@ class LicenseplateController extends Controller
             $query->where('user_id', '=', $request->user);
         }
 
+        if ($request->filled('featured')) {
+            $feature = $request->featured;
+            if ($feature == "Yes") {
+                $featured = 1;
+            } else {
+                $featured = 0;
+            }
+
+            $query->where('featured', '=', $featured);
+        }
+
+        //   @if (request()->has('featured') && request('featured') != '')
 
 
         // Filter: Contain
@@ -145,7 +157,20 @@ class LicenseplateController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
 
+        if ($request->filled('user')) {
+            $query->where('user_id', '=', $request->user);
+        }
 
+        if ($request->filled('featured')) {
+            $feature = $request->featured;
+            if ($feature == "Yes") {
+                $featured = 1;
+            } else {
+                $featured = 0;
+            }
+
+            $query->where('featured', '=', $featured);
+        }
         $plates = $query->where("status", "Available")->get();
 
 
@@ -346,7 +371,20 @@ class LicenseplateController extends Controller
         if ($request->filled('max_price')) {
             $query->where('price', '<=', $request->max_price);
         }
+        if ($request->filled('user')) {
+            $query->where('user_id', '=', $request->user);
+        }
 
+        if ($request->filled('featured')) {
+            $feature = $request->featured;
+            if ($feature == "Yes") {
+                $featured = 1;
+            } else {
+                $featured = 0;
+            }
+
+            $query->where('featured', '=', $featured);
+        }
 
         $plates = $query->where("status", "Available")->limit(1500)->get();
 
