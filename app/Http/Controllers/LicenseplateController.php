@@ -65,7 +65,7 @@ class LicenseplateController extends Controller
         if ($request->filled('max_price')) {
             $query->where('price', '<=', $request->max_price);
         }
-         if ($request->filled('user')) {
+        if ($request->filled('user')) {
             $query->where('user_id', '=', $request->user);
         }
 
@@ -83,16 +83,16 @@ class LicenseplateController extends Controller
             ->distinct()
             ->get();
 
-   $user_ids=LicensePlate::select('user_id')
+        $user_ids = LicensePlate::select('user_id')
             ->whereNotNull('user_id')
             ->distinct()
             ->pluck('user_id')->toArray();
-     $users=    \App\Models\User::select('id','name')->whereIn("id",$user_ids)->get();
+        $users =    \App\Models\User::select('id', 'name')->whereIn("id", $user_ids)->get();
         // Get the filtered plates
         $query->where('status', "Available"); // Ensure only plates of the authenticated user are fetched
 
         $plates = $query->paginate(10)->appends($request->query());
-        return view('customer.plates', compact('plates', 'cities', 'regions','users'));
+        return view('customer.plates', compact('plates', 'cities', 'regions', 'users'));
     }
     public function export(Request $request)
     {
@@ -193,17 +193,18 @@ class LicenseplateController extends Controller
                 }
 
                 // Assuming columns: plate_number, region, city, price, status
-
-                LicensePlate::updateOrCreate(
-                    ['plate_number' => $row[2]],
-                    [
-                        'region' => $row[0],
-                        'city' => $row[1],
-                        'price' => $row[3],
-                        'status' => $row[4] ?? 'Available',
-                        'user_id' => Auth::id(),
-                    ]
-                );
+                if (!empty($row[0]) && !empty($row[1]) && !empty($row[2]) && !empty($row[3])) {
+                    LicensePlate::insertOrIgnore(
+                        ['plate_number' => $row[2]],
+                        [
+                            'region' => $row[0],
+                            'city' => $row[1],
+                            'price' => $row[3],
+                            'status' => $row[4] ?? 'Available',
+                            'user_id' => Auth::id(),
+                        ]
+                    );
+                }
             }
             fclose($handle);
             return redirect(url('plates'))->with('success', 'Plates imported successfully!');
@@ -239,7 +240,7 @@ class LicenseplateController extends Controller
         ]);
 
         foreach ($validated['plate_number'] as $index => $plateNumber) {
-            \App\Models\licenseplate::updateOrCreate(
+            \App\Models\licenseplate::insertOrIgnore(
                 ['plate_number' => $plateNumber], // Unique identifier to check if record exists
                 [
                     'region' => $validated['province'][$index],
@@ -273,25 +274,26 @@ class LicenseplateController extends Controller
     public function edit($id)
     {
         $item = LicensePlate::findOrFail($id);
-               print_r($item->toArray());
+
         if ($item->user_id != Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
-       $regions=LicensePlate::select('region')->distinct()->get();
-    $cities= LicensePlate::select('city')->distinct()->get();
+        $regions = LicensePlate::select('region')->distinct()->get();
+        $cities = LicensePlate::select('city')->distinct()->get();
         return view('customer.edit', [
             'item' => $item,
-             "cities"=>   $cities,
-             "provinces"=> $regions
-     
+            "cities" =>   $cities,
+            "provinces" => $regions
+
         ]);
     }
-   public function getCities(Request $request){
+    public function getCities(Request $request)
+    {
         $region = $request->input('province');
         if (!$region) {
             return response()->json(['error' => 'Region is required'], 400);
         }
-       
+
         $region_id = Region::where('region_name', $region)->value('id');
         if (!$region_id) {
             return response()->json(['status' => 'error']);
@@ -299,13 +301,12 @@ class LicenseplateController extends Controller
         // Fetch cities based on the region
         $cities = City::where('region_id', $region_id)->get();
         if ($cities->isEmpty()) {
-            return response()->json(['status' => 'error',"message"=>"No Cities Found For This Region "], 404);
+            return response()->json(['status' => 'error', "message" => "No Cities Found For This Region "], 404);
         }
-        
-        return response()->json(['cities' => $cities,"status"=>"success"]);
 
-   }  
-     
+        return response()->json(['cities' => $cities, "status" => "success"]);
+    }
+
 
     public function exportPdf(Request $request)
     {
@@ -369,19 +370,18 @@ class LicenseplateController extends Controller
 
         $pdf = PDF::loadView('customer.my_plate_data_pdf', compact('plates'));
         return $pdf->download('my_license_plates.pdf');
-
     }
     public function myCsv()
     {
         $plates = LicensePlate::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')->limit(100)->get();
-            
+
         $filename = "my_license_plates_" . date('Y-m-d_H-i-s') . ".csv";
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
         header('Pragma: no-cache');
         header('Expires: 0');
-        
+
         $file = fopen('php://output', 'w');
         fputcsv($file, ['Province', 'City', 'Plate Number', 'Price', 'Status']);
 
@@ -392,13 +392,13 @@ class LicenseplateController extends Controller
                 $plate->plate_number,
                 $plate->price,
                 $plate->status
-               // Assuming you have a user relationship
+                // Assuming you have a user relationship
             ]);
         }
-        
+
         fclose($file);
         exit;
-    }       
+    }
     private function mergePdfs(array $files, string $outputFile)
     {
         $pdf = new Fpdi();
@@ -421,24 +421,24 @@ class LicenseplateController extends Controller
     public function update(Request $request, $id)
     {
         $item = LicensePlate::findOrFail($id);
-           
+
         if ($item->user_id != Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
-         
 
-       $validated= $request->validate([
+
+        $validated = $request->validate([
             'plate_number' => 'required|string|max:255',
 
             'price' => 'required|numeric|min:0',
             'status' => 'nullable|string|max:50',
-            "city"=>"required",
-            "region"=>"required"
+            "city" => "required",
+            "region" => "required"
         ]);
         $item->update([
             'plate_number' =>  $validated['plate_number'],
-             "city"=>$validated['city'],
-             "region"=>$validated["region"],
+            "city" => $validated['city'],
+            "region" => $validated["region"],
             'price' => $request->price,
             'status' => $request->status,
         ]);
@@ -496,7 +496,7 @@ class LicenseplateController extends Controller
 
 
         foreach ($platesArray as $plate) {
-            $plateModel =  LicensePlate::updateOrCreate(
+            $plateModel =  LicensePlate::insertOrIgnore(
                 ['plate_number' => $plate['plate_number']],
                 [
                     'region' => $plate['province'],
@@ -572,8 +572,10 @@ class LicenseplateController extends Controller
             ->where('status', '!=', "Sold") // Ensure only the authenticated user's plates are fetched
             ->get();
 
+        $regions = Region::select('region_name', 'full_form')->get();
+        $cities = City::select("city_name")->get();
         // Pass to view or return JSON
-        return view('customer.edit_multiple', compact('plates'));
+        return view('customer.edit_multiple', compact('plates', 'regions', 'cities'));
     }
     public function viewAll(Request $request)
     {
@@ -592,23 +594,28 @@ class LicenseplateController extends Controller
             'plate_number.*' => 'required|string|max:255',
             'price.*' => 'required|numeric|min:0',
             'status.*' => 'required|in:Available,Pending,Sold',
+            "province.*" => "required",
+            'city.*' => "required"
         ]);
 
-        $ids = $request->input('id');
-        $plateNumbers = $request->input('plate_number');
-        $prices = $request->input('price');
-        $statuses = $request->input('status');
-
+        $ids =  $validated['id'];
+        $plateNumbers = $validated['plate_number'];
+        $prices = $validated['price'];
+        $statuses = $validated['status'];
+        $regions = $validated['province'];
+        $cities = $validated['city'];
         foreach ($ids as $index => $id) {
             $plate =    LicensePlate::find($id);
             if ($plate) {
                 $plate->plate_number = $plateNumbers[$index];
                 $plate->price = $prices[$index];
                 $plate->status = $statuses[$index];
+                $plate->city = $cities[$index];
+                $plate->region = $regions[$index];
                 $plate->save();
             }
         }
 
-        return redirect(url('plates'))->with('success', 'Plates updated successfully!');
+        return redirect(url('profile'))->with('success', 'Plates updated successfully!');
     }
 }

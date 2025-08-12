@@ -37,9 +37,9 @@ Multi-Format PDF Data Ingestion Engine
 - Export license plate data to CSV.
 - CSV export matches re-import format for seamless data exchange.
 ### 📊 Plate Management
-- Add, edit, and update multiple plates at once.
-- Province–City dependent dropdown (frontend JS only).
-- Bulk status update (mark multiple as Sold).
+- Add, edit, update and delete multiple plates at once.
+- Province–City dependent dropdown .
+- Bulk status update .
 - Sold plates:
   - Show red “Sold” badge.
 - Search and filter functionality.
@@ -120,9 +120,6 @@ php artisan serve
 
 
 
-* **Frontend Dependent Dropdowns:**
-  Required without backend/API calls.
-  **Solution:** Embedded JS-based province–city mapping.
 
 ---
 

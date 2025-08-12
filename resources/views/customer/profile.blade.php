@@ -70,11 +70,13 @@
                                         <div class="col-md-6">
                                             <label for="province" class="form-label">City</label>
                                             <select name="city" id="city" class="form-select mt-1">
-
+                                                   <option value="">Select City</option>
                                                 @foreach ($cities as $city)
-                                                    <option value="{{ $city->city }}"
-                                                        {{ request('city') == $city->city ? 'selected' : '' }}>
-                                                        {{ $city->city }}</option>
+                                                    @if ($city->city != '')
+                                                        <option value="{{ $city->city }}"
+                                                            {{ request('city') == $city->city ? 'selected' : '' }}>
+                                                            {{ $city->city }}</option>
+                                                    @endif
                                                 @endforeach
                                             </select>
                                         </div>
@@ -119,7 +121,9 @@
                                                 request('length') != '' ||
                                                 request('end_with') != '' ||
                                                 request('contain') != '' ||
-                                                request('end_with'))
+                                                request('end_with') || 
+                                                   request('status')!=""
+                                                )
                                             Current search:
                                         @endif
                                         @if (request()->has('start_with') && request('start_with') != '')
@@ -163,7 +167,10 @@
                                                 request('length') != '' ||
                                                 request('end_with') != '' ||
                                                 request('contain') != '' ||
-                                                request('end_with') != '')
+                                                request('end_with') != '' ||
+                                                request('status')!=""
+                                                
+                                                )
                                             <a class="btn-danger btn py-0 px-2" href="{{ url('profile') }}"><i
                                                     class="fa fa-trash" aria-hidden="true"></i>Cancel</a>
                                         @endif
@@ -179,13 +186,17 @@
                             <a href="{{ route('plates.import.form') }}" class="m-1 btn btn-outline-primary">Import Plates
                                 PDF</a>
                             <a href="{{ route('profile.edit') }}" class="m-1 btn btn-outline-primary">Edit Profile</a>
-                            <a href="{{ route('plates.import') }}" class="m-1 btn btn-outline-primary">Import Plates CSV</a>
-                            <a href="{{ url('/plates/add/multiple') }}" class="m-1 btn btn-success">Add Multiple Plates</a>
+                            <a href="{{ route('plates.import') }}" class="m-1 btn btn-outline-primary">Import Plates
+                                CSV</a>
+                            <a href="{{ url('/plates/add/multiple') }}" class="m-1 btn btn-success">Add Multiple
+                                Plates</a>
                             <a href="{{ url('/plates/add') }}" class="btn btn-success m-1">Add New Plate</a>
 
-                            <a href="{{ url('/plates/mypdf') }}" class="btn btn-success m-1">Export Latest 100 Plate PDF</a>
-                            <a href="{{ url('/plates/mycsv') }}" class="btn btn-success m-1">Export Latest 100 Plate CSV</a>
-                           
+                            <a href="{{ url('/plates/mypdf') }}" class="btn btn-success m-1">Export Latest 100 Plate
+                                PDF</a>
+                            <a href="{{ url('/plates/mycsv') }}" class="btn btn-success m-1">Export Latest 100 Plate
+                                CSV</a>
+
 
 
 
@@ -231,12 +242,12 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                             
+
                             </tbody>
                         </table>
 
                         <div class="mt-4 text-end">
-   {{$myplates->links()}}
+                            {{ $myplates->links() }}
                         </div>
                     </div>
                 </div>
