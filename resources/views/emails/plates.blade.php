@@ -13,25 +13,31 @@
 
 
 
-<div
-    style="display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #0d6efd; background-color:{{$provinceColor}}; border-radius: 8px; padding: 15px; box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);">
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" 
+       style="max-width: 400px; margin: auto; border-collapse: collapse;">
+  <tr>
+    <td style="border: 1px solid #0d6efd; background-color: {{ $provinceColor }}; border-radius: 8px; padding: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.15); font-family: Arial, sans-serif; text-align: center;">
+      
+      <!-- Province Logo -->
+      <img src="{{ $message->embed($provinceLogo) }}" alt="Province Logo" width="40" height="40" 
+           style="display: block; margin: 0 auto 10px auto;">
 
-   <img src="{{ $message->embed($provinceLogo) }}"  style="width: 40px; height: 40px;">
-    <div style="text-align: center;">
+      <!-- Region -->
+      <div style="font-weight: bold; font-size: 1rem;  margin-bottom: 5px;">
+        {{ strtoupper($plate->region) }}
+      </div>
 
-        <div style="font-weight: bold; font-size: 1rem;">{{ strtoupper($plate->region) }}</div>
+      <!-- Plate Number -->
+      <div style="font-size: 2rem; letter-spacing: 5px; color: white; font-weight: bold;  padding: 6px 10px; border-radius: 6px; display: inline-block; margin-bottom: 8px;">
+        {{ $plate->plate_number ?? 'ABC 000' }}
+      </div>
 
+      <!-- City -->
+      <div style=" font-size: 0.9rem; margin-top: 6px;">
+        {{ strtoupper($plate->city) }}
+      </div>
 
-        <div style="font-size: 2rem; letter-spacing: 5px; color: white; font-weight: bold;">
-            {{ $plate->plate_number ?? 'ABC 000' }}
-        </div>
-    </div>
-
-    <div style="display: flex; justify-content: center; margin-top: 8px; color: #6c757d;">
-
-        <div>{{ strtoupper($plate->city) }}</div>
-
-    </div>
-</div>
-
+    </td>
+  </tr>
+</table>
 

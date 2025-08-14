@@ -11,9 +11,13 @@ class BalochistanPlate extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public $plate;
+    public $cityUrduName;
+
+    public function __construct($plate, $cityUrduName)
     {
-        //
+        $this->plate = $plate;
+        $this->cityUrduName = $cityUrduName;
     }
 
     /**

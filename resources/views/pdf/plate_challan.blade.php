@@ -37,9 +37,9 @@
     <h3 style="text-align: center;">Government Of {{ Str::ucfirst($plate->region) }} </h3>
     <h3 style="text-align: center;">Due Date: {{ $dueDate }}</h3>
 
-    <h3 style="text-align: center;">Creator Name: {{ $plate->user->name }}</h3>
-    <h3 style="text-align: center;">Creator Email: {{ $plate->user->email }}</h3>
-    <h3 style="text-align: center;">Creator Number: {{ $plate->user->mobile }}</h3>
+    <h3 style="text-align: center;">Creator Name: {{ $user->name }}</h3>
+    <h3 style="text-align: center;">Creator Email: {{ $user->email }}</h3>
+    <h3 style="text-align: center;">Creator Number: {{ $user->mobile }}</h3>
     <h3 style="text-align: center;">Payment Method :{{ $paymentMethod }}</h3>
     <h3 style="text-align: center;">Invoice Number : {{ $invoiceNumber }}</h3> 
       <h3 style="text-align: right;">

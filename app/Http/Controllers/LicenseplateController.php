@@ -22,69 +22,69 @@ class LicenseplateController extends Controller
 
 
     public function store(LicensePlateRequest $request)
-{
-    $plateData = $request->validated();
-    $plateData['user_id'] = Auth::id();
+    {
+        $plateData = $request->validated();
+        $plateData['user_id'] = Auth::id();
 
-    $plate = LicensePlate::create($plateData);
-    $banks = Bank::get()->toArray();
-    $dueDate = now()->addMonths(2)->format('d M Y');
+        $plate = LicensePlate::create($plateData);
+        $banks = Bank::get()->toArray();
+        $dueDate = now()->addMonths(2)->format('d M Y');
 
-    $provinceLogos = [
-        'Punjab'      => public_path('glogo/punjab.jpeg'),
-        'Sindh'       => public_path('glogo/sindh.png'),
-        'KPK'         => public_path('glogo/KP_logo.png'),
-        'Balochistan' => public_path('glogo/balochistan.jpeg'),
-    ];
+        $provinceLogos = [
+            'Punjab'      => public_path('glogo/punjab.jpeg'),
+            'Sindh'       => public_path('glogo/sindh.png'),
+            'KPK'         => public_path('glogo/KP_logo.png'),
+            'Balochistan' => public_path('glogo/balochistan.jpeg'),
+        ];
 
-    $user = Auth::user();
-    $provinceLogo = $provinceLogos[$plate->region] ?? null;
+        $user = Auth::user();
+        $provinceLogo = $provinceLogos[$plate->region] ?? null;
 
-    // Generate PDF
-    $paymentMthod="Bank";
-    $pdf = Pdf::loadView('pdf.plate_challan', [
-        'plate'        => $plate,
-        'banks'        => $banks,
-        'dueDate'      => $dueDate,
-        'user'         => $user,
-        'provinceLogo' => $provinceLogo,
-        "paymentMethod"=>$paymentMthod,
-        "LatePaymentPenalty"=>500,
-        "invoiceNumber" => 'INV-' . rand(100000, 999999)
-    ])->setPaper('A4', 'portrait');
+        // Generate PDF
+        $paymentMthod = "Bank";
+        $pdf = Pdf::loadView('pdf.plate_challan', [
+            'plate'        => $plate,
+            'banks'        => $banks,
+            'dueDate'      => $dueDate,
+            'user'         => $user,
+            'provinceLogo' => $provinceLogo,
+            "paymentMethod" => $paymentMthod,
+            "LatePaymentPenalty" => 500,
+            "invoiceNumber" => 'INV-' . rand(100000, 999999)
+        ])->setPaper('A4', 'portrait');
 
-    // Path to public/challans
-    $challanDir = public_path('challans');
-    if (!file_exists($challanDir)) {
-        mkdir($challanDir, 0777, true);
+        // Path to public/challans
+        $challanDir = public_path('challans');
+        if (!file_exists($challanDir)) {
+            mkdir($challanDir, 0777, true);
+        }
+
+        $fileName = 'challan_' . $plate->id . '.pdf';
+        $filePath = $challanDir . '/' . $fileName;
+
+        // Save PDF
+        $pdf->save($filePath);
+        $downloadUrl = asset('challans/' . $fileName);
+        // Send email with attachment
+        Mail::send('emails.plate_challan', compact('plate', 'dueDate', 'user', 'provinceLogo'), function ($message) use ($user, $filePath) {
+            $message->to($user->email)
+                ->subject('Your License Plate Challan')
+                ->attach($filePath, [
+                    'as'   => 'Plate_Challan.pdf',
+                    'mime' => 'application/pdf',
+                ]);
+        });
+
+        // Optional: make download link
+        return redirect(url('plates/' . $plate->id . '/show'));
+        // return redirect()->route('home')->with([
+        //     'success'      => 'License Plate added successfully!',
+        //     'downloadLink' => $downloadUrl
+        // ]);
     }
 
-    $fileName = 'challan_' . $plate->id . '.pdf';
-    $filePath = $challanDir . '/' . $fileName;
 
-    // Save PDF
-    $pdf->save($filePath);
-$downloadUrl = asset('challans/' . $fileName);
-    // Send email with attachment
-    Mail::send('emails.plate_challan', compact('plate', 'dueDate', 'user','provinceLogo'), function ($message) use ($user, $filePath) {
-        $message->to($user->email)
-            ->subject('Your License Plate Challan')
-            ->attach($filePath, [
-                'as'   => 'Plate_Challan.pdf',
-                'mime' => 'application/pdf',
-            ]);
-    });
-
-    // Optional: make download link
-   return redirect(url('plates/' . $plate->id . '/show'));
-    // return redirect()->route('home')->with([
-    //     'success'      => 'License Plate added successfully!',
-    //     'downloadLink' => $downloadUrl
-    // ]);
-}
-
-
-         // return view('customer.plate_detail', compact('plate'));
+    // return view('customer.plate_detail', compact('plate'));
 
 
     public function index(Request $request)
@@ -302,48 +302,183 @@ $downloadUrl = asset('challans/' . $fileName);
 
 
     }
+    // public function multistore(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'plate_number' => 'array',
+    //         'plate_number.*' => 'required|string|max:255',
+    //         'province' => 'array',
+    //         'province.*' => 'required|string|max:255',
+    //         'city' => 'array',
+    //         'city.*' => 'required|string|max:255',
+    //         'price' => 'array',
+    //         'price.*' => 'required|numeric|min:0',
+    //         'status' => 'array',
+    //         'status.*' => 'nullable|string|max:50',
+    //     ]);
+
+    //     $provinceLogos = [
+    //         'Punjab'      => public_path('glogo/punjab.jpeg'),
+    //         'Sindh'       => public_path('glogo/sindh.png'),
+    //         'KPK'         => public_path('glogo/KP_logo.png'),
+    //         'Balochistan' => public_path('glogo/balochistan.jpeg'),
+    //     ];
+
+    //     foreach ($validated['plate_number'] as $index => $plateNumber) {
+    //         // Insert or update
+    //         $plateId = \App\Models\LicensePlate::updateOrInsert(
+    //             ['plate_number' => $plateNumber],
+    //             [
+    //                 'region'  => $validated['province'][$index],
+    //                 'city'    => $validated['city'][$index],
+    //                 'price'   => $validated['price'][$index],
+    //                 'status'  => $validated['status'][$index] ?? null,
+    //                 'user_id' => Auth::id()
+    //             ]
+    //         );
+
+    //         $plate = LicensePlate::with('user')->where("plate_number", $plateNumber)->first();
+    //         $banks = Bank::all();
+    //         $dueDate = now()->addMonths(2)->format('d M Y');
+
+    //         $user = Auth::user();
+    //         $provinceLogo = $provinceLogos[$plate->region] ?? null;
+
+    //         // Generate PDF
+    //         $pdf = Pdf::loadView('pdf.plate_challan', [
+    //             'plate'             => $plate,
+    //             'banks'             => $banks,
+    //             'dueDate'           => $dueDate,
+    //             'user'              => $user,
+    //             'provinceLogo'      => $provinceLogo,
+    //             'paymentMethod'     => "Bank",
+    //             'LatePaymentPenalty' => 500,
+    //             'invoiceNumber'     => 'INV-' . rand(100000, 999999)
+    //         ])->setPaper('A4', 'portrait');
+
+    //         $challanDir = public_path('challans');
+    //         if (!file_exists($challanDir)) {
+    //             mkdir($challanDir, 0777, true);
+    //         }
+
+    //         $fileName = 'challan_' . $plate->id . '.pdf';
+    //         $filePath = $challanDir . '/' . $fileName;
+
+    //         $pdf->save($filePath);
+
+    //         // Send Email
+    //         Mail::send('emails.plate_challan', compact('plate', 'dueDate', 'user', 'provinceLogo'), function ($message) use ($user, $filePath) {
+    //             $message->to($user->email)
+    //                 ->subject('Your License Plate Challan')
+    //                 ->attach($filePath, [
+    //                     'as'   => 'Plate_Challan.pdf',
+    //                     'mime' => 'application/pdf',
+    //                 ]);
+    //         });
+    //     }
+
+    //     return redirect(url('plates'))->with('success', 'Multiple plates added successfully!');
+    // }
+
     public function multistore(Request $request)
     {
-
-
         $validated = $request->validate([
-            'plate_number' => 'array',
+            'plate_number'   => 'array',
             'plate_number.*' => 'required|string|max:255',
-
-            'province' => 'array',
-            'province.*' => 'required|string|max:255',
-
-            'city' => 'array',
-            'city.*' => 'required|string|max:255',
-
-            'price' => 'array',
-            'price.*' => 'required|numeric|min:0',
-
-            'status' => 'array',
-            'status.*' => 'nullable|string|max:50',
+            'province'       => 'array',
+            'province.*'     => 'required|string|max:255',
+            'city'           => 'array',
+            'city.*'         => 'required|string|max:255',
+            'price'          => 'array',
+            'price.*'        => 'required|numeric|min:0',
+            'status'         => 'array',
+            'status.*'       => 'nullable|string|max:50',
         ]);
 
+        $provinceLogos = [
+            'Punjab'      => public_path('glogo/punjab.jpeg'),
+            'Sindh'       => public_path('glogo/sindh.png'),
+            'KPK'         => public_path('glogo/KP_logo.png'),
+            'Balochistan' => public_path('glogo/balochistan.jpeg'),
+        ];
+
+        $user = Auth::user();
+        $banks = Bank::all();
+        $dueDate = now()->addMonths(2)->format('d M Y');
+
+        $platesData = [];
+        $attachments = [];
+        $insertedIds = [];
+
         foreach ($validated['plate_number'] as $index => $plateNumber) {
-            \App\Models\licenseplate::insertOrIgnore(
-                ['plate_number' => $plateNumber], // Unique identifier to check if record exists
+            // Insert/update plate
+            \App\Models\LicensePlate::updateOrInsert(
+                ['plate_number' => $plateNumber],
                 [
-                    'region' => $validated['province'][$index],
-                    'city' => $validated['city'][$index],
-                    'price' => $validated['price'][$index],
-                    'status' => $validated['status'][$index] ?? null,
-                    'user_id' => Auth::id() // Assuming you want to associate the plate with the authenticated user
+                    'region'  => $validated['province'][$index],
+                    'city'    => $validated['city'][$index],
+                    'price'   => $validated['price'][$index],
+                    'status'  => $validated['status'][$index] ?? null,
+                    'user_id' => $user->id
                 ]
             );
+
+            $plate = LicensePlate::with('user')->where("plate_number", $plateNumber)->first();
+            if (!$plate) continue;
+            $insertedIds[] = $plate->id;
+            $provinceLogo = $provinceLogos[$plate->region] ?? null;
+
+            // Generate PDF for this plate
+            $pdf = Pdf::loadView('pdf.plate_challan', [
+                'plate'              => $plate,
+                'banks'              => $banks,
+                'dueDate'            => $dueDate,
+                'user'               => $user,
+                'provinceLogo'       => $provinceLogo,
+                'paymentMethod'      => "Bank",
+                'LatePaymentPenalty' => 500,
+                'invoiceNumber'      => 'INV-' . rand(100000, 999999)
+            ])->setPaper('A4', 'portrait');
+
+            $challanDir = public_path('challans');
+            if (!file_exists($challanDir)) {
+                mkdir($challanDir, 0777, true);
+            }
+
+            $filePath = $challanDir . '/challan_' . $plate->id . '.pdf';
+            $pdf->save($filePath);
+
+            // Store plate info & attachment for later email
+            $platesData[] = [
+                'plate'        => $plate,
+                'provinceLogo' => $provinceLogo
+            ];
+            $attachments[] = $filePath;
         }
 
+        // Send ONE email with all plates
+        Mail::send('emails.plate_challan_multiple', [
+            'platesData' => $platesData,
+            'dueDate'    => $dueDate,
+            'user'       => $user
+        ], function ($message) use ($user, $attachments) {
+            $message->to($user->email)
+                ->subject('Your License Plate Challans');
 
-
-
-
-
-
-        return redirect(url('plates'))->with('success', 'Multiple plates added successfully!');
+            foreach ($attachments as $filePath) {
+                $message->attach($filePath, [
+                    'as'   => basename($filePath),
+                    'mime' => 'application/pdf',
+                ]);
+            }
+        });
+           return redirect(url('/plates/views?plates=' . implode(',', $insertedIds)));
+      
     }
+
+
+
+
     public function show(LicensePlate $plate)
 
     {

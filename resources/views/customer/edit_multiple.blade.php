@@ -17,7 +17,12 @@
                             <div class="col-md-2">
                                 <label class="form-label">Plate Number</label>
                                 <input type="text" name="plate_number[]" class="form-control"
-                                    value="{{ $plate['plate_number'] }}" placeholder="ABC-123" required>
+                          
+                                value="{{ $plate['plate_number'] }}" placeholder="ABC-123" required>
+                          @error("plate_number.$index")
+            <div class="text-danger">{{ $message }}</div>
+        @enderror
+                          
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Province</label>
