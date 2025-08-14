@@ -125,7 +125,8 @@ Route::get('plates/add/multiple', function () {
 Route::get('/plates/mypdf', [App\Http\Controllers\LicenseplateController::class, 'myPdf'])->name('plates.my.pdf');
 Route::get('/plates/mycsv', [App\Http\Controllers\LicenseplateController::class, 'myCsv'])->name('plates.my.csv');
 Route::get('/plates/export/pdf', [App\Http\Controllers\LicenseplateController::class, 'exportPdf']);
-
+Route::get('/plates/{plate}/download-image', [App\Http\Controllers\LicensePlateController::class, 'downloadImage'])
+     ->name('plates.download-image');
 
 Route::get('platesupload', [App\Http\Controllers\LicensePlateController::class, 'showOcrForm'])->name('plates.upload');
 Route::post('platesocr', [App\Http\Controllers\LicensePlateController::class, 'ocrStore'])->name('plates.ocr');

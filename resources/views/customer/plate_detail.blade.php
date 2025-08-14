@@ -64,7 +64,7 @@
                     <hr>
 
                     <div class="text-center">
-                        <a href="{{ url('plates') }}" class="btn btn-outline-secondary">⬅ Back to Listings</a>
+                        <a href="{{ url('licenseplate') }}" class="btn btn-outline-secondary">⬅ Back to Listings</a>
 
                         @auth
                             @if(!$plate->is_sold && Auth::id() !== $plate->user_id)

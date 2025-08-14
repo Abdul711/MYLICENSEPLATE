@@ -130,7 +130,8 @@ Selling license plates without government authorization is illegal.
 The developer is not responsible for misuse.**
 
 ---
-
+public/plates/HIL-67914-August-20251755189471.png
+public/plates/sndh.png
 ## 📬 Contact
 
 * **Developer:** Syed Abdul Samad Ahasn
