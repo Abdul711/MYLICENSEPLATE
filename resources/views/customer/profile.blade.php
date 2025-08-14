@@ -197,7 +197,7 @@
                             <a href="{{ url('/plates/mycsv') }}" class="btn btn-success m-1">Export Latest 100 Plate
                                 CSV</a>
 
-
+                            <a href="{{route('plates.upload')}}" class="btn btn-success m-1">Create From Image</a>
 
 
 

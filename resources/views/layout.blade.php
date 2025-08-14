@@ -28,7 +28,7 @@
 
             <div class="collapse navbar-collapse" id="navbarMain">
                 <ul class="navbar-nav ms-auto">
-                       <li class="nav-item"><a class="nav-link" href="{{ url('plates') }}"> Plates</a></li>
+                       <li class="nav-item"><a class="nav-link" href="{{ url('licenseplate') }}"> Plates</a></li>
                     @auth
                      
 

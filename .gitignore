@@ -16,6 +16,7 @@
 /public/build
 /public/hot
 /public/challans
+/public/Tesseract-OCR
 /public/storage
 /storage/*.key
 /storage/pail

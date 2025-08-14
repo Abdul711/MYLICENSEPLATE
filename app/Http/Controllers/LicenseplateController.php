@@ -14,8 +14,13 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\City;
 use App\Models\Region;
 use Carbon\Carbon;
+use Alimranahmed\LaraOCR\Facades\OCR;
 use App\Models\Bank;
 use Illuminate\Support\Facades\Mail;
+use Spatie\Browsershot\Browsershot;
+use thiagoalessio\TesseractOCR\TesseractOCR;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class LicenseplateController extends Controller
 {
@@ -472,8 +477,7 @@ class LicenseplateController extends Controller
                 ]);
             }
         });
-           return redirect(url('/plates/views?plates=' . implode(',', $insertedIds)));
-      
+        return redirect(url('/plates/views?plates=' . implode(',', $insertedIds)));
     }
 
 
@@ -683,6 +687,24 @@ class LicenseplateController extends Controller
     {
         return view('customer.import_pdf');
     }
+    public function showOcrForm()
+    {
+        return view('ocr.ocr_upload');
+    }
+    public function ocrStore(Request $request)
+    {
+         
+            $imagePath = public_path('plates/Balochistan.png');
+
+        return $ocrText = OCR::scan($imagePath);
+
+        // Use $ocrText as needed in your application
+        return response()->json(['text' => $ocrText]);
+
+    return back()->with('success', "Extracted Text: " . $text);
+       
+    }
+
     public function importPDF(Request $request)
     {
 

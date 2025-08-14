@@ -8,7 +8,7 @@ use App\Models\LicensePlate;
 use App\Models\City;
 use App\Models\Region;
 
-Route::redirect('/', '/plates');
+Route::redirect('/', 'licenseplate');
 
 
 Route::get("register",[AuthController::class,"index"]);
@@ -114,7 +114,7 @@ Route::post('plates_add', [App\Http\Controllers\LicenseplateController::class, '
 Route::post('plates/add/multiple', [App\Http\Controllers\LicenseplateController::class, 'multistore'])->name('multiplates.store');
 Route::post('/plates/ajaxProcess', [App\Http\Controllers\LicenseplateController::class, 'ajaxProcess'])->name('plates.ajaxProcess');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('plates', [App\Http\Controllers\LicenseplateController::class, 'index'])->name('home');
+Route::get('licenseplate', [App\Http\Controllers\LicenseplateController::class, 'index'])->name('home');
 Route::get('plates/export', [App\Http\Controllers\LicenseplateController::class, 'export'])->name('plates.export');
 Route::get('plates/import', [App\Http\Controllers\LicenseplateController::class, 'import'])->name('plates.import');
 Route::post('plates/import', [App\Http\Controllers\LicenseplateController::class, 'importStore'])->name('plates.import.store');
@@ -127,7 +127,8 @@ Route::get('/plates/mycsv', [App\Http\Controllers\LicenseplateController::class,
 Route::get('/plates/export/pdf', [App\Http\Controllers\LicenseplateController::class, 'exportPdf']);
 
 
-
+Route::get('platesupload', [App\Http\Controllers\LicensePlateController::class, 'showOcrForm'])->name('plates.upload');
+Route::post('platesocr', [App\Http\Controllers\LicensePlateController::class, 'ocrStore'])->name('plates.ocr');
 
 Route::get('/plates/import/form', [App\Http\Controllers\LicenseplateController::class, 'importPDFForm'])->name('plates.import.form');
 Route::post('/plates/import-pdf', [App\Http\Controllers\LicenseplateController::class, 'importPDF'])->name('plates.importPDF');
