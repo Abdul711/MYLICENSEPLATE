@@ -114,7 +114,7 @@ Route::post('plates_add', [App\Http\Controllers\LicenseplateController::class, '
 Route::post('plates/add/multiple', [App\Http\Controllers\LicenseplateController::class, 'multistore'])->name('multiplates.store');
 Route::post('/plates/ajaxProcess', [App\Http\Controllers\LicenseplateController::class, 'ajaxProcess'])->name('plates.ajaxProcess');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('licenseplate', [App\Http\Controllers\LicenseplateController::class, 'index'])->name('home');
+Route::get('licenseplate', [App\Http\Controllers\LicenseplateController::class, 'index']);
 Route::get('plates/export', [App\Http\Controllers\LicenseplateController::class, 'export'])->name('plates.export');
 Route::get('plates/import', [App\Http\Controllers\LicenseplateController::class, 'import'])->name('plates.import');
 Route::post('plates/import', [App\Http\Controllers\LicenseplateController::class, 'importStore'])->name('plates.import.store');
