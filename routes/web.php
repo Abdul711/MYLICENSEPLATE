@@ -75,7 +75,7 @@ Route::get("profile", function () {
 
       $myplates = $query->
         where('user_id', Auth::id())->
-        paginate(10);
+        paginate(1000);
 
 
 

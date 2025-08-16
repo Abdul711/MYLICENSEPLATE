@@ -63,8 +63,24 @@
                                     </div>
                                 @endif
                             @endauth
+                @php
+                        
+                             $provinceLogos = [
+            'Punjab'      => asset('glogo/punjab.jpeg'),
+            'Sindh'       => asset('glogo/sindh.png'),
+            'KPK'         => asset('glogo/KP_logo.png'),
+            'Balochistan' => asset('glogo/balochistan.jpeg'),
+        ];
 
+        $provinceLogo = $provinceLogos[$plate->region] ?? null;
+        @endphp
                             <hr>
+                                @include("plates.plate_template",compact("plate","provinceLogo"))
+                             <a href="{{ url('licenseplatedownload/'.$plate->id) }}" class="btn btn-outline-secondary mt-1">Download Image</a>
+          
+ 
+ 
+  <a href="{{ url('challandownload/'.$plate->id) }}" class="btn btn-outline-secondary mt-1">Download Challan</a>
 
                             <div class="text-center">
                                
