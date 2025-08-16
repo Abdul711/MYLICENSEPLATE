@@ -19,6 +19,9 @@
 /public/plates
 /public/Tesseract-OCR
 /public/storage
+/public/plates_image
+/public/exports_csv
+/public/exports_pdf
 /storage/*.key
 /storage/pail
 /vendor

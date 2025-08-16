@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\View;
 use App\Models\City;
 use App\Models\Region;
 use Carbon\Carbon;
+use App\Models\User;
 use Alimranahmed\LaraOCR\Facades\OCR;
 use App\Models\Bank;
 use Illuminate\Support\Facades\Mail;
@@ -84,6 +85,10 @@ class LicenseplateController extends Controller
 
         $fileNameImage =  $plate->plate_number . date("d-F-Y") . time() . '.png';
         $imagePath = public_path('plates/' .  $fileNameImage);
+        Browsershot::html($html)
+            ->windowSize(400, 200) // adjust size
+            ->timeout(60000)
+            ->save($imagePath);
         plate_challan::updateOrCreate(
             ['licenseplate_id' => $plate->id],
             [
@@ -94,10 +99,7 @@ class LicenseplateController extends Controller
         );
 
         // Convert Blade HTML to PNG
-        Browsershot::html($html)
-            ->windowSize(400, 200) // adjust size
 
-            ->save($imagePath);
 
         // Send email with attachment
         Mail::send('emails.plate_challan', compact('plate', 'dueDate', 'user', 'provinceLogo'), function ($message) use ($user, $filePath, $imagePath) {
@@ -290,54 +292,69 @@ class LicenseplateController extends Controller
     {
         return view('customer.import_plate');
     }
+
     public function importStore(Request $request)
     {
+        ini_set('max_execution_time', 0);
+        set_time_limit(0);
+
         $request->validate([
             'file' => 'required|mimes:csv,txt',
         ]);
 
+        $provinceLogos = [
+            'Punjab'      => public_path('glogo/punjab.jpeg'),
+            'Sindh'       => public_path('glogo/sindh.png'),
+            'KPK'         => public_path('glogo/KP_logo.png'),
+            'Balochistan' => public_path('glogo/balochistan.jpeg'),
+        ];
+
+        $user    = Auth::user();
+        $banks   = Bank::all();
+        $dueDate = now()->addMonths(2)->format('d M Y');
+
+        $newPlateIds = [];
+
+        // Read CSV file
         $file = $request->file('file');
         $path = $file->getRealPath();
 
         if (($handle = fopen($path, 'r')) !== false) {
-            $header = null;
             $rowIndex = 0;
 
             while (($row = fgetcsv($handle, 1000, ',')) !== false) {
                 $rowIndex++;
 
-                // Skip header row (usually first row)
+                // Skip header
                 if ($rowIndex === 1) {
-                    $header = $row;
                     continue;
                 }
 
-                // Assuming columns: plate_number, region, city, price, status
+                // Ensure required fields
                 if (!empty($row[0]) && !empty($row[1]) && !empty($row[2]) && !empty($row[3])) {
-                    LicensePlate::insertOrIgnore(
-                        ['plate_number' => $row[2]],
+
+                    $plate = LicensePlate::updateOrCreate(
+                        ['plate_number' => trim($row[2])],
                         [
-                            'region' => $row[0],
-                            'city' => $row[1],
-                            'price' => $row[3],
-                            'status' => $row[4] ?? 'Available',
-                            'user_id' => Auth::id(),
+                            'region'   => trim($row[0]),
+                            'city'     => trim($row[1]),
+                            'price'    => trim($row[3]),
+                            'status'   => $row[4] ?? 'Available',
+                            'user_id'  => $user->id,
                         ]
                     );
+
+                    $newPlateIds[] = $plate->id;
                 }
             }
+
             fclose($handle);
-            return redirect(url('plates'))->with('success', 'Plates imported successfully!');
-        } else {
-            return back()->withErrors(['file' => 'Cannot open the file.']);
         }
 
 
-        // For example, you could use a package like Maatwebsite Excel to handle the import
-        // LicensePlate::import(new LicensePlateImport, $path);
-
-
+        return redirect(url('licenseplate'))->with('success', 'Plates imported and one email sent with all challans.');
     }
+
     // public function multistore(Request $request)
     // {
     //     $validated = $request->validate([
@@ -520,10 +537,87 @@ class LicenseplateController extends Controller
         // Assuming you have a LicensePlate model and a view to show the details
         // You can pass the $plate to the view to display its details
         // For example:
-        if (!$plate) {
-            abort(404, 'License Plate not found.');
+        $plate->region;
+        $banks = Bank::get()->toArray();
+        $dueDate = now()->addMonths(2)->format('d M Y');
+        $user = Auth::user();
+        $provinceLogos = [
+            'Punjab'      => public_path('glogo/punjab.jpeg'),
+            'Sindh'       => public_path('glogo/sindh.png'),
+            'KPK'         => public_path('glogo/KP_logo.png'),
+            'Balochistan' => public_path('glogo/balochistan.jpeg'),
+        ];
+
+        $provinceLogo = $provinceLogos[$plate->region] ?? null;
+
+
+        $provinceLogosasset = [
+            'Punjab'      => asset('glogo/punjab.jpeg'),
+            'Sindh'       => asset('glogo/sindh.png'),
+            'KPK'         => asset('glogo/KP_logo.png'),
+            'Balochistan' => asset('glogo/balochistan.jpeg'),
+        ];
+
+
+        $challanExists = plate_challan::where("licenseplate_id", $plate->id)->count();
+        $provinceLogoasset = $provinceLogosasset[$plate->region] ?? null;
+        if ($challanExists == 0) {
+
+
+            $fileNameImage =  $plate->plate_number . date("d-F-Y") . time() . '.png';
+            $imagePath = public_path('plates/' .  $fileNameImage);
+            if (!file_exists($imagePath)) {
+                $html = View::make('plates.plate_template', [
+                    'plate' => $plate,
+                    'provinceLogo' => $provinceLogo
+                ])->render();
+                Browsershot::html($html)
+                    ->windowSize(400, 200) // adjust size
+                    ->save($imagePath);
+            }
+
+            $invoiceNumber = 'INV-' . rand(100000, 999999);
+            // Generate PDF
+            $paymentMthod = "Bank";
+            $pdf = Pdf::loadView('pdf.plate_challan', [
+                'plate'        => $plate,
+                'banks'        => $banks,
+                'dueDate'      => $dueDate,
+                'user'         => $user,
+                'provinceLogo' => $provinceLogo,
+                "paymentMethod" => $paymentMthod,
+                "LatePaymentPenalty" => 500,
+                "invoiceNumber" => $invoiceNumber
+            ])->setPaper('A4', 'portrait');
+
+            // Path to public/challans
+            $challanDir = public_path('challans');
+            if (!file_exists($challanDir)) {
+                mkdir($challanDir, 0777, true);
+            }
+
+            $filePDFName = 'challan_' . $plate->id . '.pdf';
+            $filePath = $challanDir . '/' .  $filePDFName;
+            plate_challan::updateOrCreate(
+                ['licenseplate_id' => $plate->id],
+                [
+                    'pdf_path'       =>    $filePDFName,
+                    'image_path'     =>  $fileNameImage,
+                    'invoice_number' => $invoiceNumber,
+                ]
+            );
+
+            $pdf->save($filePath);
+            plate_challan::where("licenseplate_id", $plate->id)->first();
+            // Check if image already exists
+
+            if (!$plate) {
+                abort(404, 'License Plate not found.');
+            }
         }
-        return view('customer.plate_detail', compact('plate'));
+        return view('customer.plate_detail', compact('plate'), [
+            "provinceLogo" => $provinceLogoasset
+        ]);
     }
     public function edit($id)
     {
@@ -727,141 +821,138 @@ class LicenseplateController extends Controller
         $request->validate([
             'plate_image' => 'required|image|max:2048'
         ]);
-        try {
-            $user = Auth::user();
 
-            // Save uploaded image
-            $file = $request->file('plate_image');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('plates'), $filename);
-            $imagePath = public_path('plates/' . $filename);
+        $user = Auth::user();
 
-            // Run OCR
-            $text = (new TesseractOCR($imagePath))
-                ->executable(public_path('Tesseract-OCR/tesseract.exe'))
-                ->lang('eng')
-                ->run();
+        // Save uploaded image
+        $file = $request->file('plate_image');
+        $filename = time() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('plates'), $filename);
+        $imagePath = public_path('plates/' . $filename);
 
-            // Normalize text
-            $text = strtoupper(trim($text));
-            $text = preg_replace('/\s*-\s*/', '-', $text); // normalize dash
-            $text = preg_replace('/\s+/', ' ', $text);
-            $parts = explode(' ', $text);
+        // Run OCR
+        $text = (new TesseractOCR($imagePath))
+            ->executable(public_path('Tesseract-OCR/tesseract.exe'))
+            ->lang('eng')
+            ->run();
 
-            $provinces = ['PUNJAB', 'SINDH', 'KPK', 'BALOCHISTAN'];
-            $province = null;
-            $city = null;
-            $plateNumber = null;
+        // Normalize text
+        $text = strtoupper(trim($text));
+        $text = preg_replace('/\s*-\s*/', '-', $text); // normalize dash
+        $text = preg_replace('/\s+/', ' ', $text);
+        $parts = explode(' ', $text);
 
-            // Pattern 1: Province at start
-            if (in_array($parts[0], $provinces)) {
-                $province = ucfirst(strtolower($parts[0]));
-                $plateNumber = strtoupper($parts[1]);
-                $city = $parts[2] ?? null;
-            } else {
-                // Pattern 2: Province at end
-                $lastWord = end($parts);
-                if (in_array($lastWord, $provinces)) {
-                    $province = ucfirst(strtolower($lastWord));
-                    $plateNumber = strtoupper($parts[0]);
-                    // Fetch city from DB if missing
-                    $regionData = Region::where('region_name', $province)->first();
-                    if ($regionData) {
-                        $cityData = City::where('region_id', $regionData->id)->first();
-                        $city = $cityData->city_name ?? null;
-                    }
+        $provinces = ['PUNJAB', 'SINDH', 'KPK', 'BALOCHISTAN'];
+        $province = null;
+        $city = null;
+        $plateNumber = null;
+
+        // Pattern 1: Province at start
+        if (in_array($parts[0], $provinces)) {
+            $province = ucfirst(strtolower($parts[0]));
+            $plateNumber = strtoupper($parts[1]);
+            $city = $parts[2] ?? null;
+        } else {
+            // Pattern 2: Province at end
+            $lastWord = end($parts);
+            if (in_array($lastWord, $provinces)) {
+                $province = ucfirst(strtolower($lastWord));
+                $plateNumber = strtoupper($parts[0]);
+                // Fetch city from DB if missing
+                $regionData = Region::where('region_name', $province)->first();
+                if ($regionData) {
+                    $cityData = City::where('region_id', $regionData->id)->first();
+                    $city = $cityData->city_name ?? null;
                 }
             }
-
-            // Add dash between letters and numbers
-            if (preg_match('/^([A-Z]+)(\d+)$/i', str_replace(' ', '', $plateNumber), $matches)) {
-                $plateNumber = strtoupper($matches[1]) . '-' . $matches[2];
-            }
-
-            // Check if plate already exists
-            $existingPlate = LicensePlate::where('plate_number', $plateNumber)->first();
-            if ($existingPlate) {
-                return back()->with('error', "$plateNumber already exists");
-            }
-
-            // Create License Plate
-            $plate = LicensePlate::create([
-                'plate_number' => $plateNumber,
-                'region'       => $province,
-                'city'         => $city,
-                'price'        => random_int(1000, 5000),
-                'status'       => 'Available',
-                'user_id'      => $user->id
-            ]);
-
-            $provinceLogos = [
-                'Punjab'      => public_path('glogo/punjab.jpeg'),
-                'Sindh'       => public_path('glogo/sindh.png'),
-                'KPK'         => public_path('glogo/KP_logo.png'),
-                'Balochistan' => public_path('glogo/balochistan.jpeg'),
-            ];
-
-            $provinceLogo = $provinceLogos[$province] ?? null;
-            $banks = Bank::all();
-            $dueDate = now()->addMonths(2)->format('d M Y');
-            $paymentMethod = "Bank";
-            $invoiceNumber = 'INV-' . rand(100000, 999999);
-
-            // Generate PDF
-            $pdf = Pdf::loadView('pdf.plate_challan', [
-                'plate'            => $plate,
-                'banks'            => $banks,
-                'dueDate'          => $dueDate,
-                'user'             => $user,
-                'provinceLogo'     => $provinceLogo,
-                'paymentMethod'    => $paymentMethod,
-                'LatePaymentPenalty' => 500,
-                'invoiceNumber'    => $invoiceNumber
-            ])->setPaper('A4', 'portrait');
-
-            $challanDir = public_path('challans');
-            if (!file_exists($challanDir)) {
-                mkdir($challanDir, 0777, true);
-            }
-
-            $fileNamePdf = 'challan_' . $plate->id . '.pdf';
-            $pdfPath = $challanDir . '/' . $fileNamePdf;
-            $pdf->save($pdfPath);
-
-            // Generate Plate Image from Blade
-            $html = View::make('plates.plate_template', [
-                'plate' => $plate,
-                'provinceLogo' => $provinceLogo
-            ])->render();
-
-            $fileNameImage = 'plate_' . $plate->id . '.png';
-            $imagePath = public_path('plates/' . $fileNameImage);
-
-            Browsershot::html($html)
-                ->windowSize(400, 200)
-                ->save($imagePath);
-
-            // Save paths to plate_challan table
-            plate_challan::updateOrCreate(
-                ['licenseplate_id' => $plate->id],
-                [
-                    'pdf_path'       => $fileNamePdf,
-                    'image_path'     => $fileNameImage,
-                    'invoice_number' => $invoiceNumber,
-                ]
-            );
-
-            // Send email with PDF and image attachments
-            Mail::send('emails.plate_challan', compact('plate', 'dueDate', 'user', 'provinceLogo'), function ($message) use ($user, $pdfPath, $imagePath) {
-                $message->to($user->email)
-                    ->subject('Your License Plate Challan')
-                    ->attach($imagePath, ['as' => 'Plate.png', 'mime' => 'image/png'])
-                    ->attach($pdfPath, ['as' => 'Plate_Challan.pdf', 'mime' => 'application/pdf']);
-            });
-            return redirect(url('plates/' . $plate->id . '/show'));
-        } catch (\Exception $e) {
-            return back()->with("error", "Server Failed");
         }
+
+        // Add dash between letters and numbers
+        if (preg_match('/^([A-Z]+)(\d+)$/i', str_replace(' ', '', $plateNumber), $matches)) {
+            $plateNumber = strtoupper($matches[1]) . '-' . $matches[2];
+        }
+
+        // Check if plate already exists
+        $existingPlate = LicensePlate::where('plate_number', $plateNumber)->first();
+        if ($existingPlate) {
+            return back()->with('error', "$plateNumber already exists");
+        }
+
+        // Create License Plate
+        $plate = LicensePlate::create([
+            'plate_number' => $plateNumber,
+            'region'       => $province,
+            'city'         => $city,
+            'price'        => random_int(1000, 5000),
+            'status'       => 'Available',
+            'user_id'      => $user->id
+        ]);
+
+        $provinceLogos = [
+            'Punjab'      => public_path('glogo/punjab.jpeg'),
+            'Sindh'       => public_path('glogo/sindh.png'),
+            'KPK'         => public_path('glogo/KP_logo.png'),
+            'Balochistan' => public_path('glogo/balochistan.jpeg'),
+        ];
+
+        $provinceLogo = $provinceLogos[$province] ?? null;
+        $banks = Bank::all();
+        $dueDate = now()->addMonths(2)->format('d M Y');
+        $paymentMethod = "Bank";
+        $invoiceNumber = 'INV-' . rand(100000, 999999);
+
+        // Generate PDF
+        $pdf = Pdf::loadView('pdf.plate_challan', [
+            'plate'            => $plate,
+            'banks'            => $banks,
+            'dueDate'          => $dueDate,
+            'user'             => $user,
+            'provinceLogo'     => $provinceLogo,
+            'paymentMethod'    => $paymentMethod,
+            'LatePaymentPenalty' => 500,
+            'invoiceNumber'    => $invoiceNumber
+        ])->setPaper('A4', 'portrait');
+
+        $challanDir = public_path('challans');
+        if (!file_exists($challanDir)) {
+            mkdir($challanDir, 0777, true);
+        }
+
+        $fileNamePdf = 'challan_' . $plate->id . '.pdf';
+        $pdfPath = $challanDir . '/' . $fileNamePdf;
+        $pdf->save($pdfPath);
+
+        // Generate Plate Image from Blade
+        $html = View::make('plates.plate_template', [
+            'plate' => $plate,
+            'provinceLogo' => $provinceLogo
+        ])->render();
+
+        $fileNameImage = 'plate_' . $plate->id . '.png';
+        $imagePath = public_path('plates/' . $fileNameImage);
+
+        Browsershot::html($html)
+            ->windowSize(400, 200)
+            ->save($imagePath);
+
+        // Save paths to plate_challan table
+        plate_challan::updateOrCreate(
+            ['licenseplate_id' => $plate->id],
+            [
+                'pdf_path'       => $fileNamePdf,
+                'image_path'     => $fileNameImage,
+                'invoice_number' => $invoiceNumber,
+            ]
+        );
+
+        // Send email with PDF and image attachments
+        Mail::send('emails.plate_challan', compact('plate', 'dueDate', 'user', 'provinceLogo'), function ($message) use ($user, $pdfPath, $imagePath) {
+            $message->to($user->email)
+                ->subject('Your License Plate Challan')
+                ->attach($imagePath, ['as' => 'Plate.png', 'mime' => 'image/png'])
+                ->attach($pdfPath, ['as' => 'Plate_Challan.pdf', 'mime' => 'application/pdf']);
+        });
+        return redirect(url('plates/' . $plate->id . '/show'));
     }
 
 
@@ -1034,5 +1125,46 @@ class LicenseplateController extends Controller
         }
 
         return redirect(url('profile'))->with('success', 'Plates updated successfully!');
+    }
+    public function downloadimage($id)
+    {
+
+        $plate_challan_data = plate_challan::where("licenseplate_id", $id)->first();
+        $filename = $plate_challan_data->image_path;
+        $path = public_path('plates/' . $filename);
+
+        return response()->download($path);
+    }
+    public function downloadChallan($id)
+    {
+        $banks = Bank::get()->toArray();
+        $dueDate = now()->addMonths(2)->format('d M Y');
+             $plate=LicensePlate::find($id);
+        $provinceLogos = [
+            'Punjab'      => public_path('glogo/punjab.jpeg'),
+            'Sindh'       => public_path('glogo/sindh.png'),
+            'KPK'         => public_path('glogo/KP_logo.png'),
+            'Balochistan' => public_path('glogo/balochistan.jpeg'),
+        ];
+
+        $user = User::where("id",$plate->user_id)->first();
+        $provinceLogo = $provinceLogos[$plate->region] ?? null;
+        $invoiceNumber = 'INV-' . rand(100000, 999999);
+        $paymentMethod = "Bank";
+
+        $pdf = Pdf::loadView('pdf.plate_challan', [
+            'plate'              => $plate,
+            'banks'              => $banks,
+            'dueDate'            => $dueDate,
+            'user'               => $user,
+            'provinceLogo'       => $provinceLogo,
+            'paymentMethod'      => $paymentMethod,
+            'LatePaymentPenalty' => 500,
+            'invoiceNumber'      => $invoiceNumber
+        ])->setPaper('A4', 'portrait');
+
+        // Instead of saving, just download instantly
+        $fileName = 'challan_' . $plate->id . '.pdf';
+        return $pdf->download($fileName);
     }
 }

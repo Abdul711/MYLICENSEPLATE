@@ -105,7 +105,7 @@
                 </table>
             </div>
             <p>Your Plate Look Like Below</p>
-              @include("emails.plates",["plate"=>$plate,"provinceLogo"=>$provinceLogo]);
+              @include("emails.plates",["plate"=>$plate,"provinceLogo"=>$provinceLogo])
             {{-- <a href="#" class="cta">Download PDF Challan</a> --}}
         </div>
         <div class="footer">

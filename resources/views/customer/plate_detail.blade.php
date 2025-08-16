@@ -62,11 +62,18 @@
                         @endauth
 
                     <hr>
-
-                    <div class="text-center">
+                       <p class="text-center">Your Plate Image</p>
+                     @include("plates.plate_template",compact("plate","provinceLogo"))
+                    <div class="text-center mt-2">
                         <a href="{{ url('licenseplate') }}" class="btn btn-outline-secondary">⬅ Back to Listings</a>
-
-                        @auth
+ <a href="{{ url('licenseplatedownload/'.$plate->id) }}" class="btn btn-outline-secondary">Download Image</a>
+                    
+ 
+ 
+  <a href="{{ url('challandownload/'.$plate->id) }}" class="btn btn-outline-secondary">Download Challan</a>
+ 
+ 
+ @auth
                             @if(!$plate->is_sold && Auth::id() !== $plate->user_id)
                                 <a href="{{ url('plates_buy/', $plate->id) }}" class="btn btn-success">Buy Now</a>
                             @endif
@@ -78,5 +85,5 @@
 
         </div>
     </div>
-</div>
+   
 @endsection

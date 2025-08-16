@@ -1,0 +1,21 @@
+Province,City,"Plate Number",Price,Status
+Sindh,Dadu,CZN-745,2834,Available
+Sindh,Sukkur,FCE-592,2458,Available
+Sindh,Hyderabad,WSL-742,3380,Available
+Sindh,Hyderabad,BMK-311,3249,Available
+Sindh,Karachi,IXM-320,1393,Available
+Punjab,Rawalpindi,MCP-438,3496,Available
+Punjab,Rawalpindi,BGA-734,2039,Available
+Punjab,Bahawalpur,LQB-860,1074,Available
+Punjab,Gujranwala,YPO-887,3694,Available
+Punjab,Gujranwala,KKN-714,2749,Available
+Balochistan,Hub,IMW-975,1585,Available
+Balochistan,Sibi,FXX-906,3848,Available
+Balochistan,Sibi,UFS-661,3942,Available
+Balochistan,Hub,RFB-594,1098,Available
+Balochistan,Sibi,YPW-774,2838,Available
+KPK,Swat,HFN-521,1699,Available
+KPK,Bannu,KLM-901,1658,Available
+KPK,Swat,HBW-775,3738,Available
+KPK,Haripur,NKW-970,2782,Available
+KPK,"Dera Ismail Khan",IAF-988,2511,Available

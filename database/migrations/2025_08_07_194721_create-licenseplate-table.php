@@ -16,7 +16,10 @@ return new class extends Migration
             $table->string('plate_number')->unique();
             $table->string('region');
             $table->string('city');
-            $table->string('status')->default('active'); // active, inactive, pending
+            $table->string('status')->default('active');
+            $table->string('price');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // active, inactive, pending
             $table->timestamps();
         });
 

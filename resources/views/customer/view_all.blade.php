@@ -77,7 +77,7 @@
 
                         </div>
                     @endforeach
-                     <a href="{{ url('plates') }}" class="btn btn-outline-secondary m-1 text-center">⬅ Back to Listings</a>
+                     <a href="{{ url('licenseplate') }}" class="btn btn-outline-secondary m-1 text-center">⬅ Back to Listings</a>
 
                 </div>
 

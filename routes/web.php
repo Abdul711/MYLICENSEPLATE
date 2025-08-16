@@ -141,6 +141,9 @@ Route::get('/plates/summary', [App\Http\Controllers\LicenseplateController::clas
 Route::post('/updateMultiple', [App\Http\Controllers\LicenseplateController::class, 'updateMultiple']);
 Route::get('plates/{id}/delete', [App\Http\Controllers\LicenseplateController::class, 'delete']);
 Route::get('/plates/views', [App\Http\Controllers\LicenseplateController::class, 'viewAll']);
+
+Route::get('licenseplatedownload/{id}', [App\Http\Controllers\LicenseplateController::class, 'downloadimage']);
+Route::get("challandownload/{id}",[App\Http\Controllers\LicenseplateController::class, 'downloadChallan']);
 Route::view('forgotpassword', 'forget')->name('forgotpassword');
 Route::post('forget', [App\Http\Controllers\ForgetPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('password/reset/{token}', [App\Http\Controllers\ForgetPasswordController::class, 'showResetForm'])->name('password.reset');
