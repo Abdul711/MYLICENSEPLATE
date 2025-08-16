@@ -200,7 +200,7 @@ class LicenseplateController extends Controller
         // Get the filtered plates
         $query->where('status', "Available"); // Ensure only plates of the authenticated user are fetched
 
-        $plates = $query->paginate(10)->appends($request->query());
+        $plates = $query->paginate(1000)->appends($request->query());
         return view('customer.plates', compact('plates', 'cities', 'regions', 'users'));
     }
     public function export(Request $request)
@@ -219,6 +219,8 @@ class LicenseplateController extends Controller
         fputcsv($file, ['Province', 'City', 'Plate Number', 'Price', 'Status', 'Owner']);
 
         // Fetch data from DB
+        $page = $request->input('page', 1);
+        $perPage = 1000;
 
         $query = LicensePlate::query();
         if ($request->filled('city')) {
@@ -270,7 +272,7 @@ class LicenseplateController extends Controller
         }
         $plates = $query->where("status", "Available")->get();
 
-
+        $plates = $query->paginate($perPage, ['*'], 'page', $page);
 
 
         foreach ($plates as $plate) {
@@ -655,70 +657,62 @@ class LicenseplateController extends Controller
         return response()->json(['cities' => $cities, "status" => "success"]);
     }
 
-
     public function exportPdf(Request $request)
     {
-        // 5 minutes, adjust if needed  $query = LicensePlate::query();
-
-        // Filter: Start with
         $query = LicensePlate::query();
-        if ($request->filled('city')) {
-            $query->where('city', '=', $request->city);
-        }
 
+        $page = $request->input('page', 1);
+        $perPage = 1000;
+
+        // --- Filters ---
+        if ($request->filled('city')) {
+            $query->where('city', $request->city);
+        }
         if ($request->filled('start_with')) {
             $query->where('plate_number', 'like', $request->start_with . '%');
         }
         if ($request->filled('region')) {
-            $query->where('region', '=', $request->region);
+            $query->where('region', $request->region);
         }
-
-
         if ($request->filled('contain')) {
             $query->where('plate_number', 'like', '%' . $request->contain . '%');
         }
-
         if ($request->filled('end_with')) {
             $query->where('plate_number', 'like', '%' . $request->end_with);
         }
-
         if ($request->filled('length')) {
-            $length = (int) $request->length;
+            $length = (int)$request->length;
             $query->whereRaw("LENGTH(REPLACE(REPLACE(plate_number, ' ', ''), '-', '')) = ?", [$length]);
         }
         if ($request->filled('min_price')) {
             $query->where('price', '>=', $request->min_price);
         }
-
-        // Filter by max price
         if ($request->filled('max_price')) {
             $query->where('price', '<=', $request->max_price);
         }
         if ($request->filled('user')) {
-            $query->where('user_id', '=', $request->user);
+            $query->where('user_id', $request->user);
         }
-
         if ($request->filled('featured')) {
-            $feature = $request->featured;
-            if ($feature == "Yes") {
-                $featured = 1;
-            } else {
-                $featured = 0;
-            }
-
-            $query->where('featured', '=', $featured);
+            $featured = $request->featured === 'Yes' ? 1 : 0;
+            $query->where('featured', $featured);
         }
 
-        $plates = $query->where("status", "Available")->limit(1500)->get();
+        $query->where('status', 'Available');
 
+        // --- Check total count before exporting ---
+        // $total = $query->count();
+        // if ($total > 1500) {
+        //     return redirect()->back()->with('error', 'Cannot export more than 1500 plates to PDF.');
+        // }
 
-        if (count($plates) > 1500) {
+        // --- Get paginated results ---
+        $plates = $query->paginate($perPage, ['*'], 'page', $page);
 
-            return redirect()->back()->with('success', 'Plates exported to CSV. Downloading PDF for more than 2000 plates is not allowed.');
-        }
         $pdf = PDF::loadView('customer.plates_pdf', compact('plates'));
         return $pdf->download('license_plates.pdf');
     }
+
     public function myPdf()
     {
         // $myplates = LicensePlate::where('user_id', Auth::id())
@@ -1001,22 +995,25 @@ class LicenseplateController extends Controller
                 ];
             }
         }
-
-
+        // return $platesArray;
+        //   die();
         foreach ($platesArray as $plate) {
-            $plateModel =  LicensePlate::insertOrIgnore(
-                ['plate_number' => $plate['plate_number']],
+            $inserted = LicensePlate::insertOrIgnore([
                 [
-                    'region' => $plate['province'],
-                    'city'     => $plate['city'],
-                    'price'    => $plate['price'],
-                    'status'   => $plate['status'],
-                    'user_id'  => Auth::id() // Associate with the authenticated user
+                    'plate_number' => $plate['plate_number'],
+                    'region'       => $plate['province'],
+                    'city'         => $plate['city'],
+                    'price'        => $plate['price'],
+                    'status'       => $plate['status'],
+                    'user_id'      => Auth::id(),
                 ]
-            );
-            if ($plateModel->wasRecentlyCreated) {
-                $imported++;
-            }
+            ]);
+
+            $imported += $inserted;
+            // 
+            //     $imported++;
+            //
+
         }
 
         return back()->with('success', "$imported plates imported successfully from PDF.");
@@ -1139,7 +1136,7 @@ class LicenseplateController extends Controller
     {
         $banks = Bank::get()->toArray();
         $dueDate = now()->addMonths(2)->format('d M Y');
-             $plate=LicensePlate::find($id);
+        $plate = LicensePlate::find($id);
         $provinceLogos = [
             'Punjab'      => public_path('glogo/punjab.jpeg'),
             'Sindh'       => public_path('glogo/sindh.png'),
@@ -1147,7 +1144,7 @@ class LicenseplateController extends Controller
             'Balochistan' => public_path('glogo/balochistan.jpeg'),
         ];
 
-        $user = User::where("id",$plate->user_id)->first();
+        $user = User::where("id", $plate->user_id)->first();
         $provinceLogo = $provinceLogos[$plate->region] ?? null;
         $invoiceNumber = 'INV-' . rand(100000, 999999);
         $paymentMethod = "Bank";

@@ -10,7 +10,7 @@
         <h2 class="text-center mb-4"> {{ $plates->count() }} Plates Found</h2>
         <div class="row mb-4">
             <div class="col-md-12">
-                <form action="{{ url('plates') }}" method="GET" class="d-flex justify-content-end">
+                <form action="{{ url('licenseplate') }}" method="GET" class="d-flex justify-content-end">
                     <div class="row">
                         <div class="col-md-6">
                             <label for="">Start With</label>
@@ -199,7 +199,7 @@
                                 request('start_with') != '' ||
                                 request('user') != '' ||
                                 request('featured') != '')
-                            <a class="btn-danger btn py-0 px-2" href="{{ url('plates') }}"><i class="fa fa-trash"
+                            <a class="btn-danger btn py-0 px-2" href="{{ url('licenseplate') }}"><i class="fa fa-trash"
                                     aria-hidden="true"></i>Cancel</a>
                         @endif
                     </p>
@@ -218,15 +218,15 @@
 
                     <a href="{{ url('plates/export?' . http_build_query($nonEmptyQuery)) }}"
                         class="btn btn-outline-secondary">Export Plates CSV</a>
-                    @if (count($plates) < 2200)
-                        @if (count($nonEmptyQuery) > 0)
+                  
+                       
                             {{-- Show export button with filtered query parameters --}}
                             <a href="{{ url('plates/export/pdf?' . http_build_query($nonEmptyQuery)) }}"
                                 class="btn btn-outline-secondary">
                                 Export Plates PDF
                             </a>
-                        @endif
-                    @endif
+                    
+                    
                 </div>
                 @php
                     $regions = [

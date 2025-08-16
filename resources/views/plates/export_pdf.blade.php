@@ -9,7 +9,7 @@
     </style>
 </head>
 <body>
-<h2 style="text-align:center;">License Plates Export</h2>
+<h2 style="text-align:center;">License Plates List</h2>
 <table>
     <thead>
         <tr>

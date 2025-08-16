@@ -12,18 +12,24 @@ use Spatie\Browsershot\Browsershot;
 class GeneratePlatesCsv extends Command
 {
     protected $signature = 'plates:csv';
-    protected $description = 'Generate license plates CSV, PDFs, and optional PNG images per province';
+    protected $description = 'Generate license plates CSV, PDFs, and PNG images per province';
 
     public function handle()
     {
-        ini_set('memory_limit', '1024M'); // 1GB memory
-        ini_set('max_execution_time', 0); // unlimited execution time
+        ini_set('memory_limit', '1024M');
+        ini_set('max_execution_time', 0);
 
         $provinces = Region::with('cities')->get();
-        $letters = range('A', 'Z');
-        $exportData = [];
-    $totalImages = 0; 
-        // --- Folders ---
+        $letters = range('A', 'T');
+
+        $exportCsvFolder = public_path('exports_csv');
+        $exportPdfFolder = public_path('exports_pdf');
+        $exportPngFolder = public_path('plates_image');
+
+        foreach ([$exportCsvFolder, $exportPdfFolder, $exportPngFolder] as $folder) {
+            if (!file_exists($folder)) mkdir($folder, 0777, true);
+        }
+
         $provinceLogos = [
             'Punjab'      => public_path('glogo/punjab.jpeg'),
             'Sindh'       => public_path('glogo/sindh.png'),
@@ -31,14 +37,8 @@ class GeneratePlatesCsv extends Command
             'Balochistan' => public_path('glogo/balochistan.jpeg'),
         ];
 
-        $exportCsvFolder = public_path('exports_csv');
-        if (!file_exists($exportCsvFolder)) mkdir($exportCsvFolder, 0777, true);
-
-        $exportPdfFolder = public_path('exports_pdf');
-        if (!file_exists($exportPdfFolder)) mkdir($exportPdfFolder, 0777, true);
-
-        $exportPngFolder = public_path('plates_image');
-        if (!file_exists($exportPngFolder)) mkdir($exportPngFolder, 0777, true);
+        $totalImages = 0;
+        $allPlates = []; // For combined CSV
 
         foreach ($provinces as $province) {
             $this->info("Generating plates for {$province->region_name}...");
@@ -47,11 +47,11 @@ class GeneratePlatesCsv extends Command
             $cities = $province->cities->pluck('id', 'city_name')->toArray();
             $provincePlates = [];
             $provinceImages = 0;
-            for ($i = 0; $i < 100; $i++) {
-                $cityName = array_rand($cities);
-                $cityId = $cities[$cityName];
 
-                // --- Generate unique plate ---
+            // --- Generate plates ---
+            for ($i = 0; $i < 50; $i++) {
+                $cityName = array_rand($cities);
+
                 do {
                     $plateNumber = $letters[array_rand($letters)]
                         . $letters[array_rand($letters)]
@@ -61,21 +61,20 @@ class GeneratePlatesCsv extends Command
                 } while (in_array($plateNumber, $usedPlates));
 
                 $usedPlates[] = $plateNumber;
-                $price = rand(1000, 4000);
 
                 $row = [
                     'Province' => $province->region_name,
                     'City' => $cityName,
                     'Plate Number' => $plateNumber,
-                    'Price' => $price,
+                    'Price' => rand(1000, 4000),
                     'Status' => 'Available'
                 ];
 
-                $exportData[] = $row;
                 $provincePlates[] = $row;
+                $allPlates[] = $row;
             }
 
-            // --- Generate PNG images (optional) ---
+            // --- Generate PNG images ---
             $provinceLogo = $provinceLogos[$province->region_name] ?? null;
             foreach ($provincePlates as $row) {
                 $html = View::make('plates.plate_templates', [
@@ -90,28 +89,41 @@ class GeneratePlatesCsv extends Command
                     ->windowSize(400, 200)
                     ->timeout(60000)
                     ->save($imagePath);
-                $this->info("Image Png Created for {$province->region_name} {$provinceImages} at {$imagePath}");
+  $this->info("Image Png Created for {$province->region_name} {$provinceImages} at {$imagePath}");
                 $provinceImages++;
-                   $totalImages++;
+                $totalImages++;
             }
-            $this->info("Total  {$provinceImages} Png Image Created for {$province->region_name} ");
+
+            $this->info("PNG images created for {$province->region_name}: {$provinceImages}");
+
             // --- PDF per province ---
             $pdfPath = $exportPdfFolder . '/' . $province->region_name . '_plates.pdf';
             $pdf = Pdf::loadView('plates.export_pdf', ['plates' => $provincePlates]);
             $pdf->save($pdfPath);
             $this->info("PDF exported for {$province->region_name} at {$pdfPath}");
+
+            // --- CSV per province ---
+            $csvPath = $exportCsvFolder . '/' . $province->region_name . '_plates.csv';
+            $csv = Writer::createFromPath($csvPath, 'w+');
+            $csv->insertOne(array_keys($provincePlates[0]));
+            foreach ($provincePlates as $row) {
+                $csv->insertOne($row);
+            }
+            $this->info("CSV file created for {$province->region_name} at {$csvPath}");
         }
 
-        // --- Single CSV for all provinces ---
-        $csvPath = $exportCsvFolder . '/license_plates.csv';
-        $csv = Writer::createFromPath($csvPath, 'w+');
-        $csv->insertOne(array_keys($exportData[0]));
-        foreach ($exportData as $row) {
-            $csv->insertOne($row);
+        // --- Combined CSV for all provinces ---
+        if (!empty($allPlates)) {
+            $csvPathAll = $exportCsvFolder . '/license_plates_combined.csv';
+            $csvAll = Writer::createFromPath($csvPathAll, 'w+');
+            $csvAll->insertOne(array_keys($allPlates[0]));
+            foreach ($allPlates as $row) {
+                $csvAll->insertOne($row);
+            }
+            $this->info("Combined CSV created at {$csvPathAll}");
         }
 
-        $this->info("CSV file created successfully at: {$csvPath}");
+        $this->info("Total PNG images created: {$totalImages}");
         $this->info("All exports completed!");
-           $this->info("Total PNG images created: {$totalImages}");
     }
 }
