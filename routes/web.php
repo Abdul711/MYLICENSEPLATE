@@ -148,3 +148,6 @@ Route::view('forgotpassword', 'forget')->name('forgotpassword');
 Route::post('forget', [App\Http\Controllers\ForgetPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('password/reset/{token}', [App\Http\Controllers\ForgetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('reset', [App\Http\Controllers\ForgetPasswordController::class, 'reset'])->name('password.update');
+Route::get("/failedJob",function(){
+return \App\Models\FailedJob::select('exception','failed_at')->get();
+});

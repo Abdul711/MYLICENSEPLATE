@@ -218,15 +218,15 @@
 
                     <a href="{{ url('plates/export?' . http_build_query($nonEmptyQuery)) }}"
                         class="btn btn-outline-secondary">Export Plates CSV</a>
-                  
-                       
-                            {{-- Show export button with filtered query parameters --}}
-                            <a href="{{ url('plates/export/pdf?' . http_build_query($nonEmptyQuery)) }}"
-                                class="btn btn-outline-secondary">
-                                Export Plates PDF
-                            </a>
-                    
-                    
+
+
+                    {{-- Show export button with filtered query parameters --}}
+                    <a href="{{ url('plates/export/pdf?' . http_build_query($nonEmptyQuery)) }}"
+                        class="btn btn-outline-secondary">
+                        Export Plates PDF
+                    </a>
+
+
                 </div>
                 @php
                     $regions = [
@@ -237,7 +237,7 @@
                     ];
                 @endphp
 
-                {{-- @foreach ($plates as $plate)
+                @foreach ($plates as $plate)
                     @php
                         $city = \App\Models\City::where('city_name', $plate->city)->first();
                         $city_urdu_name = $city->name_ur;
@@ -290,48 +290,10 @@
                     @endif
                 @endforeach
 
-                {{ $plates->links() }} --}}
-
-
-                {{-- Loop through each plate --}}
-                @foreach ($plates as $plate)
-                    @php
-
-                        $city = \App\Models\City::where('city_name', $plate->city)->first();
-                        $city_urdu_name = $city?->name_ur;
-                         $componentName = strtolower($plate->region) . '-plate';
-                    @endphp
-
-    <div class="col-md-3">
-        <x-dynamic-component 
-            :component="$componentName" 
-            :plate="$plate" 
-            :cityUrduName="$city_urdu_name" 
-        />
-    </div>
-    {{-- php artisan make:component BalochistanPlate --}}
-
-     
-
-                    {{-- @if ($plate->region == 'Punjab')
-                        <div class="col-md-3">
-                            <x-punjab-plate :plate="$plate" :cityUrduName="$city_urdu_name" />
-                        </div>
-                    @elseif ($plate->region == 'Sindh')
-                        <div class="col-md-3">
-                            <x-sindh-plate :plate="$plate" :cityUrduName="$city_urdu_name" />
-                        </div>
-                    @elseif ($plate->region == 'Balochistan')
-                        <div class="col-md-3">
-                            <x-balochistan-plate :plate="$plate" :cityUrduName="$city_urdu_name" />
-                        </div>
-                    @elseif ($plate->region == 'KPK')
-                        <div class="col-md-3">
-                            <x-kpk-plate :plate="$plate" :cityUrduName="$city_urdu_name" />
-                        </div>
-                    @endif --}}
-                @endforeach
                 {{ $plates->links() }}
+
+
+              
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

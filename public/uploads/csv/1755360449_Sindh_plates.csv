@@ -1,0 +1,1001 @@
+Province,City,"Plate Number",Price,Status
+Sindh,Khairpur,BKE-704,3140,Available
+Sindh,"Mirpur Khas",EFC-569,2167,Available
+Sindh,Hyderabad,OIB-222,2995,Available
+Sindh,Dadu,RAD-874,1901,Available
+Sindh,Dadu,RKG-412,1849,Available
+Sindh,Sukkur,JAT-530,3071,Available
+Sindh,"Mirpur Khas",CPK-148,2373,Available
+Sindh,Larkana,DPO-358,1532,Available
+Sindh,Larkana,FEJ-936,1630,Available
+Sindh,Hyderabad,MPP-229,3070,Available
+Sindh,Karachi,REN-964,2002,Available
+Sindh,Hyderabad,MOQ-157,3779,Available
+Sindh,Dadu,LLP-499,2278,Available
+Sindh,Thatta,QQP-290,2298,Available
+Sindh,Dadu,OGC-854,2775,Available
+Sindh,Dadu,LFH-516,2608,Available
+Sindh,Karachi,QED-420,3097,Available
+Sindh,"Mirpur Khas",TRP-969,1425,Available
+Sindh,Dadu,AAC-840,1012,Available
+Sindh,Hyderabad,OPB-642,1268,Available
+Sindh,Dadu,QFD-789,3573,Available
+Sindh,Khairpur,NPP-807,1369,Available
+Sindh,Larkana,AHG-651,3795,Available
+Sindh,Dadu,GHF-797,2267,Available
+Sindh,Thatta,CMM-848,1585,Available
+Sindh,"Mirpur Khas",HIQ-847,1508,Available
+Sindh,Karachi,CMD-765,2898,Available
+Sindh,Thatta,KCH-582,1155,Available
+Sindh,Larkana,MSO-957,3610,Available
+Sindh,Hyderabad,HTR-347,1242,Available
+Sindh,Sukkur,NBF-265,1727,Available
+Sindh,"Mirpur Khas",GFJ-846,3149,Available
+Sindh,Hyderabad,BIR-320,3971,Available
+Sindh,Sukkur,DLT-686,1242,Available
+Sindh,Khairpur,QAE-403,2807,Available
+Sindh,Hyderabad,FLL-191,2496,Available
+Sindh,Hyderabad,REL-394,1512,Available
+Sindh,Sukkur,JEG-923,2481,Available
+Sindh,Nawabshah,TDN-570,2321,Available
+Sindh,Larkana,PKC-937,3580,Available
+Sindh,Larkana,AJE-475,3238,Available
+Sindh,Nawabshah,BTC-514,3397,Available
+Sindh,Hyderabad,SOM-681,3885,Available
+Sindh,Khairpur,GEL-863,3186,Available
+Sindh,Thatta,CPL-806,1957,Available
+Sindh,Nawabshah,JRG-102,2011,Available
+Sindh,Larkana,QET-427,1025,Available
+Sindh,Hyderabad,QLN-557,1362,Available
+Sindh,Nawabshah,KDA-435,1536,Available
+Sindh,"Mirpur Khas",TCO-931,1176,Available
+Sindh,Hyderabad,PAN-467,1714,Available
+Sindh,Larkana,JIN-846,2942,Available
+Sindh,Thatta,IIL-379,3486,Available
+Sindh,Karachi,FOG-438,2745,Available
+Sindh,Hyderabad,ITD-148,3220,Available
+Sindh,Sukkur,NIC-706,3192,Available
+Sindh,Nawabshah,QCR-668,1737,Available
+Sindh,Khairpur,HBB-527,3921,Available
+Sindh,Larkana,LLR-451,2499,Available
+Sindh,Larkana,PHB-188,1028,Available
+Sindh,Sukkur,SFQ-411,3589,Available
+Sindh,Khairpur,CLC-712,3471,Available
+Sindh,Nawabshah,FCI-656,2917,Available
+Sindh,Sukkur,DHS-994,1874,Available
+Sindh,Sukkur,MGR-210,3654,Available
+Sindh,Khairpur,MFA-622,1853,Available
+Sindh,Khairpur,KMB-895,1126,Available
+Sindh,Khairpur,PKS-886,1502,Available
+Sindh,Nawabshah,MPS-934,1770,Available
+Sindh,Khairpur,COE-592,2901,Available
+Sindh,Karachi,QIO-718,3701,Available
+Sindh,Dadu,PKA-922,1739,Available
+Sindh,Larkana,STD-359,2959,Available
+Sindh,Nawabshah,TME-886,3423,Available
+Sindh,Karachi,AMF-858,1819,Available
+Sindh,"Mirpur Khas",LKE-109,3133,Available
+Sindh,Hyderabad,AHS-237,2069,Available
+Sindh,Karachi,SHI-288,1030,Available
+Sindh,Karachi,RNQ-434,1161,Available
+Sindh,Nawabshah,EBD-307,1791,Available
+Sindh,Hyderabad,NCG-632,3484,Available
+Sindh,Hyderabad,JIL-329,1467,Available
+Sindh,Sukkur,LMC-789,2251,Available
+Sindh,Khairpur,OFB-816,1779,Available
+Sindh,Larkana,HQH-664,3811,Available
+Sindh,Sukkur,SOA-837,1920,Available
+Sindh,Thatta,HMA-498,3956,Available
+Sindh,Thatta,IDN-305,3468,Available
+Sindh,Dadu,IGG-276,2878,Available
+Sindh,Nawabshah,LHC-417,2610,Available
+Sindh,Khairpur,PIT-515,2403,Available
+Sindh,Sukkur,QIM-182,1941,Available
+Sindh,Thatta,CGG-265,3725,Available
+Sindh,Hyderabad,EDH-256,2406,Available
+Sindh,Sukkur,ALI-636,2055,Available
+Sindh,Larkana,CQS-151,1064,Available
+Sindh,Khairpur,FMR-894,1956,Available
+Sindh,Larkana,FQM-796,2105,Available
+Sindh,Nawabshah,QPD-137,1230,Available
+Sindh,Dadu,PTP-607,1402,Available
+Sindh,Larkana,MTL-774,3767,Available
+Sindh,Khairpur,CBO-985,3123,Available
+Sindh,Nawabshah,TSM-848,2042,Available
+Sindh,Larkana,NGF-496,1801,Available
+Sindh,Larkana,TGF-158,2233,Available
+Sindh,Thatta,QLQ-205,2286,Available
+Sindh,Larkana,KQB-383,2510,Available
+Sindh,"Mirpur Khas",NGB-605,1426,Available
+Sindh,Thatta,OHR-697,1488,Available
+Sindh,Nawabshah,TSK-883,3326,Available
+Sindh,Sukkur,NIA-570,3281,Available
+Sindh,Nawabshah,MAJ-978,3758,Available
+Sindh,Sukkur,QMT-591,3202,Available
+Sindh,"Mirpur Khas",FML-822,1570,Available
+Sindh,Thatta,ASM-462,2547,Available
+Sindh,Khairpur,QHT-680,1012,Available
+Sindh,Thatta,FMI-982,2846,Available
+Sindh,Dadu,JLE-570,3561,Available
+Sindh,Sukkur,LLJ-325,1049,Available
+Sindh,Hyderabad,BOI-488,1935,Available
+Sindh,Khairpur,CIQ-821,2271,Available
+Sindh,Sukkur,KQJ-349,1740,Available
+Sindh,Nawabshah,ABA-650,2553,Available
+Sindh,Thatta,MBD-233,3731,Available
+Sindh,"Mirpur Khas",BFN-402,3254,Available
+Sindh,Nawabshah,GTA-700,1450,Available
+Sindh,Thatta,GIA-393,1971,Available
+Sindh,"Mirpur Khas",IRN-502,3414,Available
+Sindh,Nawabshah,AKL-211,3846,Available
+Sindh,"Mirpur Khas",PNE-814,3703,Available
+Sindh,Khairpur,EFB-726,1907,Available
+Sindh,Hyderabad,FIG-242,2596,Available
+Sindh,Dadu,BLG-106,3886,Available
+Sindh,Khairpur,OIE-183,2105,Available
+Sindh,Dadu,IMS-517,1716,Available
+Sindh,Nawabshah,AAI-488,1480,Available
+Sindh,Karachi,EJA-367,1150,Available
+Sindh,Sukkur,KPA-827,2065,Available
+Sindh,Nawabshah,JBP-651,2067,Available
+Sindh,Dadu,BFN-863,3416,Available
+Sindh,Dadu,DRS-224,2564,Available
+Sindh,Nawabshah,LKS-809,3304,Available
+Sindh,"Mirpur Khas",JQJ-369,2627,Available
+Sindh,"Mirpur Khas",CIL-603,1464,Available
+Sindh,Sukkur,RHC-804,2241,Available
+Sindh,Sukkur,NGB-886,2435,Available
+Sindh,Karachi,LCR-167,3599,Available
+Sindh,Nawabshah,MSL-573,3649,Available
+Sindh,"Mirpur Khas",HSO-329,2172,Available
+Sindh,"Mirpur Khas",EFN-451,1290,Available
+Sindh,"Mirpur Khas",THC-631,3911,Available
+Sindh,Larkana,OJL-902,1201,Available
+Sindh,Nawabshah,GIO-540,1777,Available
+Sindh,Hyderabad,LCG-917,1624,Available
+Sindh,Hyderabad,RSC-583,1419,Available
+Sindh,Thatta,TJS-401,2173,Available
+Sindh,"Mirpur Khas",DFN-496,1379,Available
+Sindh,Larkana,KJN-603,1741,Available
+Sindh,Hyderabad,TRM-920,3055,Available
+Sindh,"Mirpur Khas",KDI-789,1310,Available
+Sindh,Thatta,GGT-482,2047,Available
+Sindh,Khairpur,NPS-805,1023,Available
+Sindh,Hyderabad,KNG-857,1400,Available
+Sindh,Thatta,OEP-772,3590,Available
+Sindh,Khairpur,EDF-179,1380,Available
+Sindh,"Mirpur Khas",LDG-602,3570,Available
+Sindh,Karachi,PLJ-566,1135,Available
+Sindh,"Mirpur Khas",RFK-491,1736,Available
+Sindh,Thatta,BGA-890,2026,Available
+Sindh,Sukkur,FHD-905,1205,Available
+Sindh,Larkana,EAA-747,1562,Available
+Sindh,Dadu,SNI-104,1380,Available
+Sindh,"Mirpur Khas",GSQ-297,3893,Available
+Sindh,"Mirpur Khas",NDC-676,3336,Available
+Sindh,Karachi,JEG-535,2527,Available
+Sindh,Larkana,BFE-477,2924,Available
+Sindh,Dadu,MRF-182,1399,Available
+Sindh,Sukkur,JTL-566,1359,Available
+Sindh,Sukkur,DIA-386,3326,Available
+Sindh,Khairpur,NNJ-343,2480,Available
+Sindh,Hyderabad,NBR-364,1963,Available
+Sindh,Larkana,RPI-518,3714,Available
+Sindh,Larkana,LKF-614,3208,Available
+Sindh,Larkana,QED-386,2778,Available
+Sindh,Hyderabad,SED-627,3827,Available
+Sindh,Larkana,QEO-953,1989,Available
+Sindh,Hyderabad,AOC-366,2179,Available
+Sindh,Hyderabad,GTD-920,2710,Available
+Sindh,Dadu,FJE-316,1174,Available
+Sindh,Khairpur,OCE-496,1751,Available
+Sindh,Sukkur,MCO-930,3523,Available
+Sindh,Sukkur,FTE-258,2578,Available
+Sindh,Khairpur,SSS-247,2133,Available
+Sindh,Hyderabad,SLH-904,1719,Available
+Sindh,"Mirpur Khas",GOF-597,3245,Available
+Sindh,Larkana,PQI-625,2125,Available
+Sindh,Sukkur,FBB-652,2892,Available
+Sindh,Khairpur,LPS-653,2824,Available
+Sindh,Khairpur,DKL-590,1079,Available
+Sindh,Dadu,CEH-407,3968,Available
+Sindh,"Mirpur Khas",SFR-677,1534,Available
+Sindh,Karachi,GHD-203,1257,Available
+Sindh,Karachi,PHD-718,3468,Available
+Sindh,Hyderabad,PST-427,1270,Available
+Sindh,"Mirpur Khas",BOM-841,2682,Available
+Sindh,Larkana,IOE-633,2465,Available
+Sindh,Sukkur,JAI-147,2010,Available
+Sindh,Larkana,SDI-887,3467,Available
+Sindh,Nawabshah,FOG-405,3600,Available
+Sindh,Sukkur,FLB-696,1239,Available
+Sindh,Thatta,LQF-335,1221,Available
+Sindh,Thatta,NQJ-855,1599,Available
+Sindh,Nawabshah,LKM-672,1681,Available
+Sindh,Karachi,STM-792,3610,Available
+Sindh,Nawabshah,CNL-150,1797,Available
+Sindh,Dadu,LDA-890,2993,Available
+Sindh,Nawabshah,MLK-521,2325,Available
+Sindh,Thatta,KAC-128,2954,Available
+Sindh,Nawabshah,HBC-338,1586,Available
+Sindh,Thatta,FJQ-525,3991,Available
+Sindh,Dadu,HKE-453,1017,Available
+Sindh,Larkana,HPC-471,3008,Available
+Sindh,Thatta,CSO-287,1215,Available
+Sindh,Thatta,NME-192,3207,Available
+Sindh,Hyderabad,GPG-771,3861,Available
+Sindh,Hyderabad,KOD-735,1186,Available
+Sindh,Khairpur,KHQ-523,3971,Available
+Sindh,Thatta,PDF-883,1473,Available
+Sindh,Dadu,MGL-877,1930,Available
+Sindh,Hyderabad,FSG-465,2823,Available
+Sindh,Larkana,DMH-936,3376,Available
+Sindh,Hyderabad,ILS-296,2577,Available
+Sindh,Hyderabad,QBJ-208,2702,Available
+Sindh,Karachi,LHJ-145,2708,Available
+Sindh,"Mirpur Khas",DAO-245,3375,Available
+Sindh,Khairpur,EAN-426,3232,Available
+Sindh,Khairpur,JKG-428,2591,Available
+Sindh,Karachi,JQS-302,1930,Available
+Sindh,Nawabshah,IJB-153,2936,Available
+Sindh,Nawabshah,GGC-374,2983,Available
+Sindh,Khairpur,LRI-681,1996,Available
+Sindh,Nawabshah,TGE-509,3726,Available
+Sindh,"Mirpur Khas",NME-532,2761,Available
+Sindh,Karachi,FJL-427,3453,Available
+Sindh,Khairpur,TFT-390,3988,Available
+Sindh,Sukkur,KEL-973,2726,Available
+Sindh,Nawabshah,SBM-755,2363,Available
+Sindh,Thatta,HIN-680,3311,Available
+Sindh,Sukkur,FPO-247,3767,Available
+Sindh,Sukkur,LRP-320,1667,Available
+Sindh,Karachi,CEJ-728,3899,Available
+Sindh,Thatta,LOJ-538,1393,Available
+Sindh,Karachi,EJE-829,3961,Available
+Sindh,Nawabshah,HTO-971,2287,Available
+Sindh,Hyderabad,JSK-862,3565,Available
+Sindh,Dadu,MTS-568,1611,Available
+Sindh,Khairpur,LIN-496,3174,Available
+Sindh,Khairpur,SOP-697,1697,Available
+Sindh,Dadu,BQE-486,2078,Available
+Sindh,Khairpur,IHE-937,3755,Available
+Sindh,"Mirpur Khas",GTJ-931,2547,Available
+Sindh,Dadu,QPI-783,1624,Available
+Sindh,Sukkur,JQH-720,1955,Available
+Sindh,Hyderabad,QRJ-862,3532,Available
+Sindh,Thatta,PQQ-539,2234,Available
+Sindh,Larkana,QQR-527,2854,Available
+Sindh,Thatta,THE-625,3233,Available
+Sindh,Karachi,CIC-939,3153,Available
+Sindh,Larkana,KMB-415,1741,Available
+Sindh,Khairpur,OOR-654,3902,Available
+Sindh,Dadu,BQH-658,3947,Available
+Sindh,Larkana,GPQ-821,3652,Available
+Sindh,Nawabshah,IRE-176,3035,Available
+Sindh,Sukkur,NHF-460,1102,Available
+Sindh,Nawabshah,BDJ-722,2830,Available
+Sindh,Hyderabad,OQR-189,2320,Available
+Sindh,Thatta,OAD-686,1221,Available
+Sindh,"Mirpur Khas",FKL-774,2412,Available
+Sindh,Khairpur,NHD-406,2348,Available
+Sindh,Hyderabad,IKD-623,2971,Available
+Sindh,Dadu,KAM-726,2391,Available
+Sindh,Thatta,KML-110,3327,Available
+Sindh,Dadu,SDR-963,3453,Available
+Sindh,Hyderabad,ROR-647,2392,Available
+Sindh,Nawabshah,TQI-752,1319,Available
+Sindh,Karachi,RPR-835,2806,Available
+Sindh,Dadu,ICS-150,1619,Available
+Sindh,Dadu,CBR-120,2725,Available
+Sindh,Dadu,LDE-295,2878,Available
+Sindh,Larkana,COK-152,1441,Available
+Sindh,Larkana,LET-542,1582,Available
+Sindh,Larkana,GOR-994,3217,Available
+Sindh,Hyderabad,FMG-485,2642,Available
+Sindh,Larkana,OED-176,1500,Available
+Sindh,Karachi,DOG-349,3945,Available
+Sindh,Dadu,KMD-282,3955,Available
+Sindh,Thatta,PQG-794,2999,Available
+Sindh,Dadu,NJD-117,1240,Available
+Sindh,Hyderabad,RSM-458,1448,Available
+Sindh,Khairpur,NAR-812,1453,Available
+Sindh,Hyderabad,ECK-908,1771,Available
+Sindh,Sukkur,RRI-119,3364,Available
+Sindh,Dadu,KFN-853,1892,Available
+Sindh,Hyderabad,FMO-203,2246,Available
+Sindh,Thatta,RJS-279,1681,Available
+Sindh,Nawabshah,AIS-920,2345,Available
+Sindh,Nawabshah,HOD-785,1645,Available
+Sindh,Karachi,LAF-444,3455,Available
+Sindh,"Mirpur Khas",DJG-648,2725,Available
+Sindh,Hyderabad,GBE-704,2424,Available
+Sindh,Nawabshah,SAQ-894,2641,Available
+Sindh,Larkana,IOJ-946,3099,Available
+Sindh,Thatta,TOA-990,1574,Available
+Sindh,Thatta,FPA-594,1146,Available
+Sindh,Sukkur,HFR-374,1048,Available
+Sindh,Sukkur,MES-169,2266,Available
+Sindh,Dadu,IBD-173,2421,Available
+Sindh,Dadu,LBD-233,1500,Available
+Sindh,Hyderabad,KAR-960,3984,Available
+Sindh,Karachi,POS-311,1207,Available
+Sindh,Sukkur,CNP-375,2651,Available
+Sindh,Khairpur,SHN-331,2737,Available
+Sindh,Khairpur,FCQ-223,1648,Available
+Sindh,Nawabshah,LBQ-859,3209,Available
+Sindh,Khairpur,EJI-796,2450,Available
+Sindh,Sukkur,NOH-807,2974,Available
+Sindh,Khairpur,SBH-605,3526,Available
+Sindh,Karachi,DJJ-582,1616,Available
+Sindh,Karachi,JJK-825,3857,Available
+Sindh,Khairpur,GCP-254,3779,Available
+Sindh,"Mirpur Khas",HKL-442,1824,Available
+Sindh,Sukkur,NDM-581,3507,Available
+Sindh,"Mirpur Khas",KKM-301,3613,Available
+Sindh,Karachi,MEE-516,2873,Available
+Sindh,Thatta,MQE-564,1378,Available
+Sindh,Khairpur,GLM-509,3360,Available
+Sindh,Karachi,EEN-305,3481,Available
+Sindh,Dadu,LLD-264,2602,Available
+Sindh,Sukkur,SBQ-109,1299,Available
+Sindh,Dadu,LLJ-300,1068,Available
+Sindh,Dadu,QJO-786,1778,Available
+Sindh,Sukkur,LJT-828,3913,Available
+Sindh,Thatta,MFD-512,3333,Available
+Sindh,Nawabshah,RDN-991,3757,Available
+Sindh,Hyderabad,RQC-265,2347,Available
+Sindh,Khairpur,NCO-501,3904,Available
+Sindh,Hyderabad,AMD-446,1006,Available
+Sindh,Dadu,FAG-289,2138,Available
+Sindh,Karachi,RFH-922,2372,Available
+Sindh,Larkana,GNF-263,1915,Available
+Sindh,Larkana,NJL-300,3292,Available
+Sindh,Dadu,PEB-786,2614,Available
+Sindh,Hyderabad,MMJ-491,3592,Available
+Sindh,Hyderabad,TJB-972,3644,Available
+Sindh,Thatta,PNA-702,3245,Available
+Sindh,"Mirpur Khas",PKS-149,1511,Available
+Sindh,Karachi,MSM-342,2271,Available
+Sindh,Hyderabad,TDM-493,3590,Available
+Sindh,Hyderabad,TOO-941,1641,Available
+Sindh,Larkana,IRT-525,1615,Available
+Sindh,"Mirpur Khas",HQS-192,3387,Available
+Sindh,Dadu,KAP-967,2321,Available
+Sindh,Karachi,FJE-813,1955,Available
+Sindh,Sukkur,DRB-595,3189,Available
+Sindh,"Mirpur Khas",HAK-450,3159,Available
+Sindh,"Mirpur Khas",TCP-367,2801,Available
+Sindh,Dadu,BEJ-988,1154,Available
+Sindh,Larkana,ACO-396,2323,Available
+Sindh,Karachi,RDH-814,1921,Available
+Sindh,Karachi,OOG-640,3866,Available
+Sindh,Thatta,MPF-546,2431,Available
+Sindh,Thatta,DOP-424,3453,Available
+Sindh,Sukkur,JMB-377,1668,Available
+Sindh,Sukkur,KLN-900,1797,Available
+Sindh,Hyderabad,POG-453,2407,Available
+Sindh,Thatta,HKJ-132,3630,Available
+Sindh,Khairpur,MKI-165,2263,Available
+Sindh,Karachi,RHB-574,3933,Available
+Sindh,Khairpur,GDC-507,3381,Available
+Sindh,"Mirpur Khas",ENP-462,2433,Available
+Sindh,Larkana,SMJ-996,2743,Available
+Sindh,Nawabshah,EFL-158,3911,Available
+Sindh,"Mirpur Khas",FNJ-150,1855,Available
+Sindh,Nawabshah,KEL-421,2826,Available
+Sindh,Karachi,KMI-664,2065,Available
+Sindh,"Mirpur Khas",HCI-419,3885,Available
+Sindh,Khairpur,RAF-814,3401,Available
+Sindh,Khairpur,DHA-447,3432,Available
+Sindh,Khairpur,NRD-545,2668,Available
+Sindh,"Mirpur Khas",RIN-632,2748,Available
+Sindh,Larkana,OMG-774,2684,Available
+Sindh,Karachi,EHG-871,2950,Available
+Sindh,Larkana,KSR-484,1630,Available
+Sindh,Sukkur,QSC-894,2148,Available
+Sindh,Larkana,ETP-966,1392,Available
+Sindh,Dadu,ASC-544,2359,Available
+Sindh,Karachi,BBN-904,3105,Available
+Sindh,"Mirpur Khas",ICM-931,3287,Available
+Sindh,Sukkur,AOD-550,2527,Available
+Sindh,Sukkur,ELC-743,2553,Available
+Sindh,Hyderabad,KJG-348,2466,Available
+Sindh,Khairpur,QCI-528,1098,Available
+Sindh,Nawabshah,SCE-646,2469,Available
+Sindh,Sukkur,CPF-949,3645,Available
+Sindh,Thatta,RGN-101,1990,Available
+Sindh,Sukkur,PPD-871,1789,Available
+Sindh,"Mirpur Khas",TAC-442,1611,Available
+Sindh,Thatta,QDA-264,2886,Available
+Sindh,Hyderabad,JAG-560,3808,Available
+Sindh,Sukkur,QHL-524,2049,Available
+Sindh,Thatta,MSB-552,1369,Available
+Sindh,Hyderabad,ONQ-547,2039,Available
+Sindh,Nawabshah,CNF-680,1882,Available
+Sindh,Karachi,GKP-985,3759,Available
+Sindh,Nawabshah,GLF-513,3000,Available
+Sindh,Nawabshah,GFB-757,1001,Available
+Sindh,Larkana,DKN-635,1694,Available
+Sindh,Sukkur,AJK-455,2667,Available
+Sindh,Khairpur,NDR-883,3654,Available
+Sindh,Nawabshah,QJA-548,2152,Available
+Sindh,Dadu,CLI-168,1394,Available
+Sindh,Sukkur,TPB-618,2957,Available
+Sindh,"Mirpur Khas",DSE-836,1476,Available
+Sindh,Thatta,OGM-830,2708,Available
+Sindh,Thatta,DEQ-295,1501,Available
+Sindh,Dadu,JII-582,2970,Available
+Sindh,Dadu,ILF-188,3315,Available
+Sindh,Dadu,SOR-859,3356,Available
+Sindh,Nawabshah,GBN-423,3631,Available
+Sindh,Dadu,JSL-607,2203,Available
+Sindh,Karachi,RAT-176,1292,Available
+Sindh,Dadu,SSN-124,2752,Available
+Sindh,Khairpur,TNR-160,3920,Available
+Sindh,"Mirpur Khas",MGL-521,1332,Available
+Sindh,Thatta,DAE-199,2345,Available
+Sindh,"Mirpur Khas",JOH-853,3427,Available
+Sindh,Dadu,MMQ-934,3701,Available
+Sindh,Karachi,MFE-386,2355,Available
+Sindh,Thatta,OOL-380,3814,Available
+Sindh,Dadu,EGE-532,1698,Available
+Sindh,Hyderabad,NGP-699,1968,Available
+Sindh,Dadu,RBG-112,1885,Available
+Sindh,Sukkur,KAA-536,3684,Available
+Sindh,Hyderabad,HHN-965,1365,Available
+Sindh,Thatta,CRF-798,1333,Available
+Sindh,Hyderabad,HGG-236,2301,Available
+Sindh,Thatta,RRN-638,1058,Available
+Sindh,Khairpur,MBR-142,2026,Available
+Sindh,Hyderabad,DLT-201,3039,Available
+Sindh,Dadu,TJG-628,2724,Available
+Sindh,Thatta,BTT-557,3079,Available
+Sindh,Karachi,IMS-383,2132,Available
+Sindh,Thatta,OLT-660,2095,Available
+Sindh,Thatta,TQR-429,3230,Available
+Sindh,Sukkur,DLD-379,3541,Available
+Sindh,Dadu,EPR-176,2246,Available
+Sindh,Sukkur,BCK-825,2452,Available
+Sindh,Khairpur,CCL-229,1246,Available
+Sindh,Khairpur,TNG-638,3840,Available
+Sindh,Sukkur,GDL-767,2650,Available
+Sindh,Sukkur,GOH-894,2664,Available
+Sindh,"Mirpur Khas",JIP-928,3578,Available
+Sindh,Karachi,DPQ-793,1374,Available
+Sindh,Dadu,OCH-908,3292,Available
+Sindh,Hyderabad,PFA-453,2091,Available
+Sindh,Hyderabad,ROB-283,1716,Available
+Sindh,Hyderabad,LFG-317,1754,Available
+Sindh,Larkana,HIT-143,3791,Available
+Sindh,Sukkur,FST-840,3877,Available
+Sindh,Dadu,IDD-769,3743,Available
+Sindh,Dadu,HBN-470,2445,Available
+Sindh,Karachi,GCQ-589,1005,Available
+Sindh,Sukkur,EEJ-374,1066,Available
+Sindh,Karachi,BKJ-909,2840,Available
+Sindh,Karachi,PAO-230,1063,Available
+Sindh,Khairpur,GID-813,1175,Available
+Sindh,Nawabshah,KCN-519,3289,Available
+Sindh,Sukkur,QGM-465,1540,Available
+Sindh,Nawabshah,LEK-184,2813,Available
+Sindh,Sukkur,QSP-654,3305,Available
+Sindh,Karachi,HQS-620,1439,Available
+Sindh,Larkana,MHP-606,3364,Available
+Sindh,Karachi,PFQ-146,1692,Available
+Sindh,Nawabshah,QSM-208,1159,Available
+Sindh,"Mirpur Khas",LDQ-536,2703,Available
+Sindh,Karachi,KDP-938,3806,Available
+Sindh,"Mirpur Khas",HJF-520,2437,Available
+Sindh,Thatta,ERG-857,3838,Available
+Sindh,Dadu,DDL-981,3571,Available
+Sindh,Nawabshah,FRE-861,3675,Available
+Sindh,Sukkur,DRC-328,2908,Available
+Sindh,Nawabshah,QCH-401,3862,Available
+Sindh,Dadu,GML-254,3038,Available
+Sindh,Larkana,NSD-869,1107,Available
+Sindh,Thatta,LTC-209,3074,Available
+Sindh,Nawabshah,AGN-579,1222,Available
+Sindh,Nawabshah,KIF-673,2292,Available
+Sindh,Karachi,EOH-336,1099,Available
+Sindh,Sukkur,FCL-329,3106,Available
+Sindh,Sukkur,AET-799,1400,Available
+Sindh,Thatta,MCD-627,3691,Available
+Sindh,Khairpur,HIQ-560,3687,Available
+Sindh,Khairpur,OEM-100,2049,Available
+Sindh,"Mirpur Khas",KGP-834,3187,Available
+Sindh,Larkana,JLJ-578,1199,Available
+Sindh,Nawabshah,GIN-993,2103,Available
+Sindh,Nawabshah,GHJ-430,3602,Available
+Sindh,Karachi,RIH-657,2358,Available
+Sindh,Larkana,TPR-826,3467,Available
+Sindh,Dadu,IQD-189,3376,Available
+Sindh,Khairpur,ITB-435,1002,Available
+Sindh,Hyderabad,PSA-376,2045,Available
+Sindh,"Mirpur Khas",OKQ-863,1193,Available
+Sindh,Thatta,RCR-129,1073,Available
+Sindh,Thatta,ADI-339,1601,Available
+Sindh,Thatta,SGM-373,3310,Available
+Sindh,Karachi,JEH-666,1976,Available
+Sindh,Dadu,CAS-620,3736,Available
+Sindh,Nawabshah,GPT-607,3214,Available
+Sindh,Thatta,HMI-185,2048,Available
+Sindh,Larkana,CDP-784,2919,Available
+Sindh,Nawabshah,DJT-502,1638,Available
+Sindh,Dadu,QTQ-464,2802,Available
+Sindh,Hyderabad,BRD-491,2528,Available
+Sindh,"Mirpur Khas",EOF-986,2621,Available
+Sindh,Hyderabad,DLL-709,3219,Available
+Sindh,"Mirpur Khas",LBI-408,2863,Available
+Sindh,Sukkur,BTN-590,1414,Available
+Sindh,Thatta,FHM-878,2223,Available
+Sindh,Thatta,MOR-875,1786,Available
+Sindh,Karachi,RLO-104,1961,Available
+Sindh,Hyderabad,LSP-461,3860,Available
+Sindh,Nawabshah,JHA-380,1086,Available
+Sindh,Dadu,GAM-591,1646,Available
+Sindh,Dadu,STI-673,1173,Available
+Sindh,Larkana,BBS-266,3194,Available
+Sindh,Sukkur,ACA-271,1479,Available
+Sindh,Khairpur,ASI-550,2876,Available
+Sindh,Larkana,NIG-988,2776,Available
+Sindh,Khairpur,BSQ-399,1046,Available
+Sindh,Karachi,TDG-938,3643,Available
+Sindh,Hyderabad,PBH-289,1400,Available
+Sindh,Khairpur,AJC-123,1389,Available
+Sindh,Thatta,MRI-690,3195,Available
+Sindh,Thatta,LAD-623,2914,Available
+Sindh,Sukkur,QJT-115,3319,Available
+Sindh,Khairpur,AJE-631,1318,Available
+Sindh,Hyderabad,KEP-711,3048,Available
+Sindh,Khairpur,IRR-517,2599,Available
+Sindh,Nawabshah,QRJ-756,1254,Available
+Sindh,Larkana,OFT-675,2386,Available
+Sindh,Thatta,EFF-864,1514,Available
+Sindh,"Mirpur Khas",KHA-973,1505,Available
+Sindh,Karachi,LKT-925,2707,Available
+Sindh,Hyderabad,HLA-225,1350,Available
+Sindh,Thatta,EPJ-612,1138,Available
+Sindh,Larkana,DIE-785,2883,Available
+Sindh,Larkana,PAQ-943,2468,Available
+Sindh,Khairpur,MFJ-282,1874,Available
+Sindh,Sukkur,JPA-954,2798,Available
+Sindh,"Mirpur Khas",QSL-577,1120,Available
+Sindh,Nawabshah,FQP-966,2768,Available
+Sindh,Dadu,DSO-664,2380,Available
+Sindh,Karachi,NOK-335,2854,Available
+Sindh,Sukkur,OFC-345,1250,Available
+Sindh,Larkana,BDB-642,3591,Available
+Sindh,Dadu,FDL-706,1933,Available
+Sindh,"Mirpur Khas",SRL-163,3045,Available
+Sindh,Nawabshah,NEF-218,2567,Available
+Sindh,Nawabshah,SCF-647,3387,Available
+Sindh,Khairpur,MDS-396,2110,Available
+Sindh,Khairpur,AFQ-434,3211,Available
+Sindh,Thatta,OQT-121,2463,Available
+Sindh,Sukkur,NMT-198,1024,Available
+Sindh,Thatta,TFK-940,2124,Available
+Sindh,Khairpur,DMR-136,1105,Available
+Sindh,Khairpur,EGD-574,1483,Available
+Sindh,Larkana,SFH-736,2937,Available
+Sindh,Thatta,RSM-157,2335,Available
+Sindh,Dadu,TBT-781,2316,Available
+Sindh,Khairpur,BTI-692,3989,Available
+Sindh,Nawabshah,FOH-287,3403,Available
+Sindh,Nawabshah,TKC-622,1489,Available
+Sindh,Sukkur,SCP-883,1744,Available
+Sindh,Hyderabad,FFP-871,1877,Available
+Sindh,Nawabshah,HMD-485,2063,Available
+Sindh,Larkana,CRL-273,1672,Available
+Sindh,"Mirpur Khas",ONE-278,2517,Available
+Sindh,"Mirpur Khas",LAS-959,3101,Available
+Sindh,"Mirpur Khas",KSA-895,1380,Available
+Sindh,Thatta,CCJ-497,2023,Available
+Sindh,Khairpur,CSR-615,2936,Available
+Sindh,Karachi,TFB-798,3720,Available
+Sindh,"Mirpur Khas",NDO-740,3776,Available
+Sindh,"Mirpur Khas",OOC-239,1070,Available
+Sindh,Dadu,NHF-244,2094,Available
+Sindh,"Mirpur Khas",PLR-579,1607,Available
+Sindh,Sukkur,ESA-385,1278,Available
+Sindh,"Mirpur Khas",HLG-800,2578,Available
+Sindh,Larkana,DFP-382,2140,Available
+Sindh,"Mirpur Khas",BBF-173,1747,Available
+Sindh,Thatta,IIP-212,1306,Available
+Sindh,Larkana,RRN-770,1969,Available
+Sindh,Khairpur,LRM-676,1465,Available
+Sindh,Sukkur,RNJ-321,2774,Available
+Sindh,Sukkur,DKA-547,2861,Available
+Sindh,Karachi,DKO-305,2115,Available
+Sindh,"Mirpur Khas",SML-263,2310,Available
+Sindh,Larkana,KQH-187,2414,Available
+Sindh,Khairpur,NLK-657,3050,Available
+Sindh,Dadu,QEK-156,3569,Available
+Sindh,Hyderabad,MHB-952,3595,Available
+Sindh,Khairpur,HCH-269,3852,Available
+Sindh,Dadu,BPT-615,1254,Available
+Sindh,Thatta,QRR-267,1397,Available
+Sindh,Sukkur,GHN-250,2490,Available
+Sindh,Khairpur,GLN-435,3049,Available
+Sindh,Nawabshah,EPI-205,3264,Available
+Sindh,Hyderabad,AOP-169,2433,Available
+Sindh,Larkana,MON-397,3278,Available
+Sindh,Thatta,PCT-244,2528,Available
+Sindh,Karachi,ELR-977,2213,Available
+Sindh,Karachi,NPM-271,1434,Available
+Sindh,Thatta,CBC-365,2798,Available
+Sindh,Hyderabad,CGJ-387,3011,Available
+Sindh,Hyderabad,PAH-170,3270,Available
+Sindh,"Mirpur Khas",DTB-908,3274,Available
+Sindh,Nawabshah,RRD-285,1943,Available
+Sindh,Dadu,ICK-126,2308,Available
+Sindh,"Mirpur Khas",PAD-961,1851,Available
+Sindh,Larkana,CGO-425,2700,Available
+Sindh,Dadu,NGL-977,3070,Available
+Sindh,Dadu,HIN-524,3918,Available
+Sindh,"Mirpur Khas",SNF-754,3984,Available
+Sindh,Nawabshah,PIT-477,3486,Available
+Sindh,Khairpur,OCO-380,2979,Available
+Sindh,Khairpur,OLE-692,3686,Available
+Sindh,Karachi,QQL-327,1651,Available
+Sindh,Khairpur,OEO-201,3498,Available
+Sindh,Khairpur,CKD-577,3107,Available
+Sindh,Larkana,PEJ-902,2432,Available
+Sindh,"Mirpur Khas",THJ-764,2790,Available
+Sindh,Nawabshah,FPQ-148,3280,Available
+Sindh,Thatta,ISE-604,3101,Available
+Sindh,Dadu,CMO-790,2725,Available
+Sindh,Karachi,JCP-520,2706,Available
+Sindh,Sukkur,SEM-221,1796,Available
+Sindh,Karachi,AIP-921,1829,Available
+Sindh,Nawabshah,FRT-498,2479,Available
+Sindh,"Mirpur Khas",KJQ-675,2663,Available
+Sindh,Nawabshah,NSN-831,1066,Available
+Sindh,"Mirpur Khas",DOT-862,1724,Available
+Sindh,Hyderabad,TAK-941,3905,Available
+Sindh,Larkana,GEP-257,2817,Available
+Sindh,Thatta,ECL-433,3143,Available
+Sindh,Hyderabad,TJH-670,1208,Available
+Sindh,Dadu,JAG-669,1949,Available
+Sindh,Khairpur,TJF-452,1151,Available
+Sindh,Hyderabad,RAP-836,3135,Available
+Sindh,Karachi,ODJ-663,2679,Available
+Sindh,Dadu,OTA-602,1075,Available
+Sindh,"Mirpur Khas",ORI-617,3169,Available
+Sindh,Nawabshah,CBB-971,2619,Available
+Sindh,Thatta,RPJ-211,1888,Available
+Sindh,Dadu,OSK-653,2652,Available
+Sindh,Thatta,GFB-139,1142,Available
+Sindh,Nawabshah,BJT-811,1729,Available
+Sindh,Khairpur,BAB-142,3732,Available
+Sindh,Sukkur,SBE-521,1963,Available
+Sindh,Hyderabad,QPK-454,3162,Available
+Sindh,Karachi,QRR-710,2960,Available
+Sindh,Hyderabad,EKF-662,1149,Available
+Sindh,Karachi,TCO-594,1091,Available
+Sindh,Sukkur,RLE-844,1861,Available
+Sindh,"Mirpur Khas",MOO-904,2581,Available
+Sindh,Dadu,QPN-876,1659,Available
+Sindh,Nawabshah,CKF-988,3017,Available
+Sindh,Nawabshah,BHQ-397,3066,Available
+Sindh,Nawabshah,IMT-822,2418,Available
+Sindh,Larkana,NIO-176,2780,Available
+Sindh,Thatta,SJB-780,3906,Available
+Sindh,Khairpur,CPS-883,2665,Available
+Sindh,Khairpur,JPH-880,1611,Available
+Sindh,Hyderabad,LDL-797,2462,Available
+Sindh,Nawabshah,GGA-916,3329,Available
+Sindh,Nawabshah,GTH-339,3929,Available
+Sindh,Karachi,CAC-529,1510,Available
+Sindh,Larkana,FMO-915,1687,Available
+Sindh,Sukkur,KCT-667,1415,Available
+Sindh,Nawabshah,MPO-449,3529,Available
+Sindh,Karachi,OSK-894,3107,Available
+Sindh,Thatta,ART-141,1825,Available
+Sindh,Larkana,OKJ-769,1084,Available
+Sindh,Karachi,KIP-399,3140,Available
+Sindh,Hyderabad,NKB-454,1691,Available
+Sindh,Sukkur,TBF-221,2317,Available
+Sindh,Karachi,HBD-327,3750,Available
+Sindh,Dadu,AQS-984,3364,Available
+Sindh,Hyderabad,QJS-734,3837,Available
+Sindh,"Mirpur Khas",NKL-609,1073,Available
+Sindh,Dadu,SQE-117,3166,Available
+Sindh,"Mirpur Khas",GKD-824,1400,Available
+Sindh,Sukkur,RAK-617,3234,Available
+Sindh,Sukkur,SKK-172,1907,Available
+Sindh,Sukkur,KHQ-176,2120,Available
+Sindh,Sukkur,TKQ-693,3921,Available
+Sindh,Larkana,IJE-669,3386,Available
+Sindh,Sukkur,GIJ-802,3455,Available
+Sindh,Thatta,IDA-967,2089,Available
+Sindh,Nawabshah,RBB-179,1147,Available
+Sindh,Khairpur,THC-129,1459,Available
+Sindh,Karachi,JAF-678,1042,Available
+Sindh,Larkana,PMK-563,2803,Available
+Sindh,"Mirpur Khas",BDM-422,1989,Available
+Sindh,Hyderabad,PGQ-124,2713,Available
+Sindh,"Mirpur Khas",ECL-228,3456,Available
+Sindh,Sukkur,NFC-697,1448,Available
+Sindh,"Mirpur Khas",KNS-813,3304,Available
+Sindh,"Mirpur Khas",IEJ-614,1660,Available
+Sindh,Sukkur,LJB-623,3054,Available
+Sindh,Dadu,FKF-100,3516,Available
+Sindh,Karachi,JLP-615,1421,Available
+Sindh,Karachi,OTO-874,2336,Available
+Sindh,Thatta,LSN-685,1213,Available
+Sindh,Hyderabad,CIM-647,1933,Available
+Sindh,Dadu,IMJ-948,2960,Available
+Sindh,Sukkur,PRA-980,3558,Available
+Sindh,"Mirpur Khas",HOL-279,3828,Available
+Sindh,Dadu,BRT-988,1480,Available
+Sindh,Hyderabad,AAG-510,1449,Available
+Sindh,Hyderabad,IST-690,1118,Available
+Sindh,Dadu,GPO-327,2667,Available
+Sindh,Hyderabad,EAK-726,3980,Available
+Sindh,Hyderabad,FKG-387,1673,Available
+Sindh,Khairpur,LDP-236,1793,Available
+Sindh,Nawabshah,QIO-216,1063,Available
+Sindh,"Mirpur Khas",CJA-851,2531,Available
+Sindh,Nawabshah,RLB-324,3439,Available
+Sindh,Karachi,TAL-323,2428,Available
+Sindh,"Mirpur Khas",KAF-454,3390,Available
+Sindh,Hyderabad,TLT-204,2603,Available
+Sindh,Khairpur,PBL-899,3547,Available
+Sindh,Thatta,ATQ-724,3136,Available
+Sindh,Larkana,OMF-262,1869,Available
+Sindh,"Mirpur Khas",BOJ-402,2940,Available
+Sindh,Dadu,JKN-853,3060,Available
+Sindh,Khairpur,HTB-965,1556,Available
+Sindh,Larkana,AGH-366,2970,Available
+Sindh,Karachi,IKJ-173,2846,Available
+Sindh,Dadu,IEG-203,3431,Available
+Sindh,Thatta,BEA-926,2680,Available
+Sindh,Nawabshah,PID-113,3142,Available
+Sindh,Hyderabad,ESB-325,1518,Available
+Sindh,Thatta,ODF-528,1067,Available
+Sindh,Khairpur,LIJ-503,1357,Available
+Sindh,Khairpur,ONC-197,2107,Available
+Sindh,Larkana,SEP-265,3832,Available
+Sindh,Sukkur,BKT-168,2029,Available
+Sindh,Sukkur,HQQ-992,3719,Available
+Sindh,Nawabshah,FQH-563,2163,Available
+Sindh,"Mirpur Khas",EOM-218,2697,Available
+Sindh,Larkana,IOA-726,3337,Available
+Sindh,Nawabshah,JRO-191,1711,Available
+Sindh,"Mirpur Khas",PKN-574,1477,Available
+Sindh,Thatta,SIB-933,3957,Available
+Sindh,Karachi,CFH-554,3934,Available
+Sindh,Khairpur,DNP-436,1510,Available
+Sindh,Khairpur,ENR-514,2281,Available
+Sindh,Hyderabad,MTH-248,2426,Available
+Sindh,Karachi,CKP-101,3514,Available
+Sindh,Nawabshah,GJS-546,2702,Available
+Sindh,Karachi,DEA-402,1246,Available
+Sindh,"Mirpur Khas",JNA-946,3728,Available
+Sindh,Nawabshah,NAB-637,2598,Available
+Sindh,Thatta,JCR-815,1004,Available
+Sindh,Hyderabad,FNK-481,3050,Available
+Sindh,Khairpur,QMO-275,1984,Available
+Sindh,Hyderabad,LGQ-970,1242,Available
+Sindh,Hyderabad,LRS-288,1579,Available
+Sindh,Dadu,FTS-327,2844,Available
+Sindh,Nawabshah,NCA-340,1415,Available
+Sindh,Sukkur,HPT-967,1192,Available
+Sindh,Nawabshah,AHB-445,1125,Available
+Sindh,Karachi,CIS-775,2690,Available
+Sindh,Larkana,TNH-458,2709,Available
+Sindh,Hyderabad,NSL-101,1791,Available
+Sindh,Sukkur,GGD-500,1111,Available
+Sindh,Karachi,BBN-277,1278,Available
+Sindh,Karachi,FIA-363,1843,Available
+Sindh,Karachi,PGB-771,3402,Available
+Sindh,"Mirpur Khas",ISQ-380,1720,Available
+Sindh,Nawabshah,CNH-166,1537,Available
+Sindh,Karachi,ION-811,3687,Available
+Sindh,Dadu,BSR-531,3031,Available
+Sindh,Thatta,CFK-363,1556,Available
+Sindh,Hyderabad,BAH-697,1871,Available
+Sindh,Sukkur,EDL-662,2711,Available
+Sindh,"Mirpur Khas",TRE-122,1113,Available
+Sindh,Hyderabad,CPK-320,3964,Available
+Sindh,Larkana,BHJ-565,1897,Available
+Sindh,Nawabshah,MNF-514,1314,Available
+Sindh,"Mirpur Khas",ORD-799,3228,Available
+Sindh,Nawabshah,ERN-170,3039,Available
+Sindh,Thatta,ADD-269,2149,Available
+Sindh,Larkana,PGN-544,2194,Available
+Sindh,Larkana,NHG-190,2585,Available
+Sindh,Larkana,MME-378,2682,Available
+Sindh,Sukkur,CTM-787,1215,Available
+Sindh,"Mirpur Khas",GRB-386,1665,Available
+Sindh,Thatta,KKI-292,2198,Available
+Sindh,Larkana,NSF-946,1319,Available
+Sindh,Hyderabad,QRI-892,2250,Available
+Sindh,Karachi,DHS-482,2037,Available
+Sindh,Khairpur,EKA-618,2120,Available
+Sindh,Hyderabad,NQK-579,2361,Available
+Sindh,Khairpur,DPB-299,3594,Available
+Sindh,"Mirpur Khas",PBR-467,1377,Available
+Sindh,"Mirpur Khas",MNK-787,1337,Available
+Sindh,"Mirpur Khas",FHD-940,1905,Available
+Sindh,Khairpur,HRO-974,2069,Available
+Sindh,"Mirpur Khas",HTH-323,2640,Available
+Sindh,"Mirpur Khas",ORN-967,1185,Available
+Sindh,Karachi,FLE-399,2023,Available
+Sindh,Hyderabad,OES-580,1386,Available
+Sindh,Nawabshah,QLQ-643,2264,Available
+Sindh,"Mirpur Khas",OOQ-689,3189,Available
+Sindh,"Mirpur Khas",FRF-121,1690,Available
+Sindh,"Mirpur Khas",LLO-439,3597,Available
+Sindh,Larkana,SIR-878,1517,Available
+Sindh,"Mirpur Khas",FLF-937,3715,Available
+Sindh,Khairpur,JIE-389,2232,Available
+Sindh,Nawabshah,IGS-558,3249,Available
+Sindh,Karachi,GIN-415,3026,Available
+Sindh,Thatta,MPE-104,1460,Available
+Sindh,Hyderabad,TTR-579,1703,Available
+Sindh,Sukkur,KAJ-530,3866,Available
+Sindh,Larkana,LDF-326,1707,Available
+Sindh,Thatta,HOD-936,3320,Available
+Sindh,"Mirpur Khas",SGE-159,2342,Available
+Sindh,Nawabshah,FMJ-163,1486,Available
+Sindh,Hyderabad,AAM-974,3402,Available
+Sindh,Karachi,KMQ-186,3975,Available
+Sindh,Khairpur,ELS-890,2493,Available
+Sindh,Larkana,NKH-541,3258,Available
+Sindh,Sukkur,NNP-452,2203,Available
+Sindh,Thatta,JED-306,1180,Available
+Sindh,Hyderabad,MTT-971,1046,Available
+Sindh,Karachi,LTP-628,2455,Available
+Sindh,Larkana,BPC-961,2525,Available
+Sindh,Larkana,BMR-451,2212,Available
+Sindh,Thatta,FMH-607,1538,Available
+Sindh,Thatta,GMA-427,3948,Available
+Sindh,Sukkur,GCC-332,1661,Available
+Sindh,Hyderabad,QDD-803,3283,Available
+Sindh,Khairpur,MTH-286,2510,Available
+Sindh,Hyderabad,PFE-591,2856,Available
+Sindh,Nawabshah,IAJ-678,2763,Available
+Sindh,Dadu,FRJ-149,1782,Available
+Sindh,Nawabshah,CLR-336,3853,Available
+Sindh,Dadu,NDH-135,2656,Available
+Sindh,Sukkur,GGE-950,2095,Available
+Sindh,Khairpur,EEG-304,1635,Available
+Sindh,Larkana,BHI-742,3757,Available
+Sindh,Khairpur,OTG-245,3926,Available
+Sindh,Nawabshah,QQB-660,1745,Available
+Sindh,Hyderabad,PIP-106,1055,Available
+Sindh,Karachi,RHI-880,3905,Available
+Sindh,Larkana,SFD-172,3367,Available
+Sindh,Dadu,RAJ-652,2392,Available
+Sindh,"Mirpur Khas",BNL-740,2429,Available
+Sindh,"Mirpur Khas",CJM-425,2123,Available
+Sindh,Khairpur,HKR-207,2146,Available
+Sindh,Thatta,RRO-780,2983,Available
+Sindh,"Mirpur Khas",QSC-566,2379,Available
+Sindh,Larkana,APF-365,1474,Available
+Sindh,Hyderabad,MJL-505,1373,Available
+Sindh,Karachi,EQR-890,3224,Available
+Sindh,Nawabshah,TKI-635,2025,Available
+Sindh,Larkana,HDB-868,1756,Available
+Sindh,Nawabshah,SBS-813,3204,Available
+Sindh,Nawabshah,TNM-331,3662,Available
+Sindh,Nawabshah,IMM-701,1243,Available
+Sindh,Karachi,EBI-300,2484,Available
+Sindh,Hyderabad,KHT-342,2917,Available
+Sindh,"Mirpur Khas",AKG-953,1160,Available
+Sindh,Larkana,EFN-211,1358,Available
+Sindh,Karachi,DGF-484,2916,Available
+Sindh,Dadu,OTG-641,3221,Available
+Sindh,Thatta,GQK-507,2459,Available
+Sindh,Khairpur,IQH-147,3682,Available
+Sindh,Karachi,DJO-557,1495,Available
+Sindh,Thatta,LTT-904,2301,Available
+Sindh,Karachi,ROK-711,2377,Available
+Sindh,Nawabshah,ASB-511,2195,Available
+Sindh,Karachi,EOP-544,1287,Available
+Sindh,Larkana,OHN-254,3950,Available
+Sindh,Karachi,EEF-300,2857,Available
+Sindh,Hyderabad,TDN-953,2753,Available
+Sindh,Sukkur,NBH-232,2629,Available
+Sindh,Nawabshah,FDL-343,1526,Available
+Sindh,Thatta,QRO-848,2321,Available
+Sindh,Thatta,PEJ-203,2832,Available
+Sindh,Larkana,EHJ-962,3044,Available
+Sindh,"Mirpur Khas",CSL-130,1160,Available
+Sindh,Larkana,SKM-966,3527,Available
+Sindh,Larkana,TKK-439,1744,Available
+Sindh,Thatta,PDF-118,1572,Available
+Sindh,Dadu,TQS-437,2167,Available
+Sindh,Karachi,QOP-927,3412,Available
+Sindh,Dadu,MKI-364,2902,Available
+Sindh,Dadu,GGG-658,3498,Available
+Sindh,Karachi,QSN-881,2238,Available
+Sindh,Hyderabad,PLQ-654,1708,Available
+Sindh,Karachi,QTS-412,3736,Available
+Sindh,Khairpur,IOS-714,2553,Available
+Sindh,Khairpur,KHB-827,1622,Available
+Sindh,Sukkur,HPK-527,3088,Available
+Sindh,Dadu,KOE-195,2861,Available
+Sindh,Larkana,DMT-798,2843,Available
+Sindh,Larkana,LPM-711,3839,Available
+Sindh,Khairpur,BSB-981,2484,Available
+Sindh,"Mirpur Khas",HDF-147,1321,Available
+Sindh,Khairpur,TGP-575,3173,Available
+Sindh,Thatta,TDA-937,2806,Available
+Sindh,Sukkur,BBN-958,2881,Available
+Sindh,Sukkur,SOP-625,2572,Available
+Sindh,"Mirpur Khas",FEA-205,3068,Available
+Sindh,Sukkur,MNP-672,2976,Available
+Sindh,Nawabshah,AJB-399,3049,Available
+Sindh,Thatta,PBL-319,1524,Available
+Sindh,Thatta,KFK-558,2195,Available
+Sindh,Hyderabad,EON-530,1666,Available
+Sindh,Karachi,PLT-418,2759,Available
+Sindh,Larkana,IAP-159,1960,Available
+Sindh,Khairpur,DCH-737,1383,Available
+Sindh,Sukkur,NOS-518,1410,Available
+Sindh,Sukkur,FMI-525,3140,Available
+Sindh,Larkana,JPQ-193,3665,Available
+Sindh,Hyderabad,RCO-795,1723,Available
+Sindh,Hyderabad,MQE-259,1421,Available
+Sindh,Sukkur,LQE-428,2047,Available
+Sindh,Larkana,IIT-562,2601,Available
+Sindh,Sukkur,GPT-833,1978,Available
+Sindh,Dadu,LFR-872,1890,Available
+Sindh,Sukkur,DKK-202,2038,Available
+Sindh,Khairpur,KKF-814,3865,Available
+Sindh,Nawabshah,GCT-924,2262,Available
+Sindh,Nawabshah,LAB-892,3496,Available
+Sindh,Karachi,SJS-892,1033,Available
+Sindh,Sukkur,FQK-490,1352,Available
+Sindh,Karachi,KDF-648,2340,Available
+Sindh,Dadu,ICL-167,2978,Available
+Sindh,Nawabshah,QRB-656,1875,Available
+Sindh,"Mirpur Khas",BFP-957,1091,Available
+Sindh,Thatta,JRA-376,3099,Available
+Sindh,Nawabshah,DHC-252,3494,Available
+Sindh,Khairpur,MBD-184,1665,Available
+Sindh,Khairpur,IPG-970,1737,Available
+Sindh,Hyderabad,AGD-757,1841,Available
+Sindh,Nawabshah,ONE-336,3575,Available
+Sindh,Larkana,NNQ-466,3960,Available
+Sindh,Nawabshah,QSP-489,1769,Available
+Sindh,Nawabshah,QCO-545,3722,Available
+Sindh,"Mirpur Khas",DBF-652,2847,Available
+Sindh,Larkana,BFD-570,2561,Available
+Sindh,Sukkur,JLD-635,1003,Available
+Sindh,Nawabshah,IMP-902,2191,Available
+Sindh,Khairpur,BFM-967,2405,Available
+Sindh,"Mirpur Khas",JCI-337,3671,Available
+Sindh,Khairpur,APO-342,1013,Available
+Sindh,Nawabshah,LQE-742,3056,Available
+Sindh,Hyderabad,IOH-752,1880,Available
+Sindh,Larkana,NAQ-475,1987,Available
+Sindh,Hyderabad,FBQ-739,1132,Available
+Sindh,"Mirpur Khas",TKK-758,2802,Available
+Sindh,Larkana,CBE-490,1779,Available
+Sindh,Khairpur,EPO-630,2725,Available
+Sindh,Larkana,NJM-127,2480,Available
+Sindh,"Mirpur Khas",NCF-891,2362,Available
+Sindh,Larkana,FHL-192,3590,Available
+Sindh,Karachi,CJK-282,1083,Available
+Sindh,Thatta,CSO-733,1522,Available
+Sindh,Karachi,BBS-259,3661,Available
+Sindh,Karachi,JFF-166,1752,Available
+Sindh,Thatta,EON-449,2143,Available
+Sindh,"Mirpur Khas",MOK-712,3286,Available
+Sindh,Khairpur,JOC-407,3084,Available
+Sindh,"Mirpur Khas",KFF-328,1956,Available
+Sindh,Karachi,BOT-130,2775,Available
+Sindh,Karachi,EAB-419,2648,Available
+Sindh,Larkana,RAF-274,1390,Available
+Sindh,Karachi,QBM-848,3779,Available
+Sindh,Karachi,CMF-955,3341,Available
+Sindh,Karachi,BOC-822,3855,Available
+Sindh,Sukkur,BTC-793,3806,Available
+Sindh,Dadu,DTD-705,3415,Available
+Sindh,Khairpur,CKL-563,2883,Available
+Sindh,Larkana,PSS-869,3924,Available
+Sindh,Nawabshah,IAK-579,2864,Available
+Sindh,Thatta,FKE-740,1817,Available

@@ -5,7 +5,28 @@
     <meta charset="UTF-8">
     <title>Your Number Plate Challans</title>
 </head>
-
+<style>
+     .plate-info {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #e5e7eb;
+        }
+        .plate-info table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .plate-info th {
+            text-align: left;
+            padding: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+        .plate-info td {
+            padding: 8px;
+        }
+</style>
 <body style="font-family:'Segoe UI', Tahoma, sans-serif; background-color:#f4f7fa; color:#333; margin:0; padding:0;">
     <div
         style="max-width:700px; margin:auto; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 3px 10px rgba(0,0,0,0.1);">

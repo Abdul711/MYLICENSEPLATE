@@ -1,0 +1,101 @@
+Province,City,"Plate Number",Price,Status
+KPK,Haripur,FTR-443,3069,Available
+KPK,Peshawar,JIH-295,1961,Available
+KPK,Kohat,DMN-889,2652,Available
+KPK,Peshawar,BOJ-924,2636,Available
+KPK,Haripur,CNS-330,3306,Available
+KPK,Peshawar,KTF-374,1272,Available
+KPK,Peshawar,NOJ-367,1855,Available
+KPK,Kohat,HSI-345,1384,Available
+KPK,Charsadda,GCH-659,2287,Available
+KPK,Swat,FAT-636,3821,Available
+KPK,Peshawar,APN-425,3845,Available
+KPK,Mardan,EHQ-656,2470,Available
+KPK,Abbottabad,BQH-995,3444,Available
+KPK,Mardan,RCH-815,1758,Available
+KPK,"Dera Ismail Khan",NNI-830,2002,Available
+KPK,Swat,QGC-210,3517,Available
+KPK,Kohat,QDD-670,2297,Available
+KPK,Mardan,MLR-897,3613,Available
+KPK,Kohat,GTQ-437,1968,Available
+KPK,Swat,IAF-600,1875,Available
+KPK,Kohat,KTP-963,3800,Available
+KPK,Swat,KJJ-764,3295,Available
+KPK,Peshawar,BRD-518,1947,Available
+KPK,Abbottabad,NPJ-938,2262,Available
+KPK,"Dera Ismail Khan",FOR-742,2416,Available
+KPK,Charsadda,RFN-495,3230,Available
+KPK,"Dera Ismail Khan",PTS-643,3435,Available
+KPK,Peshawar,IAK-855,1765,Available
+KPK,Bannu,PEA-237,1744,Available
+KPK,Bannu,JCS-996,1906,Available
+KPK,Swat,GJL-119,2937,Available
+KPK,"Dera Ismail Khan",BMG-804,3984,Available
+KPK,Charsadda,SPR-620,1715,Available
+KPK,Mardan,JBM-420,3459,Available
+KPK,Charsadda,BMG-811,3394,Available
+KPK,Swat,EIE-728,3187,Available
+KPK,Abbottabad,TJT-724,1934,Available
+KPK,Mardan,FBL-402,2901,Available
+KPK,Swat,PSJ-203,3770,Available
+KPK,Abbottabad,JEQ-374,2966,Available
+KPK,Mardan,ACI-994,3885,Available
+KPK,Peshawar,NFN-855,1944,Available
+KPK,Abbottabad,MGL-105,3742,Available
+KPK,Haripur,KJO-928,3388,Available
+KPK,"Dera Ismail Khan",TDQ-720,2105,Available
+KPK,Kohat,FGA-240,2271,Available
+KPK,Swat,TJC-641,3810,Available
+KPK,Bannu,AJJ-899,1370,Available
+KPK,Mardan,MCQ-680,2926,Available
+KPK,"Dera Ismail Khan",PJG-398,1024,Available
+KPK,Bannu,KEN-750,3490,Available
+KPK,Abbottabad,DHD-958,3405,Available
+KPK,Abbottabad,SQL-427,3794,Available
+KPK,Haripur,DKO-124,3517,Available
+KPK,"Dera Ismail Khan",RJH-311,1495,Available
+KPK,Bannu,SON-362,1797,Available
+KPK,"Dera Ismail Khan",KEP-526,3335,Available
+KPK,Peshawar,ITI-964,3944,Available
+KPK,Charsadda,GSR-412,1389,Available
+KPK,Peshawar,REN-131,2441,Available
+KPK,Bannu,LTB-947,2665,Available
+KPK,Swat,MKO-314,2254,Available
+KPK,Haripur,CNA-197,2432,Available
+KPK,Peshawar,OQM-894,3556,Available
+KPK,Swat,SNG-797,2552,Available
+KPK,Charsadda,HJI-149,1140,Available
+KPK,Haripur,RJN-555,1602,Available
+KPK,Peshawar,REJ-372,2702,Available
+KPK,Haripur,FGG-356,1306,Available
+KPK,Peshawar,JOB-731,2006,Available
+KPK,Mardan,NNC-530,3457,Available
+KPK,"Dera Ismail Khan",GDP-480,2108,Available
+KPK,Haripur,MKA-541,3356,Available
+KPK,"Dera Ismail Khan",TNS-657,2272,Available
+KPK,"Dera Ismail Khan",NMD-916,3703,Available
+KPK,Bannu,RHG-582,2112,Available
+KPK,Bannu,CHR-726,1967,Available
+KPK,Kohat,GLS-740,3029,Available
+KPK,Kohat,KRG-308,3679,Available
+KPK,Kohat,GDR-509,3336,Available
+KPK,Swat,JRC-147,2968,Available
+KPK,"Dera Ismail Khan",KHS-871,1187,Available
+KPK,Charsadda,PMM-121,2480,Available
+KPK,Haripur,KPI-134,1247,Available
+KPK,Bannu,HBS-740,2073,Available
+KPK,Bannu,FOR-118,2614,Available
+KPK,Swat,IQL-200,2950,Available
+KPK,Haripur,QTQ-911,3361,Available
+KPK,Abbottabad,OBH-451,2606,Available
+KPK,Abbottabad,INA-144,2182,Available
+KPK,Kohat,PPP-382,1886,Available
+KPK,Mardan,EDS-369,3110,Available
+KPK,"Dera Ismail Khan",LES-233,3142,Available
+KPK,Swat,SFG-765,1204,Available
+KPK,Kohat,FBA-631,2194,Available
+KPK,Bannu,FSD-559,1083,Available
+KPK,Peshawar,NPP-418,1428,Available
+KPK,Charsadda,SQA-725,3316,Available
+KPK,"Dera Ismail Khan",NBS-878,3136,Available
+KPK,Abbottabad,DBJ-755,3729,Available

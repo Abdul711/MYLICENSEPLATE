@@ -1,0 +1,25 @@
+Province,City,"Plate Number",Price,Status
+Sindh,Khairpur,JPL-396,1015,Available
+Sindh,Thatta,TSO-375,1523,Available
+Sindh,Nawabshah,HEK-686,2039,Available
+Sindh,Sukkur,DBL-728,3353,Available
+Sindh,Nawabshah,EES-128,2488,Available
+Sindh,Dadu,QEQ-782,2419,Available
+Punjab,Sahiwal,ELT-707,2854,Available
+Punjab,Sahiwal,PJA-220,1137,Available
+Punjab,Faisalabad,JGD-246,2886,Available
+Punjab,Rawalpindi,JBJ-704,1643,Available
+Punjab,Bahawalpur,TSH-785,2054,Available
+Punjab,Faisalabad,GGK-801,1420,Available
+Balochistan,Turbat,BPR-585,3274,Available
+Balochistan,Jacobabad,DNG-725,2056,Available
+Balochistan,Quetta,IKF-575,3491,Available
+Balochistan,Jacobabad,AHR-754,3368,Available
+Balochistan,Quetta,AJJ-130,2941,Available
+Balochistan,Sibi,HFK-552,1253,Available
+KPK,"Dera Ismail Khan",LJL-236,3209,Available
+KPK,Peshawar,NRT-630,2970,Available
+KPK,Kohat,FSR-631,3777,Available
+KPK,Charsadda,ABM-639,2346,Available
+KPK,Abbottabad,QTO-868,2420,Available
+KPK,Abbottabad,HPN-488,2931,Available

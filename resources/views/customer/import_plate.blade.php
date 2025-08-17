@@ -3,7 +3,11 @@
 @section('content')
 <div class="container mt-5">
   <h2>Import Plates CSV</h2>
+    @if(session('success'))
+         <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
      @error('file')
+    
     <div class="alert alert-danger">{{ $message }}</div>
      @enderror
   <form action="{{ url('plates/import') }}" method="POST" enctype="multipart/form-data">

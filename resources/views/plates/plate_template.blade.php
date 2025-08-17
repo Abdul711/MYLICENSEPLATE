@@ -14,7 +14,7 @@
 
 
 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" 
-       style="max-width: 400px; margin: auto; border-collapse: collapse;">
+       style="width: 385px; height:185px; margin: auto; border-collapse: collapse;">
   <tr>
     <td style="border: 1px solid #0d6efd; background-color: {{ $provinceColor }}; border-radius: 8px; padding: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.15); font-family: Arial, sans-serif; text-align: center;">
       

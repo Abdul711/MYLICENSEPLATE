@@ -12,6 +12,7 @@ use Smalot\PdfParser\Parser;
 use setasign\Fpdi\Fpdi;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\File;
 use App\Models\City;
 use App\Models\Region;
 use Carbon\Carbon;
@@ -25,9 +26,12 @@ use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Str;
 use App\Models\plate_challan;
-
+use App\Jobs\ProcessChallansJob;
+use ZipArchive;
+use App\Jobs\ImportChallansJob;
 class LicenseplateController extends Controller
 {
+
 
 
     public function store(LicensePlateRequest $request)
@@ -295,68 +299,388 @@ class LicenseplateController extends Controller
         return view('customer.import_plate');
     }
 
-    public function importStore(Request $request)
-    {
-        ini_set('max_execution_time', 0);
-        set_time_limit(0);
+    // public function importStore(Request $request)
+    // {
+    //     ini_set('max_execution_time', 0);
+    //     set_time_limit(0);
 
-        $request->validate([
-            'file' => 'required|mimes:csv,txt',
-        ]);
+    //     $request->validate([
+    //         'file' => 'required|mimes:csv,txt',
+    //     ]);
 
-        $provinceLogos = [
-            'Punjab'      => public_path('glogo/punjab.jpeg'),
-            'Sindh'       => public_path('glogo/sindh.png'),
-            'KPK'         => public_path('glogo/KP_logo.png'),
-            'Balochistan' => public_path('glogo/balochistan.jpeg'),
-        ];
+    //     $provinceLogos = [
+    //         'Punjab'      => public_path('glogo/punjab.jpeg'),
+    //         'Sindh'       => public_path('glogo/sindh.png'),
+    //         'KPK'         => public_path('glogo/KP_logo.png'),
+    //         'Balochistan' => public_path('glogo/balochistan.jpeg'),
+    //     ];
 
-        $user    = Auth::user();
-        $banks   = Bank::all();
-        $dueDate = now()->addMonths(2)->format('d M Y');
+    //     $user    = Auth::user();
+    //     $banks   = Bank::all();
+    //     $dueDate = now()->addMonths(2)->format('d M Y');
 
-        $newPlateIds = [];
+    //     $platesData   = [];
+    //     $attachments  = [];
+    //     $imageAttachment=[];
+    //     $file         = $request->file('file');
+    //     $path         = $file->getRealPath();
 
-        // Read CSV file
-        $file = $request->file('file');
-        $path = $file->getRealPath();
+    //     if (($handle = fopen($path, 'r')) !== false) {
+    //         $rowIndex = 0;
 
-        if (($handle = fopen($path, 'r')) !== false) {
-            $rowIndex = 0;
+    //         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+    //             $rowIndex++;
 
-            while (($row = fgetcsv($handle, 1000, ',')) !== false) {
-                $rowIndex++;
+    //             // Skip header row
+    //             if ($rowIndex === 1) {
+    //                 continue;
+    //             }
 
-                // Skip header
-                if ($rowIndex === 1) {
-                    continue;
-                }
+    //             // Ensure required fields exist
+    //             if (!empty($row[0]) && !empty($row[1]) && !empty($row[2]) && !empty($row[3])) {
 
-                // Ensure required fields
-                if (!empty($row[0]) && !empty($row[1]) && !empty($row[2]) && !empty($row[3])) {
+    //                 $plate = LicensePlate::updateOrCreate(
+    //                     ['plate_number' => trim($row[2])],
+    //                     [
+    //                         'region'   => trim($row[0]),
+    //                         'city'     => trim($row[1]),
+    //                         'price'    => trim($row[3]),
+    //                         'status'   => $row[4] ?? 'Available',
+    //                         'user_id'  => $user->id,
+    //                     ]
+    //                 );
 
-                    $plate = LicensePlate::updateOrCreate(
-                        ['plate_number' => trim($row[2])],
-                        [
-                            'region'   => trim($row[0]),
-                            'city'     => trim($row[1]),
-                            'price'    => trim($row[3]),
-                            'status'   => $row[4] ?? 'Available',
-                            'user_id'  => $user->id,
-                        ]
-                    );
+    //                 $provinceLogo = $provinceLogos[$plate->region] ?? null;
 
-                    $newPlateIds[] = $plate->id;
-                }
-            }
+    //                 // Generate PDF challan
+    //                 $pdf = Pdf::loadView('pdf.plate_challan', [
+    //                     'plate'              => $plate,
+    //                     'banks'              => $banks,
+    //                     'dueDate'            => $dueDate,
+    //                     'user'               => $user,
+    //                     'provinceLogo'       => $provinceLogo,
+    //                     'paymentMethod'      => "Bank",
+    //                     'LatePaymentPenalty' => 500,
+    //                     'invoiceNumber'      => 'INV-' . rand(100000, 999999)
+    //                 ])->setPaper('A4', 'portrait');
 
-            fclose($handle);
-        }
+    //                 $challanDir = public_path('challans');
+    //                 if (!file_exists($challanDir)) {
+    //                     mkdir($challanDir, 0777, true);
+    //                 }
+
+    //                 $filePath = $challanDir . '/challan_' . $plate->id . '.pdf';
+    //                 $pdf->save($filePath);
+
+    //                 // Collect data for final email
+    //                 $platesData[] = [
+    //                     'plate'        => $plate,
+    //                     'provinceLogo' => $provinceLogo
+    //                 ];
+    //                 $attachments[] = $filePath;
+    //                 $html = View::make('plates.plate_template', [
+    //                     'plate' => $plate,
+    //                     'provinceLogo' => $provinceLogo
+    //                 ])->render();
 
 
-        return redirect(url('licenseplate'))->with('success', 'Plates imported and one email sent with all challans.');
-    }
+    //                 $fileNameImage =  $plate->plate_number . date("d-F-Y") . time() . '.png';
+    //                 $imagePath = public_path('plates/' .  $fileNameImage);
+    //                 Browsershot::html($html)
+    //                     ->windowSize(400, 200) // adjust size
+    //                     ->timeout(60000)
+    //                     ->save($imagePath);
 
+
+    //             }
+    //         }
+
+    //         fclose($handle);
+    //     }
+
+    //     // ✅ Send single email with all challans attached
+    //     if (!empty($attachments) &&  !empty($imageAttachment) ) {
+    //         Mail::send('emails.plate_challan_multiple', [
+    //             'platesData' => $platesData,
+    //             'dueDate'    => $dueDate,
+    //             'user'       => $user
+    //         ], function ($message) use ($user, $attachments , $imageAttachment) {
+    //             $message->to($user->email)
+    //                 ->subject('Your License Plate Challans');
+
+    //             foreach ($attachments as $filePath) {
+    //                 $message->attach($filePath, [
+    //                     'as'   => basename($filePath),
+    //                     'mime' => 'application/pdf',
+    //                 ]);
+    //             }
+    //             foreach($imageAttachment as $imageFileAttachment){
+    //                  $message->attach( $imageFileAttachment, ['as' => 'Plate.png', 'mime' => 'image/png']);
+    //             }
+    //         });
+    //     }
+
+    //     return redirect(url('licenseplate'))->with('success', 'Plates imported and one email sent with all challans.');
+    // }
+
+    private $totalCreated = 0;
+    private $totalUpdated = 0;
+    private $insertedIds = []; // ✅ track inserted IDs
+//     public function importStore(Request $request)
+//     {
+//         ini_set('max_execution_time', 0);
+//         set_time_limit(0);
+//         ini_set('memory_limit', '-1');
+
+//         $request->validate([
+//             'file' => 'required|mimes:csv,txt|max:20480', // 20MB max
+//         ]);
+
+//         $user = Auth::user();
+//         $file = $request->file('file');
+//         $filePath = $file->getRealPath();
+
+//         $insertedIds = [];
+//         $zipPaths = [];
+
+//         $batch = 1;
+//         $batchSize = 5000;
+//         $rows = [];
+
+//         if (!file_exists(public_path('challans'))) {
+//             mkdir(public_path('challans'), 0777, true);
+//         }
+
+//         if (($handle = fopen($filePath, 'r')) !== false) {
+//             $rowIndex = 0;
+
+//             while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+//                 $rowIndex++;
+//                 if ($rowIndex === 1) continue; // skip header
+
+//                 $rows[] = $row;
+
+//                 if (count($rows) >= $batchSize) {
+//                     $ids = $this->processBatch($rows, $batch, $zipPaths, $user);
+//                     $insertedIds = array_merge($insertedIds, $ids);
+//                     $rows = [];
+//                     $batch++;
+//                 }
+//             }
+
+//             if (!empty($rows)) {
+//                 $ids = $this->processBatch($rows, $batch, $zipPaths, $user);
+//                 $insertedIds = array_merge($insertedIds, $ids);
+//             }
+
+//             fclose($handle);
+//         }
+
+//         // Send email with links
+//         Mail::send('emails.challan_ready', [
+//             'user' => $user,
+//             'links' => collect($zipPaths)->map(fn($p) => url($p)),
+//             'insertedIds' => $insertedIds,
+//             'total' => count($insertedIds),
+//         ], function ($message) use ($user) {
+//             $message->to($user->email)
+//                 ->subject('Your License Plate Challans Are Ready');
+//         });
+//  return redirect()->back()->with('success', 'CSV uploaded. You will receive an email once challans are ready.');
+
+
+
+
+
+      
+
+// }
+public function importStore(Request $request)
+{
+    $request->validate([
+        'file' => 'required|mimes:csv,txt|max:20480', // 20MB max
+    ]);
+
+    $user = Auth::user();
+    $file = $request->file('file');
+
+    // store uploaded file in storage/app/imports
+       $fileName = time() . '_' . $request->file('file')->getClientOriginalName();
+    $destinationPath = public_path('imports/' . $fileName);
+
+    // Move file into public/imports
+    $request->file('file')->move(public_path('imports'), $fileName);
+
+    // Dispatch job
+    ProcessChallansJob::dispatch( $destinationPath,$user->id);
+
+    return redirect()->back()->with(
+        'success',
+        'CSV uploaded. You will receive an email once challans are ready.'
+    );
+}
+
+    
+
+    // public function importStore(Request $request)
+    // {
+    //     ini_set('max_execution_time', 0);
+    //     set_time_limit(0);
+    //     ini_set('memory_limit', '-1');
+
+    //     $request->validate([
+    //         'file' => 'required|mimes:csv,txt',
+    //     ]);
+
+    //     $user    = Auth::user();
+    //     $dueDate = now()->addMonths(2)->format('d M Y');
+
+    //     $provinceLogos = [
+    //         'Punjab'      => public_path('glogo/punjab.jpeg'),
+    //         'Sindh'       => public_path('glogo/sindh.png'),
+    //         'KPK'         => public_path('glogo/KP_logo.png'),
+    //         'Balochistan' => public_path('glogo/balochistan.jpeg'),
+    //     ];
+
+    //     $banks = Bank::all();
+    //     $file  = $request->file('file');
+    //     $path  = $file->getRealPath();
+
+    //     $chunkSize   = 100;
+    //     $rowIndex    = 0;
+    //     $batchIndex  = 1;
+    //     $batch       = [];
+    //     $zipPaths    = [];
+
+    //     $sessionDir = 'imports/session_' . time();
+    //     @mkdir(public_path($sessionDir), 0777, true);
+
+    //     if (($handle = fopen($path, 'r')) !== false) {
+    //         while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+    //             $rowIndex++;
+    //             if ($rowIndex === 1) continue; // skip header
+
+    //             $batch[] = $row;
+
+    //             if (count($batch) === $chunkSize) {
+    //                 $zipPaths[] = $this->processBatch(
+    //                     $batch, $batchIndex, $user, $banks, $provinceLogos, $dueDate, $sessionDir
+    //                 );
+    //                 $batch = [];
+    //                 $batchIndex++;
+    //             }
+    //         }
+    //         fclose($handle);
+
+    //         if (!empty($batch)) {
+    //             $zipPaths[] = $this->processBatch(
+    //                 $batch, $batchIndex, $user, $banks, $provinceLogos, $dueDate, $sessionDir
+    //             );
+    //         }
+    //     }
+
+    //     // ✅ email with counts + inserted IDs
+    //     Mail::send('emails.challan_ready', [
+    //         'user'         => $user,
+    //         'links'        => collect($zipPaths)->map(fn($p) => asset($p)),
+    //         'totalCreated' => $this->totalCreated,
+    //         'totalUpdated' => $this->totalUpdated,
+    //         'insertedIds'  => $this->insertedIds,
+    //     ], function ($message) use ($user) {
+    //         $message->to($user->email)
+    //             ->subject('Your Challans Are Ready');
+    //     });
+
+    //     return redirect()->back()
+    //         ->with('success', "Import completed. {$this->totalCreated} plates created, {$this->totalUpdated} updated. Inserted IDs: " . implode(',', $this->insertedIds));
+    // }
+
+    // private function processBatch(
+    //     array $rows,
+    //     int $batchIndex,
+    //     $user,
+    //     $banks,
+    //     $provinceLogos,
+    //     $dueDate,
+    //     $sessionDir
+    // ) {
+    //     $batchDir = "$sessionDir/batch_$batchIndex";
+    //     @mkdir(public_path($batchDir), 0777, true);
+
+    //     foreach ($rows as $row) {
+    //         if (count($row) < 4) continue;
+
+    //         [$region, $city, $plateNo, $price] = [
+    //             trim($row[0]),
+    //             trim($row[1]),
+    //             trim($row[2]),
+    //             trim($row[3]),
+    //         ];
+    //         $status = $row[4] ?? 'Available';
+
+    //         if ($plateNo === '') continue;
+
+    //         $plate = LicensePlate::updateOrCreate(
+    //             ['plate_number' => $plateNo],
+    //             [
+    //                 'region'  => $region,
+    //                 'city'    => $city,
+    //                 'price'   => $price,
+    //                 'status'  => $status,
+    //                 'user_id' => $user->id,
+    //             ]
+    //         );
+
+    //         if ($plate->wasRecentlyCreated) {
+    //             $this->totalCreated++;
+    //             $this->insertedIds[] = $plate->id; // ✅ store new ID
+    //         } else {
+    //             $this->totalUpdated++;
+    //         }
+
+    //         $provinceLogo = $provinceLogos[$plate->region] ?? null;
+
+    //         // ✅ PDF
+    //         $pdf = Pdf::loadView('pdf.plate_challan', [
+    //             'plate'              => $plate,
+    //             'banks'              => $banks,
+    //             'dueDate'            => $dueDate,
+    //             'user'               => $user,
+    //             'provinceLogo'       => $provinceLogo,
+    //             'paymentMethod'      => "Bank",
+    //             'LatePaymentPenalty' => 500,
+    //             'invoiceNumber'      => 'INV-' . rand(100000, 999999),
+    //         ])->setPaper('A4', 'portrait');
+
+    //         $pdfPath = public_path("$batchDir/challan_{$plate->id}.pdf");
+    //         file_put_contents($pdfPath, $pdf->output());
+
+    //         // ✅ PNG
+    //         $html = View::make('plates.plate_template', [
+    //             'plate'        => $plate,
+    //             'provinceLogo' => $provinceLogo,
+    //         ])->render();
+
+    //         $pngPath = public_path("$batchDir/plate_{$plate->id}.png");
+    //         Browsershot::html($html)
+    //             ->windowSize(400, 200)
+    //             ->timeout(60000)
+    //             ->save($pngPath);
+    //     }
+
+    //     $zipName = "$sessionDir/batch_$batchIndex.zip";
+    //     $zipFull = public_path($zipName);
+
+    //     $zip = new \ZipArchive();
+    //     if ($zip->open($zipFull, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === true) {
+    //         foreach (glob(public_path("$batchDir/*")) as $f) {
+    //             $zip->addFile($f, basename($f));
+    //         }
+    //         $zip->close();
+    //     }
+
+    //     return $zipName;
+    // }
     // public function multistore(Request $request)
     // {
     //     $validated = $request->validate([

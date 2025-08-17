@@ -1,0 +1,21 @@
+Province,City,"Plate Number",Price,Status
+Sindh,Larkana,STS-826,3925,Available
+Sindh,Nawabshah,JGD-103,1662,Available
+Sindh,Thatta,NDI-517,3357,Available
+Sindh,"Mirpur Khas",GAC-441,1144,Available
+Sindh,Larkana,OOE-470,3004,Available
+Punjab,Gujranwala,JKS-524,2349,Available
+Punjab,Sargodha,MOJ-501,2098,Available
+Punjab,Sahiwal,FIS-795,3373,Available
+Punjab,Bahawalpur,GAP-418,1433,Available
+Punjab,Sahiwal,TIG-789,3198,Available
+Balochistan,Sibi,CIT-477,3853,Available
+Balochistan,Quetta,EBI-799,1368,Available
+Balochistan,Turbat,OIS-637,2607,Available
+Balochistan,Turbat,FGJ-591,2652,Available
+Balochistan,Turbat,SLD-964,2969,Available
+KPK,Haripur,RTE-153,3820,Available
+KPK,Kohat,TPB-364,2347,Available
+KPK,Mardan,GJO-527,1442,Available
+KPK,Peshawar,TAO-108,1633,Available
+KPK,Peshawar,PIJ-557,3713,Available
