@@ -1,6 +1,17 @@
 @extends('layout')
 
 @section('content')
+    @php
+        use App\Models\Region;
+        $provinces = Region::all();
+
+        // Prepare province options HTML for JS
+        $provinceOptions = '<option value="">Select Province</option>';
+        foreach ($provinces as $province) {
+            $provinceOptions .= '<option value="' . $province->region_name . '">' . $province->full_form . '</option>';
+        }
+        $maxPlates=10;
+    @endphp
     <div class="container py-4">
         <h2 class="mb-4 text-center">Multiple License Plates</h2>
 
@@ -14,10 +25,15 @@
                         <label class="form-label">Province</label>
                         <select name="province[]" class="form-select province-select">
                             <option value="">Select Province</option>
-                            <option value="Punjab">Punjab</option>
-                            <option value="Sindh">Sindh</option>
+
+
+                            @foreach ($provinces as $province)
+                                <option value="{{ $province->region_name }}">{{ $province->full_form }}</option>
+                            @endforeach
+
+                            {{-- <option value="Sindh">Sindh</option>
                             <option value="Balochistan">Balochistan</option>
-                            <option value="KPK">Khyber Pakhtunkhwa</option>
+                            <option value="KPK">Khyber Pakhtunkhwa</option> --}}
 
                         </select>
                     </div>
@@ -67,16 +83,7 @@
 
         </form>
     </div>
-    @php
-        use App\Models\Region;
-        $provinces = Region::all();
 
-        // Prepare province options HTML for JS
-        $provinceOptions = '<option value="">Select Province</option>';
-        foreach ($provinces as $province) {
-            $provinceOptions .= '<option value="' . $province->region_name . '">' . $province->full_form . '</option>';
-        }
-    @endphp
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
@@ -140,9 +147,20 @@
         });
 
         // Add new plate row
+           const maxPlates = {{ $maxPlates }};
         document.getElementById('add-plate').addEventListener('click', function() {
             const container = document.getElementById('plates-container');
             const newRow = document.createElement('div');
+
+            const currentCount = container.querySelectorAll('.plate-row').length;
+           
+            if (currentCount >= maxPlates) {
+                alert(`You can only add up to ${maxPlates} plates.`);
+                return;
+            }
+
+
+
             newRow.classList.add('row', 'g-3', 'plate-row', 'align-items-end', 'mb-3');
             newRow.innerHTML = `
             <div class="col-md-3">
