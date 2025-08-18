@@ -7,6 +7,7 @@ use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+
 class AuthController extends Controller
 {
     public function index()
@@ -47,7 +48,7 @@ class AuthController extends Controller
     }
     public function update(Request $request)
     {
-          $request->validate([
+        $request->validate([
             'name'   => 'required|string|max:255',
             'email'  => 'required|email|max:255|unique:users,email,' . Auth::id(),
             'mobile' => 'nullable|string|max:20',
@@ -70,8 +71,29 @@ class AuthController extends Controller
 
         $user->save();
 
-      
+
 
         return redirect()->route('profile')->with('success', 'Profile updated successfully.');
+    }
+    public function loginform()
+    {
+        return view("admin.login");
+    }
+    public function adminLogin(Request $request)
+    {
+        $credentials = $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        if (Auth::guard('backpack')->attempt($credentials, $request->filled('remember'))) {
+            $request->session()->regenerate();
+
+            return redirect()->intended(backpack_url('dashboard'));
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
     }
 }

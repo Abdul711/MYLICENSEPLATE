@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class licenseplate extends Model
 {
+    use CrudTrait;
    public $guarded = [];
    public function user()
 {

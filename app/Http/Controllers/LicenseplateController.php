@@ -29,6 +29,7 @@ use App\Models\plate_challan;
 use App\Jobs\ProcessChallansJob;
 use ZipArchive;
 use App\Jobs\ImportChallansJob;
+
 class LicenseplateController extends Controller
 {
 
@@ -426,101 +427,101 @@ class LicenseplateController extends Controller
     private $totalCreated = 0;
     private $totalUpdated = 0;
     private $insertedIds = []; // ✅ track inserted IDs
-//     public function importStore(Request $request)
-//     {
-//         ini_set('max_execution_time', 0);
-//         set_time_limit(0);
-//         ini_set('memory_limit', '-1');
+    //     public function importStore(Request $request)
+    //     {
+    //         ini_set('max_execution_time', 0);
+    //         set_time_limit(0);
+    //         ini_set('memory_limit', '-1');
 
-//         $request->validate([
-//             'file' => 'required|mimes:csv,txt|max:20480', // 20MB max
-//         ]);
+    //         $request->validate([
+    //             'file' => 'required|mimes:csv,txt|max:20480', // 20MB max
+    //         ]);
 
-//         $user = Auth::user();
-//         $file = $request->file('file');
-//         $filePath = $file->getRealPath();
+    //         $user = Auth::user();
+    //         $file = $request->file('file');
+    //         $filePath = $file->getRealPath();
 
-//         $insertedIds = [];
-//         $zipPaths = [];
+    //         $insertedIds = [];
+    //         $zipPaths = [];
 
-//         $batch = 1;
-//         $batchSize = 5000;
-//         $rows = [];
+    //         $batch = 1;
+    //         $batchSize = 5000;
+    //         $rows = [];
 
-//         if (!file_exists(public_path('challans'))) {
-//             mkdir(public_path('challans'), 0777, true);
-//         }
+    //         if (!file_exists(public_path('challans'))) {
+    //             mkdir(public_path('challans'), 0777, true);
+    //         }
 
-//         if (($handle = fopen($filePath, 'r')) !== false) {
-//             $rowIndex = 0;
+    //         if (($handle = fopen($filePath, 'r')) !== false) {
+    //             $rowIndex = 0;
 
-//             while (($row = fgetcsv($handle, 1000, ',')) !== false) {
-//                 $rowIndex++;
-//                 if ($rowIndex === 1) continue; // skip header
+    //             while (($row = fgetcsv($handle, 1000, ',')) !== false) {
+    //                 $rowIndex++;
+    //                 if ($rowIndex === 1) continue; // skip header
 
-//                 $rows[] = $row;
+    //                 $rows[] = $row;
 
-//                 if (count($rows) >= $batchSize) {
-//                     $ids = $this->processBatch($rows, $batch, $zipPaths, $user);
-//                     $insertedIds = array_merge($insertedIds, $ids);
-//                     $rows = [];
-//                     $batch++;
-//                 }
-//             }
+    //                 if (count($rows) >= $batchSize) {
+    //                     $ids = $this->processBatch($rows, $batch, $zipPaths, $user);
+    //                     $insertedIds = array_merge($insertedIds, $ids);
+    //                     $rows = [];
+    //                     $batch++;
+    //                 }
+    //             }
 
-//             if (!empty($rows)) {
-//                 $ids = $this->processBatch($rows, $batch, $zipPaths, $user);
-//                 $insertedIds = array_merge($insertedIds, $ids);
-//             }
+    //             if (!empty($rows)) {
+    //                 $ids = $this->processBatch($rows, $batch, $zipPaths, $user);
+    //                 $insertedIds = array_merge($insertedIds, $ids);
+    //             }
 
-//             fclose($handle);
-//         }
+    //             fclose($handle);
+    //         }
 
-//         // Send email with links
-//         Mail::send('emails.challan_ready', [
-//             'user' => $user,
-//             'links' => collect($zipPaths)->map(fn($p) => url($p)),
-//             'insertedIds' => $insertedIds,
-//             'total' => count($insertedIds),
-//         ], function ($message) use ($user) {
-//             $message->to($user->email)
-//                 ->subject('Your License Plate Challans Are Ready');
-//         });
-//  return redirect()->back()->with('success', 'CSV uploaded. You will receive an email once challans are ready.');
-
-
+    //         // Send email with links
+    //         Mail::send('emails.challan_ready', [
+    //             'user' => $user,
+    //             'links' => collect($zipPaths)->map(fn($p) => url($p)),
+    //             'insertedIds' => $insertedIds,
+    //             'total' => count($insertedIds),
+    //         ], function ($message) use ($user) {
+    //             $message->to($user->email)
+    //                 ->subject('Your License Plate Challans Are Ready');
+    //         });
+    //  return redirect()->back()->with('success', 'CSV uploaded. You will receive an email once challans are ready.');
 
 
 
-      
 
-// }
-public function importStore(Request $request)
-{
-    $request->validate([
-        'file' => 'required|mimes:csv,txt|max:20480', // 20MB max
-    ]);
 
-    $user = Auth::user();
-    $file = $request->file('file');
 
-    // store uploaded file in storage/app/imports
-       $fileName = time() . '_' . $request->file('file')->getClientOriginalName();
-    $destinationPath = public_path('imports/' . $fileName);
 
-    // Move file into public/imports
-    $request->file('file')->move(public_path('imports'), $fileName);
+    // }
+    public function importStore(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:csv,txt|max:20480', // 20MB max
+        ]);
 
-    // Dispatch job
-    ProcessChallansJob::dispatch( $destinationPath,$user->id);
+        $user = Auth::user();
+        $file = $request->file('file');
 
-    return redirect()->back()->with(
-        'success',
-        'CSV uploaded. You will receive an email once challans are ready.'
-    );
-}
+        // store uploaded file in storage/app/imports
+        $fileName = time() . '_' . $request->file('file')->getClientOriginalName();
+        $destinationPath = public_path('imports/' . $fileName);
 
-    
+        // Move file into public/imports
+        $request->file('file')->move(public_path('imports'), $fileName);
+
+        // Dispatch job
+        ProcessChallansJob::dispatch($destinationPath, $user->id);
+
+        return redirect()->back()->with(
+            'success',
+            'CSV uploaded. You will receive an email once challans are ready.'
+        );
+    }
+
+
 
     // public function importStore(Request $request)
     // {
@@ -875,7 +876,7 @@ public function importStore(Request $request)
         ];
 
         $provinceLogo = $provinceLogos[$plate->region] ?? null;
-
+             return $plate->featured;
 
         $provinceLogosasset = [
             'Punjab'      => asset('glogo/punjab.jpeg'),
@@ -1451,7 +1452,40 @@ public function importStore(Request $request)
     {
 
         $plate_challan_data = plate_challan::where("licenseplate_id", $id)->first();
-        $filename = $plate_challan_data->image_path;
+
+        if (!$plate_challan_data) {
+
+            $provinceLogos = [
+                'Punjab'      => public_path('glogo/punjab.jpeg'),
+                'Sindh'       => public_path('glogo/sindh.png'),
+                'KPK'         => public_path('glogo/KP_logo.png'),
+                'Balochistan' => public_path('glogo/balochistan.jpeg'),
+            ];
+            $plate = LicensePlate::find($id);
+             $provinceLogo = $provinceLogos[$plate->region];
+            $filename  =  $plate->plate_number . date("d-F-Y") . time() . '.png';
+            $imagePath = public_path('plates/' .    $filename);
+            $html = View::make('plates.plate_template', [
+                'plate' => $plate,
+                'provinceLogo' => $provinceLogo
+            ])->render();
+
+            Browsershot::html($html)
+                ->windowSize(400, 200) // adjust size
+                ->timeout(60000)
+                ->save($imagePath);
+            plate_challan::create(
+
+                [
+                    'licenseplate_id' => $plate->id,
+
+                    'image_path'     =>   $filename,
+
+                ]
+            );
+        } else {
+            $filename = $plate_challan_data->image_path;
+        }
         $path = public_path('plates/' . $filename);
 
         return response()->download($path);

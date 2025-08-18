@@ -8,45 +8,48 @@ class LicensePlateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     *
+     * @return bool
      */
-    public function authorize(): bool
+    public function authorize()
     {
-        return true;
-    }
-       public function stopOnFirstFailure(): bool
-    {
-        return true; // Stop validation after the first failure
+        // only allow updates if the user is logged in
+        return backpack_auth()->check();
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array
      */
-    public function rules(): array
+    public function rules()
     {
         return [
-            'plate_number' => 'required|string|max:10|unique:licenseplates,plate_number',
-         
-            'region' => 'required|string|max:100',
-            'city' => 'required|string|max:100',
-            'status' => 'in:Available,Pending,Sold',
-            'price' => 'required|numeric|between:1000,5000', // Example price range
+            // 'name' => 'required|min:5|max:255'
         ];
     }
-    public function messages(): array
+
+    /**
+     * Get the validation attributes that apply to the request.
+     *
+     * @return array
+     */
+    public function attributes()
     {
         return [
-            'plate_number.required' => 'The plate number is required.',
-            'plate_number.unique' => 'The plate number already taken.',
-            'region.string' => 'The region must be a string.',
-            'city.string' => 'The city must be a string.',
-            'status.in' => 'The status must be one of the following: Available, Pending, Sold.',
-            'price.required' => 'The price is required.',
-            'price.numeric' => 'The price must be a number.',
-            'price.between' => 'The price must be between 1000 and 5000.',
+            //
         ];
     }
-    
-    
+
+    /**
+     * Get the validation messages that apply to the request.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            //
+        ];
+    }
 }
