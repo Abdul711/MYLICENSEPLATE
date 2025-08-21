@@ -147,7 +147,7 @@ class LicensePlateCrudController extends CrudController
     protected function setupListOperation()
     {
         // set columns from db columns.
-
+$this->crud->addButtonFromModelFunction('top', 'export_all', 'exportAllBtn', 'beginning');
 
         $this->crud->addColumn([
             'name'      => 'user_id',

@@ -154,3 +154,4 @@ Route::get("/failedJob",function(){
 return \App\Models\FailedJob::select('exception','failed_at')->get();
 });
 Route::get("createRemain",[App\Http\Controllers\LicenseplateController::class,"remain"]);
+Route::get("admin/exportdownload",[App\Http\Controllers\LicenseplateController::class,"exportdownloadadmin"]);

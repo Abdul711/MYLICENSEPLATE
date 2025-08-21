@@ -73,7 +73,7 @@
                     <tr>
                         <td style="padding: 20px; font-size: 14px; color: #555555;">
                             <p>Please pay your challans before the due date to avoid penalties.</p>
-                            <p style="margin-top: 10px;">Thank you,<br>License Plate Management Team</p>
+                            <p style="margin-top: 10px;">Thank you,<br>{{config('app.name')}}</p>
                         </td>
                     </tr>
 

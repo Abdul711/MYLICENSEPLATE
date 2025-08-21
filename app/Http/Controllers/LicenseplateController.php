@@ -287,6 +287,97 @@ class LicenseplateController extends Controller
         $plates = $query->paginate(1000)->appends($request->query());
         return view('customer.plates', compact('plates', 'cities', 'regions', 'users'));
     }
+ public function exportdownloadadmin(Request $request)
+    {
+        $filename = "license_plates_" . date('Y-m-d_H-i-s') . ".csv";
+
+        // Headers to force download
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        $file = fopen('php://output', 'w');
+
+        // Write the header row
+        fputcsv($file, ['Province', 'City', 'Plate Number', 'Price', 'Status', 'Owner']);
+
+        // Fetch data from DB
+        $page = $request->input('page', 1);
+     
+
+        $query = LicensePlate::query();
+        if ($request->filled('city')) {
+            $query->where('city', '=', $request->city);
+        }
+
+        if ($request->filled('start_with')) {
+            $query->where('plate_number', 'like', $request->start_with . '%');
+        }
+        if ($request->filled('region')) {
+            $query->where('region', '=', $request->region);
+        }
+
+
+        if ($request->filled('contain')) {
+            $query->where('plate_number', 'like', '%' . $request->contain . '%');
+        }
+
+        if ($request->filled('end_with')) {
+            $query->where('plate_number', 'like', '%' . $request->end_with);
+        }
+
+        if ($request->filled('length')) {
+            $length = (int) $request->length;
+            $query->whereRaw("LENGTH(REPLACE(REPLACE(plate_number, ' ', ''), '-', '')) = ?", [$length]);
+        }
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+
+        // Filter by max price
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        if ($request->filled('user')) {
+            $query->where('user_id', '=', $request->user);
+        }
+
+        if ($request->filled('featured')) {
+            $feature = $request->featured;
+            if ($feature == "Yes") {
+                $featured = 1;
+            } else {
+                $featured = 0;
+            }
+
+            $query->where('featured', '=', $featured);
+        }
+        $plates = $query->where("status", "Available")->get();
+
+       
+
+
+        foreach ($plates as $plate) {
+            fputcsv($file, [
+
+                $plate->region,
+                $plate->city,
+                $plate->plate_number,
+                $plate->price,
+                $plate->status,
+                $plate->user ? $plate->user->name : 'N/A', // Assuming you have a user relationship
+            ]);
+        }
+
+        fclose($file);
+        exit;
+    }
+
+
+
+
     public function export(Request $request)
     {
         $filename = "license_plates_" . date('Y-m-d_H-i-s') . ".csv";
