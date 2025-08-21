@@ -154,7 +154,7 @@ class GeneratePlatesCsv extends Command
             $this->info("PDF exported for {$province->region_name} at {$pdfPath}");
 
             // --- CSV per province ---
-            $csvPath = $exportCsvFolder . '/' . $province->region_name . rand(11111, 99999) . '_plates.csv';
+            $csvPath = $exportCsvFolder . '/' . $province->region_name  . '_plates.csv';
             $csv = Writer::createFromPath($csvPath, 'w+');
             $csv->insertOne(array_keys($provincePlates[0]));
             foreach ($provincePlates as $row) {
@@ -165,7 +165,7 @@ class GeneratePlatesCsv extends Command
 
         // --- Combined CSV for all provinces ---
         if (!empty($allPlates)) {
-            $csvPathAll = $exportCsvFolder . '/license_plates_combined' . rand(11111, 99999) . '.csv';
+            $csvPathAll = $exportCsvFolder . '/license_plates_combined'  . '.csv';
             $csvAll = Writer::createFromPath($csvPathAll, 'w+');
             $csvAll->insertOne(array_keys($allPlates[0]));
             foreach ($allPlates as $row) {

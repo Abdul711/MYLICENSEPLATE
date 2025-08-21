@@ -21,6 +21,7 @@
         "simplesoftwareio/simple-qrcode": "^4.2",
         "smalot/pdfparser": "^2.12",
         "spatie/browsershot": "^5.0",
+        "spatie/laravel-permission": "^6.21",
         "thiagoalessio/tesseract_ocr": "^2.13"
     },
     "require-dev": {

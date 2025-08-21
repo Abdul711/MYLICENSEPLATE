@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+use Spatie\Permission\Models\Role;
 class AuthController extends Controller
 {
     public function index()
@@ -17,7 +18,8 @@ class AuthController extends Controller
     public function store(UserRequest $request)
     {
         $userData = $request->validated();
-        User::create($userData);
+       $user= User::create($userData);
+          $user->assignRole('User');
         // Here you would typically create the user in the database
         // User::create($request->validated());
         // return redirect()->route('home')->with('success', 'User registered successfully!');

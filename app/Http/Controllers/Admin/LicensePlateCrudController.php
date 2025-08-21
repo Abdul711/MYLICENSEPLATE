@@ -83,6 +83,61 @@ class LicensePlateCrudController extends CrudController
             'escaped' => false, // allow HTML badges
         ]);
 
+
+        $this->crud->addColumn([
+            'name'  => 'featured',
+            'label' => 'Featured',
+            'type'  => 'closure',
+            'function' => function ($entry) {
+                if ($entry->featured == 1) {
+                    return '<span class="badge bg-success">Yes</span>';
+                } elseif ($entry->featured == 0) {
+                    return '<span class="badge bg-danger">No</span>';
+                }
+                return '<span class="badge bg-warning">' . $entry->featured . '</span>';
+            },
+            'escaped' => false, // allow HTML badges
+        ]);
+        $this->crud->addColumn([
+            'name'      => 'user_id',
+            'label'     => 'User',
+            'type'      => 'select',
+            'entity'    => 'user',
+            'attribute' => 'name',   // or email
+            'model'     => "App\Models\User",
+        ]);
+        $this->crud->addColumn([
+            'name' => 'challan.image_path', // relation_name.column_name
+            'label' => 'License Plate Image',
+            'type' => 'image',
+            'prefix' => 'plates/', // no prefix, since in public_path
+            'height' => '100px',
+            'width' => '200px',
+        ]);
+        //   $this->crud->addColumn([
+        //     'name' => 'challan.status', // relation_name.column_name
+        //     'label' => 'Challan Status', // better label
+        //     'type' => 'text',
+        // ]);
+        $this->crud->addColumn([
+            'name' => 'challan_status', // unique name
+            'label' => 'Plate Fee Status',
+            'type' => 'closure',
+            "escaped"=>false,
+            'function' => function ($entry) {
+                if (!$entry->challan) {
+                    return '<span class="badge bg-secondary">N/A</span>';
+                }
+
+                if ($entry->challan->status === "paid") {
+                    return '<span class="badge bg-success">Paid</span>';
+                } elseif ($entry->challan->status === "unpaid") {
+                    return '<span class="badge bg-danger">Unpaid</span>';
+                }
+
+                return ucfirst($entry->challan->status);
+            },
+        ]);
         $this->crud->addColumn([
             'name'  => 'created_at',
             'label' => 'Created At',

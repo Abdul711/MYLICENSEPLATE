@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
+    use CrudTrait;
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -51,15 +54,29 @@ class User extends Authenticatable
     {
         return $this->hasMany(LicensePlate::class);
     }
+
+public function getPlatesCount(): int
+{
+    return $this->licensePlates()->count();
+}
+
+
     public function getNameAttribute($value)
     {
         // Check current request path
-        if (!request()->is('profile/edit')) {
+        if (!request()->is('profile/edit')  ) {
             // Only run formatting when NOT on profile/edit
             $parts = explode(' ', $value);
             $firstPart = $parts[0] ?? '';
             return ucfirst(strtolower($firstPart));
         }
+              if (!request()->has('admin/')  ) {
+            // Only run formatting when NOT on profile/edit
+            $parts = explode(' ', $value);
+            $firstPart = $parts[0] ?? '';
+            return ucfirst(strtolower($firstPart));
+        }
+
 
         // Otherwise, just return the original value
         return $value;

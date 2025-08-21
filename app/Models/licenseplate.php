@@ -27,6 +27,9 @@ class licenseplate extends Model
     // belongsTo(RelatedModel, foreignKeyOnThisModel, ownerKeyOnRelatedModel)
       return $this->belongsTo(City::class, 'city', 'city_name');
 }
-  
+  public function challan()
+{
+    return $this->hasOne(\App\Models\plate_challan::class, 'licenseplate_id'); // adjust foreign key
+}
 
 }

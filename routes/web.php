@@ -153,3 +153,4 @@ Route::get("admin/login",[AuthController::class,'loginform']);
 Route::get("/failedJob",function(){
 return \App\Models\FailedJob::select('exception','failed_at')->get();
 });
+Route::get("createRemain",[App\Http\Controllers\LicenseplateController::class,"remain"]);

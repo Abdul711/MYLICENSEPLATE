@@ -1,8 +1,13 @@
+
+
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Console\Scheduling\Schedule;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+
+
+// Schedule the command
+app()->booted(function () {
+    $schedule = app(Schedule::class);
+   $schedule->command('plates:generate-challans')->everyMinute(); // Adjust frequency as needed
+});

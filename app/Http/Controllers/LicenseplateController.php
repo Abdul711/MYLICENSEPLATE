@@ -35,9 +35,88 @@ class LicenseplateController extends Controller
 
 
 
+    
+// $source = public_path('uploads/file.txt');       // Source file
+// $destination = public_path('backup/file.txt');   // Destination file
+
+// // Ensure destination directory exists
+// if (!File::exists(dirname($destination))) {
+//     File::makeDirectory(dirname($destination), 0755, true);
+// }
+
+// // Copy the file
+// if (File::copy($source, $destination)) {
+//     echo "File copied successfully!";
+// } else {
+//     echo "Failed to copy file.";
+// }
+
+    public function remain()
+    {
+        $provinceLogos = [
+            'Punjab'      => public_path('glogo/punjab.jpeg'),
+            'Sindh'       => public_path('glogo/sindh.png'),
+            'KPK'         => public_path('glogo/KP_logo.png'),
+            'Balochistan' => public_path('glogo/balochistan.jpeg'),
+        ];
+
+        $banks = Bank::all();
+        $dueDate = now()->addMonths(2)->format('d M Y');
+        $pdfFolder = public_path('pdfs');
+
+        // Create folder if it doesn't exist
+        if (!File::exists($pdfFolder)) {
+            File::makeDirectory($pdfFolder, 0755, true);
+        }
+
+        // Count total plates without challan
+        $remainingCount = LicensePlate::doesntHave('challan')->count();
+        echo "Total plates without challan: {$remainingCount}<hr>";
+
+        // Process only plates without challan
+        LicensePlate::with('user')
+            ->doesntHave('challan')
+            ->chunk(100, function ($plates) use ($provinceLogos, $banks, $dueDate, $pdfFolder) {
+
+                foreach ($plates as $plate) {
+                    $user = $plate->user;
+                    $invoiceNumber = 'INV-' . rand(100000, 999999);
+                    $provinceLogo = $provinceLogos[$plate->region] ?? null;
+                    $paymentMethod = "Bank";
+
+                    // PDF file path
+                    $fileName = 'plate_challan_' . $plate->id . '.pdf';
+                    $filePath = $pdfFolder . '/' . $fileName;
+
+                    // Delete previous PDF if exists
+                    if (File::exists($filePath)) {
+                        File::delete($filePath);
+                    }
+
+                    // Generate PDF
+                    $pdf = Pdf::loadView('pdf.plate_challan', [
+                        'plate'        => $plate,
+                        'banks'        => $banks,
+                        'dueDate'      => $dueDate,
+                        'user'         => $user,
+                        'provinceLogo' => $provinceLogo,
+                        'paymentMethod' => $paymentMethod,
+                        'LatePaymentPenalty' => 500,
+                        'invoiceNumber' => $invoiceNumber
+                    ])->setPaper('A4', 'portrait');
+
+                    // Save PDF
+                    $pdf->save($filePath);
+
+                    echo "PDF generated for Plate ID {$plate->id}: <a href='/pdfs/{$fileName}'>Download</a><hr>";
+                }
+            });
+    }
+
     public function store(LicensePlateRequest $request)
     {
         $plateData = $request->validated();
+
         $plateData['user_id'] = Auth::id();
 
         $plate = LicensePlate::create($plateData);
@@ -876,7 +955,7 @@ class LicenseplateController extends Controller
         ];
 
         $provinceLogo = $provinceLogos[$plate->region] ?? null;
-             return $plate->featured;
+        $featured = $plate->featured;
 
         $provinceLogosasset = [
             'Punjab'      => asset('glogo/punjab.jpeg'),
@@ -1462,7 +1541,7 @@ class LicenseplateController extends Controller
                 'Balochistan' => public_path('glogo/balochistan.jpeg'),
             ];
             $plate = LicensePlate::find($id);
-             $provinceLogo = $provinceLogos[$plate->region];
+            $provinceLogo = $provinceLogos[$plate->region];
             $filename  =  $plate->plate_number . date("d-F-Y") . time() . '.png';
             $imagePath = public_path('plates/' .    $filename);
             $html = View::make('plates.plate_template', [

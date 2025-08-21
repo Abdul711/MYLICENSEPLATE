@@ -25,7 +25,13 @@ class LicensePlateRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+         'plate_number' => 'required|min:5|max:255',
+
+         "region"=>"required",
+         "city"=>"required",
+            'price' => ['required', 'numeric', 'between:1000,5000'],
+               'status' => ['required', 'in:Available,Pending,Sold'],
+
         ];
     }
 
