@@ -5,6 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\LicensePlateRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\File;
+use App\Models\Bank;
+use Spatie\Browsershot\Browsershot;
+use App\Models\Region;
+use App\Models\City;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Prologue\Alerts\Facades\Alert;
+ use App\Models\plate_challan;
+
 
 /**
  * Class LicensePlateCrudController
@@ -106,38 +117,39 @@ class LicensePlateCrudController extends CrudController
             'attribute' => 'name',   // or email
             'model'     => "App\Models\User",
         ]);
-        $this->crud->addColumn([
-            'name' => 'challan.image_path', // relation_name.column_name
-            'label' => 'License Plate Image',
-            'type' => 'image',
-            'prefix' => 'plates/', // no prefix, since in public_path
-            'height' => '100px',
-            'width' => '200px',
-        ]);
+        // $this->crud->addColumn([
+        //     'name' => 'challan.image_path', // relation_name.column_name
+        //     'label' => 'License Plate Image',
+        //     'type' => 'image',
+        //     'prefix' => 'plates/', // no prefix, since in public_path
+        //     'height' => '100px',
+        //     'width' => '200px',
+        // ]);
+
         //   $this->crud->addColumn([
         //     'name' => 'challan.status', // relation_name.column_name
         //     'label' => 'Challan Status', // better label
         //     'type' => 'text',
         // ]);
-        $this->crud->addColumn([
-            'name' => 'challan_status', // unique name
-            'label' => 'Plate Fee Status',
-            'type' => 'closure',
-            "escaped"=>false,
-            'function' => function ($entry) {
-                if (!$entry->challan) {
-                    return '<span class="badge bg-secondary">N/A</span>';
-                }
+        // $this->crud->addColumn([
+        //     'name' => 'challan_status', // unique name
+        //     'label' => 'Plate Fee Status',
+        //     'type' => 'closure',
+        //     "escaped" => false,
+        //     'function' => function ($entry) {
+        //         if (!$entry->challan) {
+        //             return '<span class="badge bg-secondary">N/A</span>';
+        //         }
 
-                if ($entry->challan->status === "paid") {
-                    return '<span class="badge bg-success">Paid</span>';
-                } elseif ($entry->challan->status === "unpaid") {
-                    return '<span class="badge bg-danger">Unpaid</span>';
-                }
+        //         if ($entry->challan->status === "paid") {
+        //             return '<span class="badge bg-success">Paid</span>';
+        //         } elseif ($entry->challan->status === "unpaid") {
+        //             return '<span class="badge bg-danger">Unpaid</span>';
+        //         }
 
-                return ucfirst($entry->challan->status);
-            },
-        ]);
+        //         return ucfirst($entry->challan->status);
+        //     },
+        // ]);
         $this->crud->addColumn([
             'name'  => 'created_at',
             'label' => 'Created At',
@@ -147,7 +159,7 @@ class LicensePlateCrudController extends CrudController
     protected function setupListOperation()
     {
         // set columns from db columns.
-$this->crud->addButtonFromModelFunction('top', 'export_all', 'exportAllBtn', 'beginning');
+        $this->crud->addButtonFromModelFunction('top', 'export_all', 'exportAllBtn', 'beginning');
 
         $this->crud->addColumn([
             'name'      => 'user_id',
@@ -200,7 +212,114 @@ $this->crud->addButtonFromModelFunction('top', 'export_all', 'exportAllBtn', 'be
     protected function setupCreateOperation()
     {
         CRUD::setValidation(LicensePlateRequest::class);
-        CRUD::setFromDb(); // set fields from db columns.
+
+        CRUD::addField([
+            'name'  => 'plate_number',
+            'label' => 'Plate Number',
+            'type'  => 'text',
+        ]);
+
+        // Price
+        CRUD::addField([
+            'name'  => 'price',
+            'label' => 'Price',
+            'type'  => 'number',
+            'attributes' => ['step' => '0.01', 'min' => 1000, 'max' => 5000],
+        ]);
+
+        // Status
+        CRUD::addField([
+            'name'    => 'status',
+            'label'   => 'Status',
+            'type'    => 'select_from_array',
+            'options' => [
+                'Available' => 'Available',
+                'Pending'   => 'Pending',
+                'Sold'      => 'Sold',
+            ],
+            'default' => 'Available',
+        ]);
+
+        // Featured
+        CRUD::addField([
+            'name'    => 'featured',
+            'label'   => 'Featured',
+            'type'    => 'checkbox',
+            'default' => 0,
+        ]);
+
+        $regions = \App\Models\Region::orderBy('region_name')->pluck('region_name', 'region_name')->toArray();
+        CRUD::addField([
+            'name'    => 'region',
+            'label'   => 'Region',
+            'type'    => 'select_from_array',
+            'options' => $regions,
+        ]);
+
+        // Cities grouped by region
+        $citiesByRegion = [];
+
+
+
+        foreach (\App\Models\City::with('region')->get() as $city) {
+
+            if ($city->region) {
+                $citiesByRegion[$city->region->region_name][$city->city_name] = $city->city_name;
+            }
+        }
+        CRUD::addField([
+            'name'    => 'city',
+            'label'   => 'City',
+            'type'    => 'select_from_array',
+            'options' => $citiesByRegion[array_key_first($citiesByRegion)] ?? [],
+        ]);
+
+        // JS for dynamic city dropdown
+        $this->crud->addField([
+            'type' => 'custom_html',
+            'name' => 'region_city_js',
+            'value' => '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var citiesByRegion = ' . json_encode($citiesByRegion) . ';
+                var regionSelect = document.querySelector("[name=\'region\']");
+                var citySelect = document.querySelector("[name=\'city\']");
+                if(regionSelect && citySelect){
+                    // Populate cities on page load
+                    var selectedRegion = regionSelect.value;
+                    citySelect.innerHTML = "";
+                    if(citiesByRegion[selectedRegion]){
+                        for(var value in citiesByRegion[selectedRegion]){
+                            var option = document.createElement("option");
+                            option.value = value;
+                            option.text = citiesByRegion[selectedRegion][value];
+                            citySelect.appendChild(option);
+                        }
+                    }
+                    // Update cities when region changes
+                    regionSelect.addEventListener("change", function(){
+                        var region = this.value;
+                        citySelect.innerHTML = "";
+                        if(citiesByRegion[region]){
+                            for(var value in citiesByRegion[region]){
+                                var option = document.createElement("option");
+                                option.value = value;
+                                option.text = citiesByRegion[region][value];
+                                citySelect.appendChild(option);
+                            }
+                        }
+                    });
+                }
+            });
+        </script>'
+        ]);
+
+        // City dropdown (default = first region)
+
+        // JS for dynamic city dropdown
+
+
+
+        // set fields from db columns.
 
         /**
          * Fields can be defined using the fluent syntax:
@@ -214,5 +333,71 @@ $this->crud->addButtonFromModelFunction('top', 'export_all', 'exportAllBtn', 'be
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
+    public function store(LicensePlateRequest $request)
+    {
+        $validated = $request->validated(); // get validated data
+
+        // Append logged-in user id
+        
+        $provinceLogos = [
+            'Punjab'      => public_path('glogo/punjab.jpeg'),
+            'Sindh'       => public_path('glogo/sindh.png'),
+            'KPK'         => public_path('glogo/KP_logo.png'),
+            'Balochistan' => public_path('glogo/balochistan.jpeg'),
+        ];
+          $invoiceNumber = 'INV-' . rand(100000, 999999);
+
+
+
+        // Generate PDF
+        $paymentMthod = "Bank";
+
+        $validated['user_id'] = backpack_auth()->id();
+   $banks = Bank::get()->toArray();
+        $dueDate = now()->addMonths(2)->format('d M Y');
+
+        $provinceLogos = [
+            'Punjab'      => public_path('glogo/punjab.jpeg'),
+            'Sindh'       => public_path('glogo/sindh.png'),
+            'KPK'         => public_path('glogo/KP_logo.png'),
+            'Balochistan' => public_path('glogo/balochistan.jpeg'),
+        ];
+$user = backpack_auth()->user();
+   $validated['user_id'] = backpack_auth()->id();
+    
+        $provinceLogo = $provinceLogos[$validated['region']] ?? null;
+        $invoiceNumber = 'INV-' . rand(100000, 999999);
+        // Generate PDF
+        $paymentMthod = "Bank";
+           dd($validated);
+          $plate = $this->crud->create($validated);
+
+        $pdf = Pdf::loadView('pdf.plate_challan', [
+            'plate'        => $plate,
+            'banks'        => $banks,
+            'dueDate'      => $dueDate,
+            'user'         => $user,
+            'provinceLogo' => $provinceLogo,
+            "paymentMethod" => $paymentMthod,
+            "LatePaymentPenalty" => 500,
+            "invoiceNumber" => $invoiceNumber
+        ])->setPaper('A4', 'portrait');
+
+
+         $challanDir = public_path('challans');
+        if (!file_exists($challanDir)) {
+            mkdir($challanDir, 0777, true);
+        }
+
+        $fileName = 'challan_' . $plate->id . '.pdf';
+        $filePath = $challanDir . '/' . $fileName;
+
+        // Save PDF
+        $pdf->save($filePath);
+       
+          Alert::success('License plate created successfully!')->flash();
+         return redirect()->to(backpack_url('license-plate'));
+     
+    }
     protected function setupUpdateOperation() {}
 }

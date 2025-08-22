@@ -31,6 +31,7 @@ class LicensePlateRequest extends FormRequest
          "city"=>"required",
             'price' => ['required', 'numeric', 'between:1000,5000'],
                'status' => ['required', 'in:Available,Pending,Sold'],
+                'featured'     => 'nullable|in:0,1'
 
         ];
     }

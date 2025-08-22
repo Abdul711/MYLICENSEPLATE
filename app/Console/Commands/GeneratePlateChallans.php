@@ -30,12 +30,12 @@ class GeneratePlateChallans extends Command
 
         $banks = Bank::all();
         $dueDate = now()->addMonths(2)->format('d M Y');
-        $pdfFolder = public_path('pdfs');
+        $pdfFolder = public_path('challans');
 
         if (!File::exists($pdfFolder)) {
             File::makeDirectory($pdfFolder, 0755, true);
         }
-        $imageFolder = public_path('licenseimages');
+        $imageFolder = public_path('plates');
 
         if (!File::exists($imageFolder)) {
             File::makeDirectory($imageFolder, 0755, true);
@@ -45,18 +45,20 @@ class GeneratePlateChallans extends Command
         $this->info("Total plates without challan: {$remainingCount}");
 
         LicensePlate::with('user')
-            ->doesntHave('challan')
-            ->chunk(100, function ($plates) use ($provinceLogos, $banks, $dueDate, $pdfFolder) {
+          
+            ->chunk(100, function ($plates) use ($provinceLogos, $banks, $dueDate, $pdfFolder, $imageFolder) {
                 foreach ($plates as $plate) {
                     $user = $plate->user;
                     $invoiceNumber = 'INV-' . rand(100000, 999999);
                     $provinceLogo = $provinceLogos[$plate->region] ?? null;
                     $paymentMethod = "Bank";
+                        $fileName = 'challan_' . $plate->id . '.pdf';
 
-                    $fileName = 'plate_challan_' . $plate->id . '.pdf';
+                   
                     $filePath = $pdfFolder . '/' . $fileName;
                     $fileNameImage =  $plate->plate_number . date("d-F-Y") . time() . '.png';
-                    $imagePath = public_path('licenseimages/' .  $fileNameImage);
+                 
+                    $imagePath =  $imageFolder.'/'.$fileNameImage;
 
                       $challan = plate_challan::updateOrCreate(
                         [

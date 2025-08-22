@@ -18,6 +18,9 @@ Route::group([
 ], function () { // custom admin routes
     Route::crud('license-plate', 'LicensePlateCrudController');
     Route::crud('user', 'UserCrudController');
+    Route::crud('bank', 'BankCrudController');
+    Route::crud('region', 'RegionCrudController');
+    Route::crud('city', 'CityCrudController');
 }); // this should be the absolute last line of this file
 
 /**
