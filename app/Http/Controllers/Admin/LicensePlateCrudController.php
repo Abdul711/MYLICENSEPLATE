@@ -14,8 +14,10 @@ use App\Models\Region;
 use App\Models\City;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Prologue\Alerts\Facades\Alert;
- use App\Models\plate_challan;
+use App\Models\plate_challan;
+use App\Http\Requests\UpdatePlate;
 
+use App\Models\LicensePlate;
 
 /**
  * Class LicensePlateCrudController
@@ -39,7 +41,7 @@ class LicensePlateCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\LicensePlate::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/license-plate');
-        CRUD::setEntityNameStrings('license plate', 'license plates');
+        CRUD::setEntityNameStrings('License Plate', 'License Plates');
     }
 
     /**
@@ -117,6 +119,61 @@ class LicensePlateCrudController extends CrudController
             'attribute' => 'name',   // or email
             'model'     => "App\Models\User",
         ]);
+
+
+        $this->crud->addColumn([
+            'name' => 'challan_image',
+            'label' => 'License Plate Image',
+            'type' => 'closure',
+            'function' => function ($entry) {
+                // Ensure challan exists (create if not)
+                $plate = $entry;
+                $challan = $entry->challan()->firstOrCreate(
+                    ['licenseplate_id' => $entry->id],
+                    ['status' => 'unpaid']
+                );
+
+                $folderPath = public_path('plates');
+                if (!File::exists($folderPath)) {
+                    File::makeDirectory($folderPath, 0755, true);
+                }
+
+                $fileName = $plate->plate_number . date("d-F-Y") . time() . '.png';
+
+                $filePath = $folderPath . '/' . $fileName;
+
+                // Regenerate/update challan image if missing or file deleted
+                if (!$challan->image_path || !File::exists(public_path($challan->image_path))) {
+                    $provinceLogos = [
+                        'Punjab'      => public_path('glogo/punjab.jpeg'),
+                        'Sindh'       => public_path('glogo/sindh.png'),
+                        'KPK'         => public_path('glogo/KP_logo.png'),
+                        'Balochistan' => public_path('glogo/balochistan.jpeg'),
+                    ];
+                    $provinceLogo = $provinceLogos[$entry->region] ?? null;
+
+                    $html = View::make('plates.plate_template', [
+                        'plate' => $entry,
+                        'provinceLogo' => $provinceLogo
+                    ])->render();
+
+                    Browsershot::html($html)
+                        ->windowSize(800, 1000)
+                        ->save($filePath);
+
+                    // Update challan image path in DB
+                    $challan->update([
+                        'image_path' => 'plates/' . $fileName,
+                    ]);
+                }
+
+                return "<img src='" . asset($challan->image_path) . "' style='max-width: 400px; margin: auto; border-collapse: collapse;'>";
+            },
+            'escaped' => false,
+        ]);
+
+
+
         // $this->crud->addColumn([
         //     'name' => 'challan.image_path', // relation_name.column_name
         //     'label' => 'License Plate Image',
@@ -151,9 +208,12 @@ class LicensePlateCrudController extends CrudController
         //     },
         // ]);
         $this->crud->addColumn([
-            'name'  => 'created_at',
+            'name' => 'created_at',
             'label' => 'Created At',
-            'type'  => 'datetime',
+            'type' => 'closure',
+            'function' => function ($entry) {
+                return \Carbon\Carbon::parse($entry->created_at)->format('d F Y');
+            },
         ]);
     }
     protected function setupListOperation()
@@ -194,8 +254,14 @@ class LicensePlateCrudController extends CrudController
             }
         ]);
 
-
-
+        $this->crud->addColumn([
+            'name' => 'created_at',
+            'label' => 'Created At',
+            'type' => 'closure',
+            'function' => function ($entry) {
+                return \Carbon\Carbon::parse($entry->created_at)->format('d F Y');
+            },
+        ]);
 
         /**
          * Columns can be defined using the fluent syntax:
@@ -338,14 +404,14 @@ class LicensePlateCrudController extends CrudController
         $validated = $request->validated(); // get validated data
 
         // Append logged-in user id
-        
+
         $provinceLogos = [
             'Punjab'      => public_path('glogo/punjab.jpeg'),
             'Sindh'       => public_path('glogo/sindh.png'),
             'KPK'         => public_path('glogo/KP_logo.png'),
             'Balochistan' => public_path('glogo/balochistan.jpeg'),
         ];
-          $invoiceNumber = 'INV-' . rand(100000, 999999);
+        $invoiceNumber = 'INV-' . rand(100000, 999999);
 
 
 
@@ -353,7 +419,7 @@ class LicensePlateCrudController extends CrudController
         $paymentMthod = "Bank";
 
         $validated['user_id'] = backpack_auth()->id();
-   $banks = Bank::get()->toArray();
+        $banks = Bank::get()->toArray();
         $dueDate = now()->addMonths(2)->format('d M Y');
 
         $provinceLogos = [
@@ -362,15 +428,15 @@ class LicensePlateCrudController extends CrudController
             'KPK'         => public_path('glogo/KP_logo.png'),
             'Balochistan' => public_path('glogo/balochistan.jpeg'),
         ];
-$user = backpack_auth()->user();
-   $validated['user_id'] = backpack_auth()->id();
-    
+        $user = backpack_auth()->user();
+        $validated['user_id'] = backpack_auth()->id();
+
         $provinceLogo = $provinceLogos[$validated['region']] ?? null;
         $invoiceNumber = 'INV-' . rand(100000, 999999);
         // Generate PDF
         $paymentMthod = "Bank";
-           dd($validated);
-          $plate = $this->crud->create($validated);
+
+        $plate = $this->crud->create($validated);
 
         $pdf = Pdf::loadView('pdf.plate_challan', [
             'plate'        => $plate,
@@ -384,7 +450,7 @@ $user = backpack_auth()->user();
         ])->setPaper('A4', 'portrait');
 
 
-         $challanDir = public_path('challans');
+        $challanDir = public_path('challans');
         if (!file_exists($challanDir)) {
             mkdir($challanDir, 0777, true);
         }
@@ -394,10 +460,125 @@ $user = backpack_auth()->user();
 
         // Save PDF
         $pdf->save($filePath);
-       
-          Alert::success('License plate created successfully!')->flash();
-         return redirect()->to(backpack_url('license-plate'));
-     
+
+        Alert::success('License plate created successfully!')->flash();
+        return redirect()->to(backpack_url('license-plate'));
     }
-    protected function setupUpdateOperation() {}
+    protected function setupUpdateOperation()
+    {
+        CRUD::addField([
+            'name'  => 'plate_number',
+            'label' => 'Plate Number',
+            'type'  => 'text',
+        ]);
+
+        // Price
+        CRUD::addField([
+            'name'  => 'price',
+            'label' => 'Price',
+            'type'  => 'number',
+            'attributes' => ['step' => '0.01', 'min' => 1000, 'max' => 5000],
+        ]);
+
+        CRUD::addField([
+            'name'    => 'status',
+            'label'   => 'Status',
+            'type'    => 'select_from_array',
+            'options' => [
+                'Available' => 'Available',
+                'Pending'   => 'Pending',
+                'Sold'      => 'Sold',
+            ],
+            'default' => 'Available',
+        ]);
+        CRUD::addField([
+            'name'    => 'featured',
+            'label'   => 'Featured',
+            'type'    => 'checkbox',
+            'default' => 0,
+        ]);
+        $regions = \App\Models\Region::orderBy('region_name')
+            ->pluck('region_name', 'region_name')
+            ->toArray();
+
+        CRUD::addField([
+            'name'    => 'region_name', // actual column
+            'label'   => 'Region',
+            'type'    => 'select_from_array',
+            'options' => $regions,
+            'allows_null' => false,
+        ]);
+
+        // Cities grouped by region
+        $citiesByRegion = [];
+
+        foreach (\App\Models\City::with('region')->get() as $city) {
+            if ($city->region) {
+                $citiesByRegion[$city->region->region_name][$city->city_name] = $city->city_name;
+            }
+        }
+
+        CRUD::addField([
+            'name'    => 'city_name', // actual column
+            'label'   => 'City',
+            'type'    => 'select_from_array',
+            'options' => $citiesByRegion[array_key_first($citiesByRegion)] ?? [],
+            'allows_null' => false,
+        ]);
+         // JS for dependent dropdown
+    $this->crud->addField([
+        'type'  => 'custom_html',
+        'name'  => 'region_city_js',
+        'value' => '<script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var citiesByRegion = ' . json_encode($citiesByRegion) . ';
+                var regionSelect = document.querySelector("[name=\'region_name\']");
+                var citySelect = document.querySelector("[name=\'city_name\']");
+
+                if(regionSelect && citySelect){
+                    function populateCities(region, selectedCity){
+                        citySelect.innerHTML = "";
+                        if(citiesByRegion[region]){
+                            for(var value in citiesByRegion[region]){
+                                var option = document.createElement("option");
+                                option.value = value;
+                                option.text = citiesByRegion[region][value];
+                                if(selectedCity && selectedCity === value){
+                                    option.selected = true;
+                                }
+                                citySelect.appendChild(option);
+                            }
+                        }
+                    }
+
+                    // On page load
+                    populateCities(regionSelect.value, citySelect.getAttribute("value"));
+
+                    // On region change
+                    regionSelect.addEventListener("change", function(){
+                        populateCities(this.value, null);
+                    });
+                }
+            });
+        </script>'
+    ]);
+        
+    }
+    public function update (UpdatePlate $req){
+        $validated= $req->validated();
+      
+         $plate_update_data["plate_number"]=$validated['plate_number'];
+         $plate_update_data["region"]=$validated["region_name"];
+         $plate_update_data["city"]=$validated["city_name"];
+         $plate_update_data["status"]=$validated["status"];
+         $plate_update_data["featured"]=$validated["featured"];
+         $plate_update_data["price"]=$validated["price"];
+       
+        $id =$validated["id"];
+        \App\Models\licenseplate::where('id',$id)->update($plate_update_data);
+          Alert::success('License Plate Updated successfully!')->flash();
+        return redirect()->to(backpack_url('license-plate'));
+
+
+    }
 }

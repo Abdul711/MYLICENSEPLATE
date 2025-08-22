@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CityRequest;
+use App\Models\City;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use App\Models\LicensePlate;
 
 /**
  * Class CityCrudController
@@ -39,8 +41,38 @@ class CityCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::setFromDb(); // set columns from db columns.
+        // set columns from db columns.
+        $this->crud->query->orderBy('region_id', 'DESC');
 
+
+        $this->crud->addColumn([
+            'name'      => 'region_id',
+            'label'     => 'Province',
+            'type'      => 'select',
+            'entity'    => 'region',
+            'attribute' => 'region_name',   // or email
+            'model'     => "App\Models\Region",
+        ]);
+        $this->crud->addColumn([
+            'name' => 'city_name',
+            'label' => 'City Name',
+            'type' => 'text',
+
+        ]);
+        $this->crud->addColumn([
+            'name' => 'name_ur',
+            'label' => 'City Urdu Name',
+            'type' => 'text',
+
+        ]);
+        $this->crud->addColumn([
+            'name' => 'plates_count',
+            'label' => 'Number of Plates',
+            'type' => 'closure',
+            'function' => function ($entry) {
+                return licenseplate::where("city", $entry->city_name)->count();
+            },
+        ]);
         /**
          * Columns can be defined using the fluent syntax:
          * - CRUD::column('price')->type('number');
@@ -57,7 +89,13 @@ class CityCrudController extends CrudController
     {
         CRUD::setValidation(CityRequest::class);
         CRUD::setFromDb(); // set fields from db columns.
-
+        $regions = \App\Models\Region::orderBy('region_name')->pluck('region_name', 'id')->toArray();
+        CRUD::addField([
+            'name'    => 'region_id',
+            'label'   => 'Region',
+            'type'    => 'select_from_array',
+            'options' => $regions,
+        ]);
         /**
          * Fields can be defined using the fluent syntax:
          * - CRUD::field('price')->type('number');
@@ -74,4 +112,42 @@ class CityCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
+    protected function setupShowOperation()
+    {
+
+
+
+        $this->crud->addColumn([
+            'name'      => 'region_id',
+            'label'     => 'Province',
+            'type'      => 'select',
+            'entity'    => 'region',
+            'attribute' => 'region_name',   // or email
+            'model'     => "App\Models\Region",
+        ]);
+        $this->crud->addColumn([
+            'name' => 'city_name',
+            'label' => 'City Name',
+            'type' => 'text',
+
+        ]);
+        $this->crud->addColumn([
+            'name' => 'name_ur',
+            'label' => 'City Urdu Name',
+            'type' => 'text',
+
+        ]);
+        $this->crud->addColumn([
+            'name' => 'plates_count',
+            'label' => 'Number of Plates',
+            'type' => 'closure',
+            'function' => function ($entry) {
+                return licenseplate::where("city", $entry->city_name)->count();
+            },
+        ]);
+        // don't auto-load all columns
+
+
+    }
+   
 }

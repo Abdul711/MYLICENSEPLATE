@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\licenseplate;
 use App\Http\Requests\RegionRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -28,7 +29,9 @@ class RegionCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Region::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/region');
-        CRUD::setEntityNameStrings('region', 'regions');
+        CRUD::setEntityNameStrings('Province', 'Provinces');
+
+
     }
 
     /**
@@ -39,8 +42,36 @@ class RegionCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::setFromDb(); // set columns from db columns.
+       
 
+          $this->crud->addColumn([
+            'name' => 'full_form',
+            'label' => 'Name',
+            'type' => 'text',
+           
+        ]);
+         $this->crud->addColumn([
+            'name' => 'urdu_name',
+            'label' => 'Urdu Name',
+            'type' => 'text',
+           
+        ]);
+        $this->crud->addColumn([
+            'name' => 'plates_count',
+            'label' => 'Number of Plates',
+            'type' => 'closure',
+            'function' => function ($entry) {
+                return licenseplate::where("region", $entry->region_name)->count();
+            },
+        ]);
+        $this->crud->addColumn([
+            'name' => 'city_count',
+            'label' => 'Number of Cities',
+            'type' => 'closure',
+            'function' => function ($entry) {
+                return $entry->cities()->count();
+            },
+        ]);
         /**
          * Columns can be defined using the fluent syntax:
          * - CRUD::column('price')->type('number');
@@ -73,5 +104,43 @@ class RegionCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+       protected function setupShowOperation()
+    {
+
+ $this->crud->addColumn([
+            'name' => 'full_form',
+            'label' => 'Name',
+            'type' => 'text',
+           
+        ]);
+        $this->crud->addColumn([
+            'name' => 'plates_count',
+            'label' => 'Number of Plates',
+            'type' => 'closure',
+            'function' => function ($entry) {
+                return licenseplate::where("region", $entry->region_name)->count();
+            },
+        ]);
+        $this->crud->addColumn([
+            'name' => 'city_count',
+            'label' => 'Number of Cities',
+            'type' => 'closure',
+            'function' => function ($entry) {
+                return $entry->cities()->count();
+            },
+        ]);
+          $this->crud->addColumn([
+            'name' => 'cities',
+            'label' => 'Cities',
+            'type' => 'closure',
+            'function' => function ($entry) {
+               return $entry->cities->pluck('city_name')->implode(', ');
+            },
+        ]);
+
+        // don't auto-load all columns
+
+
     }
 }
