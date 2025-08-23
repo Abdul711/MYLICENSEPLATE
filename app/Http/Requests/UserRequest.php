@@ -25,6 +25,7 @@ class UserRequest extends FormRequest
             'name' => 'required|string|max:255|unique:users,name',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|min:8',
+            "package_id"=>"nullable|exists:packages,id",
             'mobile' => ['required','unique:users,mobile', 'regex:/^(0|\+92)[0-9]{10}$/'],
         ];
     }

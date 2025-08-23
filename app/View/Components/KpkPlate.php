@@ -12,12 +12,12 @@ class KpkPlate extends Component
      * Create a new component instance.
      */
     public $plate;
-    public $cityUrduName;
+   
 
-    public function __construct($plate, $cityUrduName)
+    public function __construct($plate)
     {
         $this->plate = $plate;
-        $this->cityUrduName = $cityUrduName;
+      
     }
 
     /**

@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\UserRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
-use Spatie\Permission\Models\Role;
+use Illuminate\Http\Request;
 
 /**
- * Class UserCrudController
+ * Class ManagerCrudController
  * @package App\Http\Controllers\Admin
  * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class UserCrudController extends CrudController
+class ManagerCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -28,8 +27,8 @@ class UserCrudController extends CrudController
     public function setup()
     {
         CRUD::setModel(\App\Models\User::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/user');
-        CRUD::setEntityNameStrings('user', 'users');
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/manager');
+        CRUD::setEntityNameStrings('manager', 'managers');
     }
 
     /**
@@ -40,30 +39,21 @@ class UserCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-
-        //    $this->crud->enableExportButtons(); 
-
-
-        $this->crud->query = $this->crud->query->role('User');
-        // Only include users where email contains '@' and domain part is not empty
-        $this->crud->query->where('email', 'like', '%@%')
-            ->whereRaw("SUBSTRING_INDEX(email, '@', -1) <> ''");
-
-
-
+        $this->crud->query = $this->crud->query->role('Manager');
+        // set columns from db columns.
         $this->crud->addColumns([
             ['name' => 'name', 'label' => 'Name'],
             ['name' => 'email', 'label' => 'Email'],
             ['name' => 'mobile', 'label' => 'Mobile'],
 
             // Show number of plates
-            [
-                'name'  => 'plates_count',   // virtual attribute
-                'label' => 'Number of Plates',
-                'type'  => 'model_function',
-                'function_name' => 'getPlatesCount', // method in User model
-            ],
+
         ]);
+
+        /**
+         * Columns can be defined using the fluent syntax:
+         * - CRUD::column('price')->type('number');
+         */
     }
 
     /**
@@ -74,7 +64,9 @@ class UserCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(UserRequest::class);
+        CRUD::setValidation([
+            'name' => 'required|min:2',
+        ]);
         // set fields from db columns.
         CRUD::addField([
             'label' => 'Name',
@@ -101,16 +93,6 @@ class UserCrudController extends CrudController
 
         ]);
 
-        CRUD::addField([
-            'name'      => 'package_id',
-            'label'     => 'Package',
-            'type'      => 'select',
-            'entity'    => 'package',
-            'attribute' => 'name',  // show package name
-            'model'     => "App\Models\Package",
-            'allows_null' => false,
-        ]);
-
         /**
          * Fields can be defined using the fluent syntax:
          * - CRUD::field('price')->type('number');
@@ -123,24 +105,37 @@ class UserCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
-
-    public function store(UserRequest $request)
+    public function store(Request $request)
     {
         // Save user using parent method
+        $data = $request->validate([
+            "name" => "required|unique:users,name",
+            "mobile" => "required|unique:users,email",
+            "password" => "required",
+            "email" => "required"
+        ]);
+        if (!empty($data['email']) && str_contains($data['email'], '@')) {
+            $domain = explode('@', $data['email'])[1] ?? '';
 
-        dd($request->validated());
-        $user = $this->crud->create($request->validated());
+            // Remove .com if it exists
+            $cleanedDomain = str_replace('.com', '', $domain);
+
+            $data['email_domain'] = $cleanedDomain;
+        }
+        $data["package_id"]=3;
+      
+        $user = $this->crud->create($data);
 
         // Assign default role
-        $user->assignRole('User');  // or Role::findByName('User')
+        $user->assignRole('Manager');  // or Role::findByName('User')
 
-        return redirect()->to(backpack_url('user'));
+        return redirect()->to(backpack_url('manager'));
     }
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
     }
-    protected function setupShowOperation()
+     protected function setupShowOperation()
     {
         
         $this->crud->addColumns([
@@ -148,14 +143,9 @@ class UserCrudController extends CrudController
             ['name' => 'email', 'label' => 'Email'],
             ['name' => 'mobile', 'label' => 'Mobile'],
 
-            // Show number of plates
-            [
-                'name'  => 'plates_count',   // virtual attribute
-                'label' => 'Number of Plates',
-                'type'  => 'model_function',
-                'function_name' => 'getPlatesCount', // method in User model
-            ],
+        
         ]);
 
-    }    
+    }   
 }
+

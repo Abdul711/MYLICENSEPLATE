@@ -12,7 +12,6 @@
 
 
 
-
 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" 
        style="max-width: 400px; margin: auto; border-collapse: collapse;">
   <tr>

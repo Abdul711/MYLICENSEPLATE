@@ -6,3 +6,6 @@
 <x-backpack::menu-item title="Banks" icon="la la-question" :link="backpack_url('bank')" />
 <x-backpack::menu-item title="Province" icon="la la-question" :link="backpack_url('region')" />
 <x-backpack::menu-item title="Cities" icon="la la-question" :link="backpack_url('city')" />
+
+<x-backpack::menu-item title="Packages" icon="la la-question" :link="backpack_url('package')" />
+<x-backpack::menu-item title="Managers" icon="la la-question" :link="backpack_url('manager')" />

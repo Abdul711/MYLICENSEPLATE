@@ -26,6 +26,7 @@ class User extends Authenticatable
         'email_domain',
         'password',
         'mobile',
+        'package_id'
     ];
 
     /**
@@ -55,22 +56,22 @@ class User extends Authenticatable
         return $this->hasMany(LicensePlate::class);
     }
 
-public function getPlatesCount(): int
-{
-    return $this->licensePlates()->count();
-}
+    public function getPlatesCount(): int
+    {
+        return $this->licensePlates()->count();
+    }
 
 
     public function getNameAttribute($value)
     {
         // Check current request path
-        if (!request()->is('profile/edit')  ) {
+        if (!request()->is('profile/edit')) {
             // Only run formatting when NOT on profile/edit
             $parts = explode(' ', $value);
             $firstPart = $parts[0] ?? '';
             return ucfirst(strtolower($firstPart));
         }
-              if (!request()->has('admin/')  ) {
+        if (!request()->has('admin/')) {
             // Only run formatting when NOT on profile/edit
             $parts = explode(' ', $value);
             $firstPart = $parts[0] ?? '';
@@ -80,6 +81,10 @@ public function getPlatesCount(): int
 
         // Otherwise, just return the original value
         return $value;
+    }
+    public function package()
+    {
+        return $this->belongsTo(Package::class);
     }
     public function getMobileAttribute($value)
     {

@@ -228,19 +228,18 @@
 
 
                 </div>
-                @php
+                {{-- @php
                     $regions = [
-                        'Punjab' => ['bg' => 'primary', 'logo' => 'punjab.jpeg', 'name_ur' => 'پنجاب'],
-                        'Sindh' => ['bg' => 'warning', 'logo' => 'sindh.png', 'name_ur' => 'سندھ'],
-                        'Balochistan' => ['bg' => 'danger', 'logo' => 'balochistan.jpeg', 'name_ur' => 'بلوچستان'],
-                        'KPK' => ['bg' => 'info', 'logo' => 'KP_logo.png', 'name_ur' => 'خیبر پختونخوا'],
+                        'Punjab' => ['bg' => 'primary', 'logo' => 'punjab.jpeg'],
+                        'Sindh' => ['bg' => 'warning', 'logo' => 'sindh.png'],
+                        'Balochistan' => ['bg' => 'danger', 'logo' => 'balochistan.jpeg'],
+                        'KPK' => ['bg' => 'info', 'logo' => 'KP_logo.png'],
                     ];
                 @endphp
 
                 @foreach ($plates as $plate)
                     @php
-                        $city = \App\Models\City::where('city_name', $plate->city)->first();
-                        $city_urdu_name = $city->name_ur;
+                       
                         $regionData = $regions[$plate->region] ?? null;
 
                     @endphp
@@ -254,9 +253,9 @@
                                 <div class="text-center">
                                     <div class="fw-bold" style="font-size: 1rem;">
                                         @if ($plate->featured == 1)
-                                            {{ $regionData['name_ur'] }}
+                                            {{ $plate->regionRelation->urdu_name }}
                                         @else
-                                            {{ strtoupper($plate->region) }}
+                                            {{ strtoupper($plate->regionRelation->full_form) }}
                                         @endif
                                     </div>
                                     <div style="font-size: 2rem; letter-spacing: 5px; color: white;">
@@ -267,7 +266,7 @@
                                 <div class="d-flex justify-content-center mt-2">
                                     <div class="text-muted">
                                         @if ($plate->featured == 1)
-                                            {{ $city_urdu_name }}
+                                          {{$plate->cityRelation->name_ur}}
                                         @else
                                             {{ strtoupper($plate->city) }}
                                         @endif
@@ -288,12 +287,39 @@
                             @endauth
                         </div>
                     @endif
+                @endforeach --}}
+                @foreach ($plates as $plate)
+                    @switch($plate->region)
+                        @case('Punjab')
+                            <div class="col-md-3">
+                                <x-punjab-plate :plate="$plate" />
+                            </div>
+                        @break
+
+                        @case('Sindh')
+                         <div class="col-md-3">
+                            <x-sindh-plate :plate="$plate" />
+                         </div>
+                        @break
+
+                        @case('Balochistan')
+                         <div class="col-md-3">
+                            <x-balochistan-plate :plate="$plate" />
+                         </div>
+                        @break
+
+                        @case('KPK')
+                         <div class="col-md-3">
+                            <x-kpk-plate :plate="$plate" />
+                         </div>
+                        @break
+                    @endswitch
                 @endforeach
 
                 {{ $plates->links() }}
 
 
-              
+
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -28,14 +28,18 @@ class licenseplate extends Model
     public function exportAllBtn()
     {
         return '<a class="btn btn-success" href="' . url('admin/exportdownload') . '">
-                <i class="la la-download"></i> Export All Challans
+                <i class="la la-download"></i> Export All 
             </a>';
     }
 
-    public function city()
+    public function cityRelation()
     {
         // belongsTo(RelatedModel, foreignKeyOnThisModel, ownerKeyOnRelatedModel)
-        return $this->belongsTo(City::class, 'city', 'city_name');
+       return $this->belongsTo(City::class, 'city', 'city_name');
+    }
+     public function regionRelation()
+    {
+        return $this->belongsTo(Region::class, 'region', 'region_name');
     }
     public function challan()
     {

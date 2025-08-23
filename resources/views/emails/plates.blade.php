@@ -13,6 +13,7 @@
 
 
 
+
 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" 
        style="max-width: 400px; margin: auto; border-collapse: collapse;">
   <tr>
@@ -24,7 +25,11 @@
 
       <!-- Region -->
       <div style="font-weight: bold; font-size: 1rem;  margin-bottom: 5px;">
-        {{ strtoupper($plate->region) }}
+             @if ($plate->featured != 1)
+     {{$plate->regionRelation->full_form}}
+            @else
+{{$plate->regionRelation->urdu_name}}
+            @endif
       </div>
 
       <!-- Plate Number -->
@@ -34,7 +39,12 @@
 
       <!-- City -->
       <div style=" font-size: 0.9rem; margin-top: 6px;">
+         @if ($plate->featured != 1)
         {{ strtoupper($plate->city) }}
+          @else
+
+{{$plate->cityRelation->name_ur}}
+          @endif
       </div>
 
     </td>

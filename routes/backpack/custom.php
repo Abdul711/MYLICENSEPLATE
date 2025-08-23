@@ -21,6 +21,8 @@ Route::group([
     Route::crud('bank', 'BankCrudController');
     Route::crud('region', 'RegionCrudController');
     Route::crud('city', 'CityCrudController');
+    Route::crud('package', 'PackageCrudController');
+    Route::crud('manager', 'ManagerCrudController');
 }); // this should be the absolute last line of this file
 
 /**

@@ -1,12 +1,12 @@
-@props(['plate', 'cityUrduName'])
+@props(['plate'])
 
     <div class="d-flex flex-column justify-content-between border border-primary bg-primary rounded p-3 shadow">
         <img src="{{ asset('glogo/punjab.jpeg') }}" width="40" height="40">
         <div class="text-center">
             @if ($plate->featured == 1)
-                <div class="fw-bold" style="font-size: 1rem;">پنجاب</div>
+                <div class="fw-bold" style="font-size: 1rem;">{{$plate->regionRelation->urdu_name}}</div>
             @else
-                <div class="fw-bold" style="font-size: 1rem;">{{ strtoupper($plate->region) }}</div>
+                <div class="fw-bold" style="font-size: 1rem;">{{ $plate->regionRelation->full_form }}</div>
             @endif
             <div style="font-size: 2rem; letter-spacing: 5px; color: white;">
                 {{ $plate->plate_number ?? 'ABC 000' }}
@@ -14,9 +14,9 @@
         </div>
         <div class="d-flex justify-content-center mt-2">
             @if ($plate->featured == 1)
-                <div class="text-muted">{{ $cityUrduName }}</div>
+                <div class="text-muted"> {{ $plate->cityRelation->name_ur }}</div>
             @else
-                <div class="text-muted">{{ strtoupper($plate->city) }}</div>
+                <div class="text-muted">{{ ucwords($plate->city) }}</div>
             @endif
         </div>
     </div>

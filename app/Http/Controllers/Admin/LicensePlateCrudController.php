@@ -163,11 +163,11 @@ class LicensePlateCrudController extends CrudController
 
                     // Update challan image path in DB
                     $challan->update([
-                        'image_path' => 'plates/' . $fileName,
+                        'image_path' =>  $fileName,
                     ]);
                 }
 
-                return "<img src='" . asset($challan->image_path) . "' style='max-width: 400px; margin: auto; border-collapse: collapse;'>";
+                return "<img src='" . asset('plates/'.$challan->image_path) . "' style='max-width: 400px; margin: auto; border-collapse: collapse;'>";
             },
             'escaped' => false,
         ]);
